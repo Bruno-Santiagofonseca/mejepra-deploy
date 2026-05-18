@@ -1,0 +1,24 @@
+{
+  "name": "Mejepra — Gestão Financeira",
+  "short_name": "Mejepra",
+  "description": "Sistema de gestão financeira para centro espírita",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f0f4f3",
+  "theme_color": "#2a7a5a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

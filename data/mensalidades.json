@@ -1,0 +1,74 @@
+[
+  {
+    "id": 1,
+    "created_at": "2026-05-18T14:55:23.720Z",
+    "updated_at": "2026-05-18T18:08:34.702Z",
+    "medium_id": 1,
+    "nome": "Ana Clara Silva",
+    "valor": 150,
+    "pago": 120,
+    "status": "pago",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 2,
+    "created_at": "2026-05-18T14:55:23.721Z",
+    "updated_at": "2026-05-18T15:00:45.476Z",
+    "medium_id": 2,
+    "nome": "Bento Ferreira",
+    "valor": 150,
+    "pago": 60,
+    "status": "parcial",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 3,
+    "created_at": "2026-05-18T14:55:23.722Z",
+    "updated_at": "2026-05-18T15:00:45.478Z",
+    "medium_id": 3,
+    "nome": "Carla Rodrigues",
+    "valor": 150,
+    "pago": 150,
+    "status": "pago",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 4,
+    "created_at": "2026-05-18T14:55:23.723Z",
+    "updated_at": "2026-05-18T15:00:45.480Z",
+    "medium_id": 4,
+    "nome": "Daniel Martins",
+    "valor": 150,
+    "pago": 0,
+    "status": "pendente",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 5,
+    "created_at": "2026-05-18T14:55:23.724Z",
+    "updated_at": "2026-05-18T15:00:45.483Z",
+    "medium_id": 5,
+    "nome": "Eduarda Lima",
+    "valor": 150,
+    "pago": 200,
+    "status": "pago",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 6,
+    "created_at": "2026-05-18T14:55:23.725Z",
+    "updated_at": "2026-05-18T15:00:45.485Z",
+    "medium_id": 6,
+    "nome": "Fernando Oliveira",
+    "valor": 150,
+    "pago": 45,
+    "status": "parcial",
+    "mes": "05",
+    "ano": "2026"
+  }
+]
