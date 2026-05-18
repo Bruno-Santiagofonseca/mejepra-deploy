@@ -132,6 +132,9 @@ body>*{position:relative;z-index:1}
   .report-section{border:1px solid #ddd!important;break-inside:avoid!important;page-break-inside:avoid!important}
   .report-section h3{color:#2a7a5a!important}
   .report-name{font-size:24px!important}
+  .report-field .lbl{color:#666!important}
+  .ri-tag{border:1px solid #ccc!important}
+  .ri-valor{color:#000!important}
 }
 
 .bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:8px 16px 16px;border-top:1px solid var(--border);background:var(--surface)}
@@ -239,7 +242,6 @@ body>*{position:relative;z-index:1}
   </button>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 const API = '/api';
 async function carregarMediuns(){
@@ -464,28 +466,7 @@ function fecharRelatorio(){
   document.getElementById('reportOverlay').classList.remove('open');
 }
 function gerarPDF(){
-  const body = document.getElementById('reportBody');
-  const nome = document.querySelector('.report-name')?.textContent || 'Relatorio';
-  const btn = document.querySelector('.btn-print');
-  const originalText = btn.textContent;
-  btn.textContent = '⏳ Gerando...';
-  btn.style.pointerEvents = 'none';
-
-  const opt = {
-    margin: [10, 10, 10, 10],
-    filename: `${nome.replace(/\s+/g,'_')}_Mejepra.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, logging: false },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-
-  html2pdf().set(opt).from(body).save().then(() => {
-    btn.textContent = originalText;
-    btn.style.pointerEvents = 'auto';
-  }).catch(() => {
-    btn.textContent = originalText;
-    btn.style.pointerEvents = 'auto';
-  });
+  window.print();
 }
 function compartilharWhatsApp(){
   const nome = document.querySelector('.report-name')?.textContent || 'Médium';
