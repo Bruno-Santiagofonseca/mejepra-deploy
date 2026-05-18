@@ -411,7 +411,7 @@ async function gerarRelatorio(id){
           </div>
         </div>`;
       });
-      html += `</div>`;
+      html += `<div class="report-total-row"><span>Total: ${fmt(resumo.despesas_total)}</span></div></div>`;
     }
 
     // TRABALHOS
@@ -431,7 +431,7 @@ async function gerarRelatorio(id){
           </div>
         </div>`;
       });
-      html += `</div>`;
+      html += `<div class="report-total-row"><span>Total: ${fmt(resumo.trabalhos_total)}</span></div></div>`;
     }
 
     // EXTRAS
@@ -452,7 +452,10 @@ async function gerarRelatorio(id){
           </div>
         </div>`;
       });
-      html += `</div>`;
+      html += `<div class="report-total-row">
+        <span style="color:var(--accent)">Rec: ${fmt(resumo.extras_receitas)}</span>
+        <span style="color:#e74c3c">Gastos: ${fmt(resumo.extras_gastos)}</span>
+      </div></div>`;
     }
 
     const today = new Date().toLocaleDateString('pt-BR');
@@ -476,29 +479,25 @@ function compartilharWhatsApp(){
   const end = fields[1]?.querySelector('.val')?.textContent || '—';
   const email = fields[2]?.querySelector('.val')?.textContent || '—';
 
-  let texto = `📋 *Relatório Financeiro — ${nome}*\n`;
-  texto += `📊 Status: ${status}\n\n`;
-  texto += `📞 ${tel}\n📍 ${end}\n✉ ${email}\n`;
+  let texto = `📋 *Relatório — ${nome}*\n`;
+  texto += `📊 ${status}\n`;
+  texto += `📞 ${tel}\n📍 ${end}\n`;
 
   const sections = document.querySelectorAll('.report-section');
   sections.forEach(sec => {
     const h3 = sec.querySelector('h3');
     if(!h3) return;
-    texto += `\n*${h3.textContent}*\n`;
+    const title = h3.textContent.replace(/[📋⭐➕💰🧹]/g, '').trim();
+    texto += `\n*${title}*\n`;
     
     const items = sec.querySelectorAll('.report-item');
     items.forEach(item => {
       const riName = item.querySelector('.ri-name')?.textContent || '';
-      const riDetail = item.querySelector('.ri-detail')?.textContent || '';
       const riValor = item.querySelector('.ri-valor')?.textContent || '';
       const riTag = item.querySelector('.ri-tag')?.textContent || '';
-      const muted = item.querySelector('[style*="color:var(--muted)"]')?.textContent || '';
       
-      texto += `• ${riName}`;
-      if(riDetail) texto += ` (${riDetail})`;
-      texto += `: ${riValor}`;
-      if(riTag) texto += ` [${riTag}]`;
-      if(muted) texto += ` ${muted}`;
+      texto += `• ${riName}: ${riValor}`;
+      if(riTag) texto += ` (${riTag})`;
       texto += `\n`;
     });
     
@@ -509,7 +508,7 @@ function compartilharWhatsApp(){
   });
 
   const today = new Date().toLocaleDateString('pt-BR');
-  texto += `\n_Relatório gerado em ${today} — Mejepra Financeiro_`;
+  texto += `\n_${today} · Mejepra_`;
 
   const encoded = encodeURIComponent(texto);
   window.open(`https://wa.me/?text=${encoded}`, '_blank');
