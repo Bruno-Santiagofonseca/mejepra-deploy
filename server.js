@@ -37,7 +37,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'INTERFACE', 'index.html'));
 });
 
-db.initDefaults();
+// db.initDefaults(); // Desativado para entrega ao cliente
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Mejepra Financeiro rodando em http://0.0.0.0:${PORT}`);
