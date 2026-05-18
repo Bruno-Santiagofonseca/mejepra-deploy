@@ -39,6 +39,6 @@ app.get('/', (req, res) => {
 
 db.initDefaults();
 
-app.listen(PORT, () => {
-  console.log(`Mejepra Financeiro rodando em http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Mejepra Financeiro rodando em http://0.0.0.0:${PORT}`);
 });
