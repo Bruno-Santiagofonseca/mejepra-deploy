@@ -471,34 +471,6 @@ function gerarPDF(){
   btn.textContent = '⏳ Gerando...';
   btn.style.pointerEvents = 'none';
 
-  const container = document.createElement('div');
-  container.innerHTML = body.innerHTML;
-  container.style.cssText = 'font-family:-apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;max-width:700px;margin:0 auto;padding:20px;color:#1a1a1a;font-size:13px;';
-
-  const styleEl = document.createElement('style');
-  styleEl.textContent = `
-    *{margin:0;padding:0;box-sizing:border-box}
-    h3{font-size:13px;color:#2a7a5a;text-transform:uppercase;letter-spacing:.5px;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid #e8f5e9}
-    .report-name{font-size:18px;font-weight:700;margin-bottom:2px}
-    .report-status{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:16px}
-    .report-status.ativo{background:#e8f5e9;color:#2a7a5a}
-    .report-status.inativo{background:#fee2e2;color:#dc2626}
-    .report-field{display:flex;justify-content:space-between;padding:3px 0;font-size:12px;border-bottom:1px solid #f0f0f0}
-    .report-field .lbl{color:#666}
-    .report-field .val{font-weight:600;text-align:right}
-    .report-item{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;border-bottom:1px solid #f5f5f5;font-size:12px}
-    .report-item:last-child{border-bottom:none}
-    .ri-name{font-weight:600}
-    .ri-detail{font-size:10px;color:#888;margin-top:1px}
-    .ri-valor{font-weight:700;white-space:nowrap}
-    .ri-tag{display:inline-block;padding:1px 7px;border-radius:8px;font-size:10px;font-weight:600}
-    .ri-tag.realizado{background:#e8f5e9;color:#2a7a5a}
-    .ri-tag.pendente{background:#fff3e0;color:#e67e22}
-    .report-section{margin-bottom:10px;padding:10px;border:1px solid #e0e0e0;border-radius:6px}
-  `;
-  container.prepend(styleEl);
-  document.body.appendChild(container);
-
   const opt = {
     margin: [10, 10, 10, 10],
     filename: `${nome.replace(/\s+/g,'_')}_Mejepra.pdf`,
@@ -507,12 +479,10 @@ function gerarPDF(){
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
-  html2pdf().set(opt).from(container).save().then(() => {
-    document.body.removeChild(container);
+  html2pdf().set(opt).from(body).save().then(() => {
     btn.textContent = originalText;
     btn.style.pointerEvents = 'auto';
   }).catch(() => {
-    document.body.removeChild(container);
     btn.textContent = originalText;
     btn.style.pointerEvents = 'auto';
   });
@@ -529,13 +499,31 @@ function compartilharWhatsApp(){
   texto += `📊 Status: ${status}\n\n`;
   texto += `📞 ${tel}\n📍 ${end}\n✉ ${email}\n`;
 
-  const totalRows = document.querySelectorAll('.report-total-row');
-  const sections = document.querySelectorAll('.report-section h3');
-
-  sections.forEach((h3, i) => {
-    texto += `\n${h3.textContent}\n`;
-    if(totalRows[i]){
-      texto += totalRows[i].textContent.trim() + '\n';
+  const sections = document.querySelectorAll('.report-section');
+  sections.forEach(sec => {
+    const h3 = sec.querySelector('h3');
+    if(!h3) return;
+    texto += `\n*${h3.textContent}*\n`;
+    
+    const items = sec.querySelectorAll('.report-item');
+    items.forEach(item => {
+      const riName = item.querySelector('.ri-name')?.textContent || '';
+      const riDetail = item.querySelector('.ri-detail')?.textContent || '';
+      const riValor = item.querySelector('.ri-valor')?.textContent || '';
+      const riTag = item.querySelector('.ri-tag')?.textContent || '';
+      const muted = item.querySelector('[style*="color:var(--muted)"]')?.textContent || '';
+      
+      texto += `• ${riName}`;
+      if(riDetail) texto += ` (${riDetail})`;
+      texto += `: ${riValor}`;
+      if(riTag) texto += ` [${riTag}]`;
+      if(muted) texto += ` ${muted}`;
+      texto += `\n`;
+    });
+    
+    const totalRow = sec.querySelector('.report-total-row');
+    if(totalRow){
+      texto += `→ ${totalRow.textContent.trim()}\n`;
     }
   });
 
