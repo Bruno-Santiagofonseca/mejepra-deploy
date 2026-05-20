@@ -226,7 +226,7 @@ function renderizar(){
   dados.forEach(d => {
     if(d.presenca === "falta") total += d.valor;
     if(d.presenca === "feito") concluidas++;
-    else pendentes++;
+    else if(d.presenca === "falta") pendentes++;
     const presencaLabel = {feito:"Feito",falta:"Falta"}[d.presenca];
     const pagamentoLabel = d.pagamento === "pago" ? "Pago" : "Não Pago";
     const presencaClass = d.presenca;

@@ -498,16 +498,16 @@ function atualizarTotais(){
   const rows = document.querySelectorAll('#extras-tbody tr');
   let total=0, receitas=0, gastos=0;
   rows.forEach(r=>{
-    const tds = r.querySelectorAll('td');
-    let val = 0;
-    if(tds.length>=2){
-      const txt = tds[1].textContent.replace('R$ ','').replace(',','.');
-      val = parseFloat(txt)||0;
-    }
+    const valor = parseFloat(r.dataset.valor)||0;
+    const qtd = parseInt(r.dataset.qtd)||1;
+    const parcela = r.dataset.parcela||'1/1';
+    const p = parcela.split('/');
+    const parcDen = p.length===2 ? (parseInt(p[1])||1) : 1;
+    const totalItem = (valor / parcDen) * qtd;
     const tipo = r.dataset.tipo||'receita';
-    total+=val;
-    if(tipo==='receita') receitas+=val;
-    else gastos+=val;
+    total+=totalItem;
+    if(tipo==='receita') receitas+=totalItem;
+    else gastos+=totalItem;
   });
   const totEls = document.querySelectorAll('.period-total .value');
   if(totEls.length>=3){

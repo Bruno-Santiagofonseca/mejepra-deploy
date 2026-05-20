@@ -277,6 +277,8 @@ async function salvarEdicao(){
   try {
     const id = parseInt(editRow.dataset.id);
     await fetch(`${API}/despesas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status, mes: mA.mes, ano: mA.ano }) });
+    const valParcela = calcParcelaValor(valor, parcela);
+    const cadaUm = valParcela / divisao;
     editRow.dataset.item=item;
     editRow.dataset.valor=valor;
     editRow.dataset.parcela=parcela;
