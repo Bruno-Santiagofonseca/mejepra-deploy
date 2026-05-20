@@ -27,11 +27,11 @@ router.put('/:id', (req, res) => {
   if (!existing) return res.status(404).json({ error: 'Despesa não encontrada' });
   const { item, valor, parcela, divisao, status, mes, ano } = req.body;
   const desp = db.update('despesas', req.params.id, {
-    item: item || existing.item,
+    item: item !== undefined ? item : existing.item,
     valor: valor !== undefined ? valor : existing.valor,
     parcela: parcela !== undefined ? parcela : existing.parcela,
     divisao: divisao !== undefined ? divisao : existing.divisao,
-    status: status || existing.status,
+    status: status !== undefined ? status : existing.status,
     mes: mes !== undefined ? mes : existing.mes,
     ano: ano !== undefined ? ano : existing.ano
   });

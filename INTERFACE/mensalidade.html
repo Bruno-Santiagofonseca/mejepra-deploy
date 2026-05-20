@@ -253,8 +253,8 @@ function abrirSheet(dadosEdicao){
   editingMediumId = dadosEdicao.medium_id;
   document.getElementById("sheetTitle").textContent = "Editar Mensalidade";
   document.getElementById("sheetNome").textContent = dadosEdicao.nome;
-  document.getElementById("inputValor").value = dadosEdicao.valor || "";
-  document.getElementById("inputPago").value = dadosEdicao.pago || "";
+  document.getElementById("inputValor").value = dadosEdicao.valor !== undefined && dadosEdicao.valor !== '' ? dadosEdicao.valor : "";
+  document.getElementById("inputPago").value = dadosEdicao.pago !== undefined && dadosEdicao.pago !== '' ? dadosEdicao.pago : "";
   document.getElementById("btnExcluir").style.display = dadosEdicao.id ? "block" : "none";
   statusAtual = dadosEdicao.status || "pendente";
   document.querySelectorAll(".status-options button").forEach(b => {

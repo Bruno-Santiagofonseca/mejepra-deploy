@@ -27,8 +27,8 @@ router.put('/:id', (req, res) => {
   if (!existing) return res.status(404).json({ error: 'Item extra não encontrado' });
   const { tipo, item, valor, parcela, qtd, divisao, mes, ano, pagamentos } = req.body;
   const extra = db.update('extras', req.params.id, {
-    tipo: tipo || existing.tipo,
-    item: item || existing.item,
+    tipo: tipo !== undefined ? tipo : existing.tipo,
+    item: item !== undefined ? item : existing.item,
     valor: valor !== undefined ? valor : existing.valor,
     parcela: parcela !== undefined ? parcela : existing.parcela,
     qtd: qtd !== undefined ? qtd : existing.qtd,

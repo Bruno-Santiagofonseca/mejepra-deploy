@@ -31,10 +31,10 @@ router.put('/:id', (req, res) => {
     nome: nome || existing.nome,
     data: data !== undefined ? data : existing.data,
     valor: valor !== undefined ? valor : existing.valor,
-    presenca: presenca || existing.presenca,
-    pagamento: pagamento || existing.pagamento,
-    mes: mes || existing.mes,
-    ano: ano || existing.ano
+    presenca: presenca !== undefined ? presenca : existing.presenca,
+    pagamento: pagamento !== undefined ? pagamento : existing.pagamento,
+    mes: mes !== undefined ? mes : existing.mes,
+    ano: ano !== undefined ? ano : existing.ano
   });
   res.json(fax);
 });

@@ -32,8 +32,8 @@ router.put('/:id', (req, res) => {
     valor: valor !== undefined ? valor : existing.valor,
     pago: pago !== undefined ? pago : existing.pago,
     status: status || existing.status,
-    mes: mes || existing.mes,
-    ano: ano || existing.ano
+    mes: mes !== undefined ? mes : existing.mes,
+    ano: ano !== undefined ? ano : existing.ano
   });
   res.json(mens);
 });

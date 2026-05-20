@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 
   const trabalhos = db.getAll('trabalhos');
   const trabalhosTotal = trabalhos.reduce((s, t) => s + t.valor, 0);
-  const trabalhosRealizados = trabalhos.filter(t => t.status === 'realizado').reduce((s, t) => s + t.valor, 0);
+  const trabalhosRealizados = trabalhosTotal;
 
   const extras = db.getAll('extras');
   const extrasReceitas = extras.filter(e => e.tipo === 'receita').reduce((s, e) => s + e.valor, 0);
@@ -52,20 +52,19 @@ router.get('/medium/:id', (req, res) => {
   const medium = db.getById('mediuns', req.params.id);
   if (!medium) return res.status(404).json({ error: 'Médium não encontrado' });
 
-  const nomeLower = medium.nome.toLowerCase();
   const { mes, ano } = req.query;
 
   const mensalidades = db.query('mensalidades', m =>
     m.medium_id === parseInt(req.params.id)
   ).sort((a, b) => {
-    if (a.ano !== b.ano) return a.ano.localeCompare(b.ano);
+    if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
     return a.mes.localeCompare(b.mes);
   });
 
   const faxinas = db.query('faxina', f =>
     f.medium_id === parseInt(req.params.id)
   ).sort((a, b) => {
-    if (a.ano !== b.ano) return a.ano.localeCompare(b.ano);
+    if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
     return a.mes.localeCompare(b.mes);
   });
 
@@ -105,7 +104,7 @@ router.get('/medium/:id', (req, res) => {
       valor_total: t.valor,
       divisao: t.divisao,
       por_medium: porMed,
-      status: t.status,
+      status: t.status || 'realizado',
       mes: t.mes,
       ano: t.ano
     };
