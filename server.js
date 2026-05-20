@@ -63,9 +63,7 @@ app.post('/api/restore', (req, res) => {
     const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
     TABLES.forEach(t => {
       if (data[t] && Array.isArray(data[t])) {
-        // Clear existing data
         db.getAll(t).forEach(r => db.delete(t, r.id));
-        // Insert backup data
         data[t].forEach(r => {
           const { created_at, updated_at, ...rest } = r;
           db.insert(t, rest);
@@ -73,6 +71,19 @@ app.post('/api/restore', (req, res) => {
       }
     });
     res.json({ success: true, message: 'Dados restaurados com sucesso' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// Reset: clear all data (one-time use for client handoff)
+app.post('/api/reset', (req, res) => {
+  try {
+    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
+    TABLES.forEach(t => {
+      db.getAll(t).forEach(r => db.delete(t, r.id));
+    });
+    res.json({ success: true, message: 'Banco limpo — pronto para uso' });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
