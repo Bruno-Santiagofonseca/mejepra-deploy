@@ -28,7 +28,6 @@ html,body{height:100%;background:var(--bg);font-family:var(--font-body);color:va
 body{display:flex;flex-direction:column;max-width:430px;margin:0 auto;min-height:100dvh}
 body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url('logo.png');background-size:120px auto;background-repeat:space;background-position:center;opacity:.035;pointer-events:none}
 body>*{position:relative;z-index:1}
-.status-bar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px 8px;font-size:13px;font-weight:600;color:var(--fg)}
 .header{display:flex;align-items:center;gap:12px;padding:6px 16px 14px}
 .header .back{width:40px;height:40px;border-radius:50%;background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--fg)}
 .header .back:active{background:var(--border);transform:scale(.93)}
@@ -109,14 +108,6 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
 </style>
 </head>
 <body>
-
-<div class="status-bar">
-  <span class="time">10:28</span>
-  <div class="status-icons">
-    <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect x="0.5" y="2" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><rect x="12" y="3" width="3.5" height="6" rx="0.8" fill="currentColor"/><rect x="2.5" y="4" width="6" height="4" rx="0.5" fill="currentColor" opacity="0.85"/></svg>
-    <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style="margin-left:2px"><path d="M8 6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm-5 5c0-2.5 2.2-4.5 5-4.5s5 2 5 4.5" stroke="currentColor" stroke-width="1.2" fill="none"/></svg>
-  </div>
-</div>
 
 <div class="header">
   <button class="back" onclick="history.back()">
