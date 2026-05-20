@@ -167,71 +167,7 @@ const dbApi = {
   },
 
   initDefaults() {
-    const mediuns = queryAll('mediuns');
-    if (mediuns.length === 0) {
-      const defaults = [
-        { nome: 'Ana Clara Silva', tipo: 'Médium', tel: '(11) 99999-0001', endereco: 'Rua A, 123', email: 'ana@email.com', nasc: '1990-03-15', obs: 'Incorporação', iniciais: 'AC', data_cadastro: '2023-03-01', status: 'Ativo' },
-        { nome: 'Bento Ferreira', tipo: 'Médium', tel: '(11) 99999-0002', endereco: 'Rua B, 456', email: 'bento@email.com', nasc: '1985-07-22', obs: 'Vidência', iniciais: 'BF', data_cadastro: '2024-01-10', status: 'Ativo' },
-        { nome: 'Carla Rodrigues', tipo: 'Médium', tel: '(11) 99999-0003', endereco: 'Rua C, 789', email: 'carla@email.com', nasc: '1992-11-02', obs: 'Psicografia', iniciais: 'CR', data_cadastro: '2022-06-20', status: 'Ativo' },
-        { nome: 'Daniel Martins', tipo: 'Médium', tel: '(11) 99999-0004', endereco: 'Rua D, 321', email: 'daniel@email.com', nasc: '1988-05-18', obs: 'Curanderia', iniciais: 'DM', data_cadastro: '2024-09-05', status: 'Inativo' },
-        { nome: 'Eduarda Lima', tipo: 'Médium', tel: '(11) 99999-0005', endereco: 'Rua E, 654', email: 'eduarda@email.com', nasc: '1995-02-28', obs: 'Incorporação', iniciais: 'EL', data_cadastro: '2023-02-14', status: 'Ativo' },
-        { nome: 'Fernando Oliveira', tipo: 'Frequentador', tel: '(11) 99999-0006', endereco: 'Rua F, 987', email: 'fernando@email.com', nasc: '1982-09-10', obs: 'Hipnose', iniciais: 'FO', data_cadastro: '2024-10-01', status: 'Ativo' }
-      ];
-      defaults.forEach(d => this.insert('mediuns', d));
-    }
-
-    const mensalidades = queryAll('mensalidades');
-    if (mensalidades.length === 0) {
-      const mediunsData = queryAll('mediuns');
-      const vals = [120, 100, 150, 80, 200, 90];
-      const pagos = [120, 60, 150, 0, 200, 45];
-      const stats = ['pago', 'parcial', 'pago', 'pendente', 'pago', 'parcial'];
-      mediunsData.slice(0, 6).forEach((m, i) => {
-        this.insert('mensalidades', { medium_id: m.id, nome: m.nome, valor: vals[i], pago: pagos[i], status: stats[i], mes: '05', ano: '2026' });
-      });
-    }
-
-    const faxina = queryAll('faxina');
-    if (faxina.length === 0) {
-      const mediunsData = queryAll('mediuns');
-      const nomes = ['Ana Clara Silva', 'Bento Ferreira', 'Carla Rodrigues', 'Daniel Martins', 'Eduarda Lima', 'Fernando Oliveira', 'Gabriela Santos', 'Heitor Costa', 'Isabela Nunes', 'João Pedro', 'Larissa Mendes', 'Marcos Tavares'];
-      const presencas = ['feito', 'feito', 'falta', 'feito', 'feito', 'feito', 'falta', 'feito', 'falta', 'feito', 'feito', 'falta'];
-      const pagamentos = ['pago', 'pago', 'nao_pago', 'nao_pago', 'pago', 'pago', 'nao_pago', 'pago', 'nao_pago', 'pago', 'pago', 'nao_pago'];
-      nomes.forEach((n, i) => {
-        const med = mediunsData.find(m => m.nome === n);
-        this.insert('faxina', { medium_id: med ? med.id : null, nome: n, valor: 80, presenca: presencas[i], pagamento: pagamentos[i], mes: '05', ano: '2026' });
-      });
-    }
-
-    const despesas = queryAll('despesas');
-    if (despesas.length === 0) {
-      const items = [
-        { item: 'Material escritório', valor: 230, parcela: '1/1', divisao: 1, status: 'paga', mes: '05', ano: '2026' },
-        { item: 'Água', valor: 180, parcela: '1/1', divisao: 1, status: 'paga', mes: '05', ano: '2026' },
-        { item: 'Energia elétrica', valor: 420, parcela: '1/1', divisao: 1, status: 'aberta', mes: '05', ano: '2026' },
-        { item: 'Manutenção telhado', valor: 1200, parcela: '3/6', divisao: 1, status: 'parcial', mes: '05', ano: '2026' },
-        { item: 'Alimentação evento', valor: 650, parcela: '1/1', divisao: 1, status: 'aberta', mes: '05', ano: '2026' },
-        { item: 'Produtos limpeza', valor: 190, parcela: '1/1', divisao: 1, status: 'paga', mes: '05', ano: '2026' },
-        { item: 'Móvel sala', valor: 1800, parcela: '2/5', divisao: 1, status: 'parcial', mes: '05', ano: '2026' },
-        { item: 'Internet', valor: 150, parcela: '1/1', divisao: 1, status: 'aberta', mes: '05', ano: '2026' }
-      ];
-      items.forEach(d => this.insert('despesas', d));
-    }
-
-    const trabalhos = queryAll('trabalhos');
-    if (trabalhos.length === 0) {
-      const items = [
-        { entidade: 'Caboclo Tupinambá', valor: 300, mes: '05', ano: '2026', divisao: 5 },
-        { entidade: 'Preta Velha Maria', valor: 250, mes: '05', ano: '2026', divisao: 4 },
-        { entidade: 'Baiano Ventania', valor: 350, mes: '06', ano: '2026', divisao: 6 },
-        { entidade: 'Indio Pena Branca', valor: 280, mes: '05', ano: '2026', divisao: 3 },
-        { entidade: 'Boiadeiro Serra', valor: 320, mes: '05', ano: '2026', divisao: 5 },
-        { entidade: 'Marujo Costa', valor: 200, mes: '06', ano: '2026', divisao: 4 },
-        { entidade: 'Cigana Esmeralda', valor: 280, mes: '05', ano: '2026', divisao: 7 },
-        { entidade: 'Mestre Quintino', valor: 400, mes: '05', ano: '2026', divisao: 6 }
-      ];
-      items.forEach(t => this.insert('trabalhos', t));
-    }
+    // No default data — client starts with clean database
   }
 };
 
