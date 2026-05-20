@@ -76,19 +76,6 @@ app.post('/api/restore', (req, res) => {
   }
 });
 
-// Reset: clear all data (one-time use for client handoff)
-app.post('/api/reset', (req, res) => {
-  try {
-    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
-    TABLES.forEach(t => {
-      db.getAll(t).forEach(r => db.delete(t, r.id));
-    });
-    res.json({ success: true, message: 'Banco limpo — pronto para uso' });
-  } catch (e) {
-    res.status(500).json({ error: e.message });
-  }
-});
-
 // Initialize SQLite database, migrate from JSON if needed, then start server
 db.init().then(() => {
   db.migrateFromJSON();
