@@ -15,7 +15,17 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'INTERFACE')));
+
+// Disable cache for static files (HTML, JS, CSS)
+app.use(express.static(path.join(__dirname, 'INTERFACE'), {
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+  }
+}));
 
 app.get('/service-worker.js', (req, res) => {
   res.type('application/javascript').sendFile(path.join(__dirname, 'INTERFACE', 'service-worker.js'));

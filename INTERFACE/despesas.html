@@ -199,6 +199,12 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
       </select>
     </div>
   </div>
+
+  <button class="divisao-btn" id="e-btnPagamentos" onclick="abrirPagamentosSheet()" style="margin-top:12px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="3"/><path d="M3 21c1.5-2.5 4-4 7-4s5.5 1.5 7 4"/><path d="M17 5.5a3 3 0 1 1 0 5"/></svg>
+    <span>Médiuns que pagaram</span>
+  </button>
+
   <div class="sheet-actions">
     <button class="btn-save" onclick="salvarEdicao()">Salvar</button>
     <button class="btn-delete" onclick="excluirDespesa()">Excluir</button>
@@ -219,6 +225,18 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
   </div>
 </div>
 
+<!-- Pagamentos medium selection overlay -->
+<div class="overlay" id="pag-overlay" onclick="fecharPagamentosSheet()"></div>
+<div class="edit-sheet" id="pag-sheet" style="z-index:96">
+  <div class="sheet-handle"></div>
+  <h2 class="sheet-title">Médiuns que pagaram</h2>
+  <div class="medium-list" id="pagMediumList"></div>
+  <div class="sheet-actions">
+    <button class="btn-save" onclick="confirmarPagamentos()">Confirmar</button>
+    <button class="btn-delete" style="background:var(--bg);color:var(--muted);border:1.5px solid var(--border)" onclick="fecharPagamentosSheet()">Cancelar</button>
+  </div>
+</div>
+
 <div class="bottom-nav">
   <button class="nav-item active" onclick="location.href='index.html'">
     <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M3 12l9-9 9 9v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -232,6 +250,8 @@ let editRow=null;
 let mediunsAtivos = [];
 let selectedMediums = [];
 let tempSelected = [];
+let editPagamentos = {};
+let tempPagamentos = {};
 
 async function carregarMediuns(){
   try {
@@ -246,8 +266,10 @@ function abrirSheet(row){
   document.getElementById('e-valor').value=row.dataset.valor;
   document.getElementById('e-parcela').value=row.dataset.parcela;
   document.getElementById('e-divisao').value=row.dataset.divisao;
+  editPagamentos = row.dataset.divisao_mediums ? JSON.parse(row.dataset.divisao_mediums) : {};
   const tag=row.querySelector('.tag');
   document.getElementById('e-status').value=tag.classList.contains('paga')?'paga':tag.classList.contains('parcial')?'parcial':'aberta';
+  atualizarBtnPagamentos();
   document.getElementById('edit-overlay').classList.add('open');
   document.getElementById('edit-sheet').classList.add('open');
 }
@@ -255,6 +277,7 @@ function fecharSheet(){
   document.getElementById('edit-overlay').classList.remove('open');
   document.getElementById('edit-sheet').classList.remove('open');
   editRow=null;
+  editPagamentos = {};
 }
 async function salvarEdicao(){
   if(!editRow) return;
@@ -267,7 +290,8 @@ async function salvarEdicao(){
   const mA = getMesAno();
   try {
     const id = parseInt(editRow.dataset.id);
-    await fetch(`${API}/despesas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status, mes: mA.mes, ano: mA.ano, divisao_mediums: JSON.parse(editRow.dataset.divisao_mediums || '[]') }) });
+    await fetch(`${API}/despesas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status, mes: mA.mes, ano: mA.ano, divisao_mediums: Object.keys(editPagamentos).filter(k => editPagamentos[k]).map(Number) }) });
+    editRow.dataset.divisao_mediums = JSON.stringify(Object.keys(editPagamentos).filter(k => editPagamentos[k]).map(Number));
     const valParcela = calcParcelaValor(valor, parcela);
     const cadaUm = valParcela / divisao;
     editRow.dataset.item=item;
@@ -465,6 +489,50 @@ function atualizarTotais(){
     totEls[0].textContent='R$ '+total.toFixed(2).replace('.',',');
     totEls[1].textContent='R$ '+pago.toFixed(2).replace('.',',');
     totEls[2].textContent='R$ '+pendente.toFixed(2).replace('.',',');
+  }
+}
+
+function abrirPagamentosSheet(){
+  tempPagamentos = { ...editPagamentos };
+  renderPagMediumList();
+  document.getElementById('pag-overlay').classList.add('open');
+  document.getElementById('pag-sheet').classList.add('open');
+}
+function fecharPagamentosSheet(){
+  document.getElementById('pag-overlay').classList.remove('open');
+  document.getElementById('pag-sheet').classList.remove('open');
+}
+function renderPagMediumList(){
+  const list = document.getElementById('pagMediumList');
+  list.innerHTML = mediunsAtivos.map(m => {
+    const pago = tempPagamentos[m.id] || false;
+    return `<div class="medium-check ${pago?'selected':''}" onclick="togglePagMedium(${m.id})">
+      <div class="avatar">${m.iniciais}</div>
+      <div class="m-name">${m.nome}</div>
+      <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>`;
+  }).join('');
+}
+function togglePagMedium(id){
+  tempPagamentos[id] = !tempPagamentos[id];
+  renderPagMediumList();
+}
+function confirmarPagamentos(){
+  editPagamentos = { ...tempPagamentos };
+  fecharPagamentosSheet();
+  atualizarBtnPagamentos();
+}
+function atualizarBtnPagamentos(){
+  const btn = document.getElementById('e-btnPagamentos');
+  if(!btn) return;
+  const pagos = Object.values(editPagamentos).filter(Boolean).length;
+  const divisao = parseInt(document.getElementById('e-divisao').value) || 1;
+  if(pagos > 0){
+    btn.classList.add('has-selection');
+    btn.querySelector('span').textContent = pagos + '/' + divisao + ' pagaram';
+  } else {
+    btn.classList.remove('has-selection');
+    btn.querySelector('span').textContent = 'Médiuns que pagaram';
   }
 }
 
