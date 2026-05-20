@@ -3,3 +3,9 @@ node_modules/
 *.log
 .DS_Store
 .vscode/
+
+# SQLite database
+data/mejepra.db
+data/mejepra.db-shm
+data/mejepra.db-wal
+data/*.json

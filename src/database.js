@@ -1,80 +1,190 @@
-const fs = require('fs');
 const path = require('path');
+const Database = require('better-sqlite3');
 
 const DB_DIR = path.join(__dirname, '..', 'data');
-if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
+const DB_PATH = path.join(DB_DIR, 'mejepra.db');
 
-const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
+const db = new Database(DB_PATH);
 
-function readTable(table) {
-  const filePath = path.join(DB_DIR, `${table}.json`);
-  if (!fs.existsSync(filePath)) {
-    writeTable(table, []);
-    return [];
-  }
-  try {
-    const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
-  } catch {
-    return [];
+// Enable WAL mode for better performance and crash safety
+db.pragma('journal_mode = WAL');
+db.pragma('foreign_keys = ON');
+
+const SCHEMA = {
+  mediuns: `
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    tipo TEXT DEFAULT 'Médium',
+    tel TEXT DEFAULT '',
+    endereco TEXT DEFAULT '',
+    email TEXT DEFAULT '',
+    nasc TEXT DEFAULT '',
+    obs TEXT DEFAULT '',
+    iniciais TEXT DEFAULT '',
+    data_cadastro TEXT DEFAULT '',
+    status TEXT DEFAULT 'Ativo',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  `,
+  mensalidades: `
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    medium_id INTEGER,
+    nome TEXT NOT NULL,
+    valor REAL DEFAULT 0,
+    pago REAL DEFAULT 0,
+    status TEXT DEFAULT 'pendente',
+    mes TEXT DEFAULT '',
+    ano TEXT DEFAULT '',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  `,
+  faxina: `
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    medium_id INTEGER,
+    nome TEXT NOT NULL,
+    data TEXT,
+    valor REAL DEFAULT 0,
+    presenca TEXT DEFAULT 'feito',
+    pagamento TEXT DEFAULT 'pago',
+    mes TEXT DEFAULT '',
+    ano TEXT DEFAULT '',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  `,
+  despesas: `
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item TEXT NOT NULL,
+    valor REAL NOT NULL,
+    parcela TEXT DEFAULT '1/1',
+    divisao INTEGER DEFAULT 1,
+    status TEXT DEFAULT 'aberta',
+    mes TEXT DEFAULT '',
+    ano TEXT DEFAULT '',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  `,
+  trabalhos: `
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    entidade TEXT NOT NULL,
+    valor REAL NOT NULL,
+    mes TEXT DEFAULT '',
+    ano TEXT DEFAULT '',
+    divisao INTEGER DEFAULT 1,
+    pagamentos TEXT DEFAULT '{}',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  `,
+  extras: `
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tipo TEXT DEFAULT 'receita',
+    item TEXT NOT NULL,
+    valor REAL NOT NULL,
+    parcela TEXT DEFAULT '1/1',
+    qtd INTEGER DEFAULT 1,
+    divisao INTEGER DEFAULT 1,
+    mes TEXT DEFAULT '',
+    ano TEXT DEFAULT '',
+    pagamentos TEXT DEFAULT '{}',
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+  `
+};
+
+function ensureTables() {
+  for (const [table, schema] of Object.entries(SCHEMA)) {
+    db.exec(`CREATE TABLE IF NOT EXISTS ${table} (${schema})`);
   }
 }
+ensureTables();
 
-function writeTable(table, data) {
-  const filePath = path.join(DB_DIR, `${table}.json`);
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+// Prepared statements for performance
+const stmts = {};
+for (const table of Object.keys(SCHEMA)) {
+  stmts[`getAll_${table}`] = db.prepare(`SELECT * FROM ${table}`);
+  stmts[`getById_${table}`] = db.prepare(`SELECT * FROM ${table} WHERE id = ?`);
+  stmts[`delete_${table}`] = db.prepare(`DELETE FROM ${table} WHERE id = ?`);
+}
+
+function parseRow(row) {
+  const result = { ...row };
+  if (result.pagamentos && typeof result.pagamentos === 'string') {
+    try { result.pagamentos = JSON.parse(result.pagamentos); } catch { result.pagamentos = {}; }
+  }
+  return result;
+}
+
+function parseRows(rows) {
+  return rows.map(parseRow);
+}
+
+function serializeRow(record) {
+  const copy = { ...record };
+  if (copy.pagamentos && typeof copy.pagamentos !== 'string') {
+    copy.pagamentos = JSON.stringify(copy.pagamentos);
+  }
+  return copy;
 }
 
 function generateId(table) {
-  const data = readTable(table);
-  if (data.length === 0) return 1;
-  return Math.max(...data.map(r => r.id)) + 1;
+  const row = db.prepare(`SELECT MAX(id) as maxId FROM ${table}`).get();
+  return (row.maxId || 0) + 1;
 }
 
-const db = {
+const dbApi = {
   getAll(table) {
-    return readTable(table);
+    const stmt = stmts[`getAll_${table}`];
+    const rows = stmt.all();
+    return parseRows(rows);
   },
 
   getById(table, id) {
-    const data = readTable(table);
-    return data.find(r => r.id === parseInt(id)) || null;
+    const stmt = stmts[`getById_${table}`];
+    const row = stmt.get(parseInt(id));
+    return row ? parseRow(row) : null;
   },
 
   insert(table, record) {
-    const data = readTable(table);
-    const id = generateId(table);
     const now = new Date().toISOString();
-    const newRecord = { id, created_at: now, updated_at: now, ...record };
-    data.push(newRecord);
-    writeTable(table, data);
-    return newRecord;
+    const data = serializeRow(record);
+    const columns = Object.keys(data);
+    const placeholders = columns.map(() => '?').join(', ');
+    const values = columns.map(c => data[c]);
+
+    const stmt = db.prepare(`INSERT INTO ${table} (${columns.join(', ')}, created_at, updated_at) VALUES (${placeholders}, ?, ?)`);
+    const result = stmt.run(...values, now, now);
+
+    return this.getById(table, result.lastInsertRowid);
   },
 
   update(table, id, updates) {
-    const data = readTable(table);
-    const idx = data.findIndex(r => r.id === parseInt(id));
-    if (idx === -1) return null;
-    data[idx] = { ...data[idx], ...updates, updated_at: new Date().toISOString() };
-    writeTable(table, data);
-    return data[idx];
+    const existing = this.getById(table, id);
+    if (!existing) return null;
+
+    const now = new Date().toISOString();
+    const data = serializeRow(updates);
+    const columns = Object.keys(data);
+    const setClause = columns.map(c => `${c} = ?`).join(', ');
+    const values = columns.map(c => data[c]);
+
+    const stmt = db.prepare(`UPDATE ${table} SET ${setClause}, updated_at = ? WHERE id = ?`);
+    stmt.run(...values, now, parseInt(id));
+
+    return this.getById(table, id);
   },
 
   delete(table, id) {
-    const data = readTable(table);
-    const filtered = data.filter(r => r.id !== parseInt(id));
-    if (filtered.length === data.length) return false;
-    writeTable(table, filtered);
-    return true;
+    const stmt = stmts[`delete_${table}`];
+    const result = stmt.run(parseInt(id));
+    return result.changes > 0;
   },
 
   query(table, filterFn) {
-    const data = readTable(table);
-    return data.filter(filterFn);
+    const rows = this.getAll(table);
+    return rows.filter(filterFn);
   },
 
   initDefaults() {
-    const mediuns = readTable('mediuns');
+    const mediuns = this.getAll('mediuns');
     if (mediuns.length === 0) {
       const defaults = [
         { nome: 'Ana Clara Silva', tipo: 'Médium', tel: '(11) 99999-0001', endereco: 'Rua A, 123', email: 'ana@email.com', nasc: '1990-03-15', obs: 'Incorporação', iniciais: 'AC', data_cadastro: '2023-03-01', status: 'Ativo' },
@@ -87,9 +197,9 @@ const db = {
       defaults.forEach(d => this.insert('mediuns', d));
     }
 
-    const mensalidades = readTable('mensalidades');
+    const mensalidades = this.getAll('mensalidades');
     if (mensalidades.length === 0) {
-      const mediunsData = readTable('mediuns');
+      const mediunsData = this.getAll('mediuns');
       const vals = [120, 100, 150, 80, 200, 90];
       const pagos = [120, 60, 150, 0, 200, 45];
       const stats = ['pago', 'parcial', 'pago', 'pendente', 'pago', 'parcial'];
@@ -98,9 +208,9 @@ const db = {
       });
     }
 
-    const faxina = readTable('faxina');
+    const faxina = this.getAll('faxina');
     if (faxina.length === 0) {
-      const mediunsData = readTable('mediuns');
+      const mediunsData = this.getAll('mediuns');
       const nomes = ['Ana Clara Silva', 'Bento Ferreira', 'Carla Rodrigues', 'Daniel Martins', 'Eduarda Lima', 'Fernando Oliveira', 'Gabriela Santos', 'Heitor Costa', 'Isabela Nunes', 'João Pedro', 'Larissa Mendes', 'Marcos Tavares'];
       const presencas = ['feito', 'feito', 'falta', 'feito', 'feito', 'feito', 'falta', 'feito', 'falta', 'feito', 'feito', 'falta'];
       const pagamentos = ['pago', 'pago', 'nao_pago', 'nao_pago', 'pago', 'pago', 'nao_pago', 'pago', 'nao_pago', 'pago', 'pago', 'nao_pago'];
@@ -110,7 +220,7 @@ const db = {
       });
     }
 
-    const despesas = readTable('despesas');
+    const despesas = this.getAll('despesas');
     if (despesas.length === 0) {
       const items = [
         { item: 'Material escritório', valor: 230, parcela: '1/1', divisao: 1, status: 'paga', mes: '05', ano: '2026' },
@@ -125,7 +235,7 @@ const db = {
       items.forEach(d => this.insert('despesas', d));
     }
 
-    const trabalhos = readTable('trabalhos');
+    const trabalhos = this.getAll('trabalhos');
     if (trabalhos.length === 0) {
       const items = [
         { entidade: 'Caboclo Tupinambá', valor: 300, mes: '05', ano: '2026', divisao: 5, status: 'realizado' },
@@ -139,7 +249,51 @@ const db = {
       ];
       items.forEach(t => this.insert('trabalhos', t));
     }
+  },
+
+  // Migration helper: import from JSON files
+  migrateFromJSON() {
+    const fs = require('fs');
+    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
+
+    for (const table of TABLES) {
+      const filePath = path.join(DB_DIR, `${table}.json`);
+      if (!fs.existsSync(filePath)) continue;
+
+      try {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        if (!Array.isArray(data) || data.length === 0) continue;
+
+        // Check if table already has data
+        const count = db.prepare(`SELECT COUNT(*) as cnt FROM ${table}`).get();
+        if (count.cnt > 0) continue;
+
+        console.log(`Migrating ${table}.json → SQLite (${data.length} records)`);
+
+        const insert = db.transaction((rows) => {
+          for (const row of rows) {
+            const columns = Object.keys(row);
+            const placeholders = columns.map(() => '?').join(', ');
+            const values = columns.map(c => {
+              const val = row[c];
+              if (val === null || val === undefined) return null;
+              if (typeof val === 'object') return JSON.stringify(val);
+              return val;
+            });
+            db.prepare(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`).run(...values);
+          }
+        });
+
+        insert(data);
+      } catch (e) {
+        console.error(`Error migrating ${table}:`, e.message);
+      }
+    }
+  },
+
+  close() {
+    db.close();
   }
 };
 
-module.exports = db;
+module.exports = dbApi;

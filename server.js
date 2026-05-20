@@ -37,7 +37,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'INTERFACE', 'index.html'));
 });
 
-// db.initDefaults(); // Desativado para entrega ao cliente
+// Migrate from JSON files to SQLite (one-time)
+db.migrateFromJSON();
+
+// Initialize default data if tables are empty
+db.initDefaults();
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Mejepra Financeiro rodando em http://0.0.0.0:${PORT}`);
