@@ -267,7 +267,7 @@ async function salvarEdicao(){
   const mA = getMesAno();
   try {
     const id = parseInt(editRow.dataset.id);
-    await fetch(`${API}/despesas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status, mes: mA.mes, ano: mA.ano }) });
+    await fetch(`${API}/despesas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status, mes: mA.mes, ano: mA.ano, divisao_mediums: JSON.parse(editRow.dataset.divisao_mediums || '[]') }) });
     const valParcela = calcParcelaValor(valor, parcela);
     const cadaUm = valParcela / divisao;
     editRow.dataset.item=item;
@@ -313,6 +313,7 @@ async function carregarDespesas(){
       tr.dataset.valor = d.valor;
       tr.dataset.parcela = d.parcela;
       tr.dataset.divisao = d.divisao;
+      tr.dataset.divisao_mediums = JSON.stringify(d.divisao_mediums || []);
       const statusLabel = d.status.charAt(0).toUpperCase() + d.status.slice(1);
       tr.innerHTML = `<td>${d.item}</td><td class="value">R$ ${d.valor.toFixed(2).replace('.',',')}</td><td>${d.parcela}</td><td class="value">R$ ${valParcela.toFixed(2).replace('.',',')}</td><td class="value cada-um">R$ ${cadaUm.toFixed(2).replace('.',',')}</td><td><span class="tag ${d.status}">${statusLabel}</span></td>`;
       tbody.appendChild(tr);
@@ -416,7 +417,7 @@ async function addDespesa(){
   if(!item || !valor){ alert('Preencha o nome do item e o valor.'); return }
   const mA = getMesAno();
   try {
-    const res = await fetch(`${API}/despesas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status: 'aberta', mes: mA.mes, ano: mA.ano }) });
+    const res = await fetch(`${API}/despesas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status: 'aberta', mes: mA.mes, ano: mA.ano, divisao_mediums: [...selectedMediums] }) });
     const d = await res.json();
     const valParcela = calcParcelaValor(valor, parcela);
     const cadaUm = valParcela / divisao;
@@ -426,6 +427,7 @@ async function addDespesa(){
     tr.dataset.valor = valor;
     tr.dataset.parcela = parcela;
     tr.dataset.divisao = divisao;
+    tr.dataset.divisao_mediums = JSON.stringify(selectedMediums);
     tr.innerHTML = `<td>${item}</td><td class="value">R$ ${valor.toFixed(2).replace('.',',')}</td><td>${parcela}</td><td class="value">R$ ${valParcela.toFixed(2).replace('.',',')}</td><td class="value cada-um">R$ ${cadaUm.toFixed(2).replace('.',',')}</td><td><span class="tag aberta">Aberta</span></td>`;
     document.getElementById('despesas-tbody').appendChild(tr);
     document.getElementById('f-item').value='';

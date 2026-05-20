@@ -16,16 +16,16 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { item, valor, parcela, divisao, status, mes, ano } = req.body;
+  const { item, valor, parcela, divisao, status, mes, ano, divisao_mediums } = req.body;
   if (!item || valor === undefined) return res.status(400).json({ error: 'Item e valor são obrigatórios' });
-  const desp = db.insert('despesas', { item, valor, parcela: parcela || '1/1', divisao: divisao || 1, status: status || 'aberta', mes: mes || '', ano: ano || '' });
+  const desp = db.insert('despesas', { item, valor, parcela: parcela || '1/1', divisao: divisao || 1, status: status || 'aberta', mes: mes || '', ano: ano || '', divisao_mediums: divisao_mediums ? JSON.stringify(divisao_mediums) : '[]' });
   res.status(201).json(desp);
 });
 
 router.put('/:id', (req, res) => {
   const existing = db.getById('despesas', req.params.id);
   if (!existing) return res.status(404).json({ error: 'Despesa não encontrada' });
-  const { item, valor, parcela, divisao, status, mes, ano } = req.body;
+  const { item, valor, parcela, divisao, status, mes, ano, divisao_mediums } = req.body;
   const desp = db.update('despesas', req.params.id, {
     item: item !== undefined ? item : existing.item,
     valor: valor !== undefined ? valor : existing.valor,
@@ -33,7 +33,8 @@ router.put('/:id', (req, res) => {
     divisao: divisao !== undefined ? divisao : existing.divisao,
     status: status !== undefined ? status : existing.status,
     mes: mes !== undefined ? mes : existing.mes,
-    ano: ano !== undefined ? ano : existing.ano
+    ano: ano !== undefined ? ano : existing.ano,
+    divisao_mediums: divisao_mediums !== undefined ? JSON.stringify(divisao_mediums) : existing.divisao_mediums
   });
   res.json(desp);
 });

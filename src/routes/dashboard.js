@@ -74,8 +74,16 @@ router.get('/medium/:id', (req, res) => {
   let totalFaxFalta = 0;
   faxinas.forEach(f => { if (f.presenca === 'falta') totalFaxFalta += f.valor; });
 
+  const mediumId = parseInt(req.params.id);
+
   const despesas = db.getAll('despesas');
-  const despesasFiltradas = mes && ano ? despesas.filter(d => d.mes === mes && d.ano === ano) : despesas;
+  const despesasFiltradas = (mes && ano ? despesas.filter(d => d.mes === mes && d.ano === ano) : despesas)
+    .filter(d => {
+      try {
+        const dm = typeof d.divisao_mediums === 'string' ? JSON.parse(d.divisao_mediums) : (d.divisao_mediums || []);
+        return dm.includes(mediumId);
+      } catch { return d.divisao > 0; }
+    });
   const despesasDetalhadas = despesasFiltradas.map(d => {
     const valParcela = d.parcela && d.parcela.includes('/') ? d.valor / (parseInt(d.parcela.split('/')[1]) || 1) : d.valor;
     const porMed = d.divisao > 0 ? valParcela / d.divisao : valParcela;
@@ -95,7 +103,13 @@ router.get('/medium/:id', (req, res) => {
   const totalDespesasMedium = despesasDetalhadas.reduce((s, d) => s + d.por_medium, 0);
 
   const trabalhos = db.getAll('trabalhos');
-  const trabalhosFiltrados = mes && ano ? trabalhos.filter(t => t.mes === mes && t.ano === ano) : trabalhos;
+  const trabalhosFiltrados = (mes && ano ? trabalhos.filter(t => t.mes === mes && t.ano === ano) : trabalhos)
+    .filter(t => {
+      try {
+        const pg = typeof t.pagamentos === 'string' ? JSON.parse(t.pagamentos) : (t.pagamentos || {});
+        return pg[String(mediumId)] === true;
+      } catch { return t.divisao > 0; }
+    });
   const trabalhosDetalhados = trabalhosFiltrados.map(t => {
     const porMed = t.divisao > 0 ? t.valor / t.divisao : t.valor;
     return {
@@ -112,7 +126,13 @@ router.get('/medium/:id', (req, res) => {
   const totalTrabalhosMedium = trabalhosDetalhados.reduce((s, t) => s + t.por_medium, 0);
 
   const extras = db.getAll('extras');
-  const extrasFiltrados = mes && ano ? extras.filter(e => e.mes === mes && e.ano === ano) : extras;
+  const extrasFiltrados = (mes && ano ? extras.filter(e => e.mes === mes && e.ano === ano) : extras)
+    .filter(e => {
+      try {
+        const pg = typeof e.pagamentos === 'string' ? JSON.parse(e.pagamentos) : (e.pagamentos || {});
+        return pg[String(mediumId)] === true;
+      } catch { return e.divisao > 0; }
+    });
   const extrasDetalhados = extrasFiltrados.map(e => {
     const valParcela = e.parcela && e.parcela.includes('/') ? e.valor / (parseInt(e.parcela.split('/')[1]) || 1) : e.valor;
     const totalItem = valParcela * (e.qtd || 1);
