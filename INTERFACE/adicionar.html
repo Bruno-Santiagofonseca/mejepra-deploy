@@ -169,7 +169,7 @@ document.querySelector('.submit-btn').addEventListener('click', async function(e
       this.textContent = 'Cadastrado ✓';
       this.style.background = 'var(--accent)';
       this.style.opacity = '.7';
-      setTimeout(() => { location.href = 'mediuns.html'; }, 400);
+      setTimeout(() => { location.replace('mediuns.html'); }, 400);
     } else {
       this.textContent = 'Erro ao cadastrar!'; this.style.background = '#e74c3c';
       setTimeout(() => { this.textContent = 'Salvar Cadastro'; this.style.background = 'var(--accent)'; }, 1500);

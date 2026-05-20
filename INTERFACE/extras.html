@@ -192,7 +192,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
 
 <div class="table-wrap">
 <table>
-<thead><tr><th>Item</th><th>Valor</th><th>Parcela</th><th>Qtd</th><th>Por Médium</th><th>Tipo</th></tr></thead>
+<thead><tr><th>Item</th><th>Valor</th><th>Parcela</th><th>Qtd</th><th>Por Médium</th><th>Pagos</th><th>Tipo</th></tr></thead>
 <tbody id="extras-tbody"></tbody>
 </table>
 </div>
@@ -227,6 +227,12 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
       <input id="e-divisao" type="number" min="1" step="1" placeholder="Médiuns">
     </div>
   </div>
+
+  <button class="divisao-btn" id="e-btnPagamentos" onclick="abrirPagamentosSheet()" style="margin-top:8px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="3"/><path d="M3 21c1.5-2.5 4-4 7-4s5.5 1.5 7 4"/><path d="M17 5.5a3 3 0 1 1 0 5"/></svg>
+    <span>Médiuns que pagaram</span>
+  </button>
+
   <div class="sheet-actions">
     <button class="btn-save" onclick="salvarEdicao()">Salvar</button>
     <button class="btn-delete" onclick="excluirExtra()">Excluir</button>
@@ -247,6 +253,18 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
   </div>
 </div>
 
+<!-- Pagamentos medium selection overlay -->
+<div class="overlay" id="pag-overlay" onclick="fecharPagamentosSheet()"></div>
+<div class="edit-sheet" id="pag-sheet" style="z-index:96">
+  <div class="sheet-handle"></div>
+  <h2 class="sheet-title">Médiuns que pagaram</h2>
+  <div class="medium-list" id="pagMediumList"></div>
+  <div class="sheet-actions">
+    <button class="btn-save" onclick="confirmarPagamentos()">Confirmar</button>
+    <button class="btn-delete" style="background:var(--bg);color:var(--muted);border:1.5px solid var(--border)" onclick="fecharPagamentosSheet()">Cancelar</button>
+  </div>
+</div>
+
 <div class="bottom-nav">
   <button class="nav-item active" onclick="location.href='index.html'">
     <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M3 12l9-9 9 9v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -260,6 +278,8 @@ let editRow=null;
 let mediunsAtivos = [];
 let selectedMediums = [];
 let tempSelected = [];
+let editPagamentos = {};
+let tempPagamentos = {};
 
 async function carregarMediuns(){
   try {
@@ -375,6 +395,8 @@ async function carregarExtras(){
       const valParcela = calcParcelaValor(e.valor, e.parcela);
       const totalItem = valParcela * e.qtd;
       const porMed = totalItem / e.divisao;
+      const pagamentos = e.pagamentos || {};
+      const pagos = Object.values(pagamentos).filter(Boolean).length;
       const tr = document.createElement('tr');
       tr.dataset.id = String(e.id);
       tr.dataset.tipo = e.tipo;
@@ -383,8 +405,9 @@ async function carregarExtras(){
       tr.dataset.parcela = e.parcela;
       tr.dataset.qtd = String(e.qtd);
       tr.dataset.divisao = String(e.divisao);
+      tr.dataset.pagamentos = JSON.stringify(pagamentos);
       const tipoLabel = e.tipo === 'receita' ? 'Receita' : 'Gasto';
-      tr.innerHTML = `<td>${e.item}</td><td class="value">R$ ${e.valor.toFixed(2).replace('.',',')}</td><td>${e.parcela}</td><td>${e.qtd}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td><span class="tag ${e.tipo}">${tipoLabel}</span></td>`;
+      tr.innerHTML = `<td>${e.item}</td><td class="value">R$ ${e.valor.toFixed(2).replace('.',',')}</td><td>${e.parcela}</td><td>${e.qtd}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td>${pagos}/${e.divisao}</td><td><span class="tag ${e.tipo}">${tipoLabel}</span></td>`;
       tbody.appendChild(tr);
     });
     tbody.addEventListener('click', function(e){
@@ -417,8 +440,9 @@ async function addExtra(){
     tr.dataset.parcela = parcela;
     tr.dataset.qtd = String(qtd);
     tr.dataset.divisao = String(divisao);
+    tr.dataset.pagamentos = '{}';
     const tipoLabel = tipo === 'receita' ? 'Receita' : 'Gasto';
-    tr.innerHTML = `<td>${item}</td><td class="value">R$ ${valor.toFixed(2).replace('.',',')}</td><td>${parcela}</td><td>${qtd}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td><span class="tag ${tipo}">${tipoLabel}</span></td>`;
+    tr.innerHTML = `<td>${item}</td><td class="value">R$ ${valor.toFixed(2).replace('.',',')}</td><td>${parcela}</td><td>${qtd}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td>0/${divisao}</td><td><span class="tag ${tipo}">${tipoLabel}</span></td>`;
     document.getElementById('extras-tbody').appendChild(tr);
     document.getElementById('f-item').value='';
     document.getElementById('f-valor').value='';
@@ -441,6 +465,8 @@ function abrirSheet(row){
   document.getElementById('e-divisao').value=row.dataset.divisao;
   const tipo = row.dataset.tipo||'receita';
   setTipoEdit(tipo);
+  editPagamentos = row.dataset.pagamentos ? JSON.parse(row.dataset.pagamentos) : {};
+  atualizarBtnPagamentos();
   document.getElementById('edit-overlay').classList.add('open');
   document.getElementById('edit-sheet').classList.add('open');
 }
@@ -448,6 +474,7 @@ function fecharSheet(){
   document.getElementById('edit-overlay').classList.remove('open');
   document.getElementById('edit-sheet').classList.remove('open');
   editRow=null;
+  editPagamentos = {};
 }
 async function salvarEdicao(){
   if(!editRow) return;
@@ -461,7 +488,7 @@ async function salvarEdicao(){
   const mA = getMesAno();
   try {
     const id = parseInt(editRow.dataset.id);
-    await fetch(`${API}/extras/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo, item, valor, parcela, qtd, divisao, mes: mA.mes, ano: mA.ano }) });
+    await fetch(`${API}/extras/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ tipo, item, valor, parcela, qtd, divisao, mes: mA.mes, ano: mA.ano, pagamentos: editPagamentos }) });
     const valParcela=calcParcelaValor(valor,parcela);
     const totalItem=valParcela*qtd;
     const porMed=totalItem/divisao;
@@ -471,12 +498,15 @@ async function salvarEdicao(){
     editRow.dataset.parcela=parcela;
     editRow.dataset.qtd=String(qtd);
     editRow.dataset.divisao=String(divisao);
+    editRow.dataset.pagamentos=JSON.stringify(editPagamentos);
     const cells=editRow.querySelectorAll('td');
     cells[0].textContent=item;
     cells[1].textContent='R$ '+valor.toFixed(2).replace('.',',');
     cells[2].textContent=parcela;
     cells[3].textContent=qtd;
     cells[4].textContent='R$ '+porMed.toFixed(2).replace('.',',');
+    const pagos = Object.values(editPagamentos).filter(Boolean).length;
+    cells[5].textContent = pagos + '/' + divisao;
     const tag=editRow.querySelector('.tag');
     tag.textContent=tipo==='receita'?'Receita':'Gasto';
     tag.className='tag '+(tipo==='receita'?'receita':'gasto');
@@ -494,6 +524,52 @@ async function excluirExtra(){
   } catch(e) { console.error('Erro:', e); }
   fecharSheet();
 }
+
+function abrirPagamentosSheet(){
+  tempPagamentos = { ...editPagamentos };
+  renderPagMediumList();
+  document.getElementById('pag-overlay').classList.add('open');
+  document.getElementById('pag-sheet').classList.add('open');
+}
+function fecharPagamentosSheet(){
+  document.getElementById('pag-overlay').classList.remove('open');
+  document.getElementById('pag-sheet').classList.remove('open');
+}
+function renderPagMediumList(){
+  const list = document.getElementById('pagMediumList');
+  const divisao = parseInt(document.getElementById('e-divisao').value) || 1;
+  const todosMediuns = mediunsAtivos.slice(0, divisao);
+  list.innerHTML = todosMediuns.map(m => {
+    const pago = tempPagamentos[m.id] || false;
+    return `<div class="medium-check ${pago?'selected':''}" onclick="togglePagMedium(${m.id})">
+      <div class="avatar">${m.iniciais}</div>
+      <div class="m-name">${m.nome}</div>
+      <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>`;
+  }).join('');
+}
+function togglePagMedium(id){
+  tempPagamentos[id] = !tempPagamentos[id];
+  renderPagMediumList();
+}
+function confirmarPagamentos(){
+  editPagamentos = { ...tempPagamentos };
+  fecharPagamentosSheet();
+  atualizarBtnPagamentos();
+}
+function atualizarBtnPagamentos(){
+  const btn = document.getElementById('e-btnPagamentos');
+  const pagos = Object.values(editPagamentos).filter(Boolean).length;
+  const divisao = parseInt(document.getElementById('e-divisao').value) || 1;
+  if(pagos > 0){
+    btn.classList.add('has-selection');
+    btn.querySelector('span').textContent = pagos + '/' + divisao + ' pagaram';
+  } else {
+    btn.classList.remove('has-selection');
+    btn.querySelector('span').textContent = 'Médiuns que pagaram';
+  }
+}
+
 function atualizarTotais(){
   const rows = document.querySelectorAll('#extras-tbody tr');
   let total=0, receitas=0, gastos=0;

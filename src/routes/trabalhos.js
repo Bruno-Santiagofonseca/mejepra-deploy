@@ -16,22 +16,22 @@ router.get('/:id', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const { entidade, valor, mes, divisao, status } = req.body;
+  const { entidade, valor, mes, divisao, pagamentos } = req.body;
   if (!entidade || valor === undefined) return res.status(400).json({ error: 'Entidade e valor são obrigatórios' });
-  const trab = db.insert('trabalhos', { entidade, valor, mes: mes || '', divisao: divisao || 1, status: status || 'realizado' });
+  const trab = db.insert('trabalhos', { entidade, valor, mes: mes || '', divisao: divisao || 1, pagamentos: pagamentos || {} });
   res.status(201).json(trab);
 });
 
 router.put('/:id', (req, res) => {
   const existing = db.getById('trabalhos', req.params.id);
   if (!existing) return res.status(404).json({ error: 'Trabalho não encontrado' });
-  const { entidade, valor, mes, divisao, status } = req.body;
+  const { entidade, valor, mes, divisao, pagamentos } = req.body;
   const trab = db.update('trabalhos', req.params.id, {
     entidade: entidade || existing.entidade,
     valor: valor !== undefined ? valor : existing.valor,
     mes: mes !== undefined ? mes : existing.mes,
     divisao: divisao !== undefined ? divisao : existing.divisao,
-    status: status || existing.status
+    pagamentos: pagamentos !== undefined ? pagamentos : existing.pagamentos
   });
   res.json(trab);
 });

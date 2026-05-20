@@ -56,14 +56,14 @@ router.get('/medium/:id', (req, res) => {
   const { mes, ano } = req.query;
 
   const mensalidades = db.query('mensalidades', m =>
-    m.medium_id === parseInt(req.params.id) || m.nome.toLowerCase().includes(nomeLower)
+    m.medium_id === parseInt(req.params.id)
   ).sort((a, b) => {
     if (a.ano !== b.ano) return a.ano.localeCompare(b.ano);
     return a.mes.localeCompare(b.mes);
   });
 
   const faxinas = db.query('faxina', f =>
-    f.medium_id === parseInt(req.params.id) || f.nome.toLowerCase().includes(nomeLower)
+    f.medium_id === parseInt(req.params.id)
   ).sort((a, b) => {
     if (a.ano !== b.ano) return a.ano.localeCompare(b.ano);
     return a.mes.localeCompare(b.mes);

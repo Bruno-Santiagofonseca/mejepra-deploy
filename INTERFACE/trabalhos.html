@@ -139,7 +139,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
     <div class="value total" id="totalTotal">R$ 0</div>
   </div>
   <div class="stat-card">
-    <div class="label">Realizado</div>
+    <div class="label">Total Pago</div>
     <div class="value realizado" id="totalRealizado">R$ 0</div>
   </div>
   <div class="stat-card">
@@ -154,16 +154,10 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
     <input id="f-entidade" type="text" placeholder="Nome da entidade">
   </div>
   <div class="form-row">
-    <div class="form-field">
-      <input id="f-valor" type="number" step="0.01" placeholder="Valor (R$)">
-    </div>
-    <div class="form-field">
-      <select id="f-status">
-        <option value="realizado">Realizado</option>
-        <option value="pendente">Pendente</option>
-        <option value="futuro">Futuro</option>
-      </select>
-    </div>
+  <div class="form-field">
+    <input id="f-valor" type="number" step="0.01" placeholder="Valor (R$)">
+  </div>
+  <div class="form-field"></div>
   </div>
   <button class="divisao-btn" id="btnDivisao" onclick="abrirDivisaoSheet()">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="3"/><path d="M3 21c1.5-2.5 4-4 7-4s5.5 1.5 7 4"/><path d="M17 5.5a3 3 0 1 1 0 5"/></svg>
@@ -175,7 +169,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
 
 <div class="table-wrap">
 <table>
-<thead><tr><th>Entidade</th><th>Valor</th><th>Por Médium</th><th>Status</th></tr></thead>
+<thead><tr><th>Entidade</th><th>Valor</th><th>Por Médium</th><th>Pagos</th></tr></thead>
 <tbody id="trabalhos-tbody"></tbody>
 </table>
 </div>
@@ -196,17 +190,12 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
       <input id="e-divisao" type="number" min="1" step="1" placeholder="Nº de médiuns">
     </div>
   </div>
-  <div class="form-row">
-    <div class="form-field">
-      <label>Status</label>
-      <select id="e-status">
-        <option value="realizado">Realizado</option>
-        <option value="pendente">Pendente</option>
-        <option value="futuro">Futuro</option>
-      </select>
-    </div>
-    <div class="form-field"></div>
-  </div>
+
+  <button class="divisao-btn" id="e-btnPagamentos" onclick="abrirPagamentosSheet()" style="margin-top:12px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="3"/><path d="M3 21c1.5-2.5 4-4 7-4s5.5 1.5 7 4"/><path d="M17 5.5a3 3 0 1 1 0 5"/></svg>
+    <span>Médiuns que pagaram</span>
+  </button>
+
   <div class="sheet-actions">
     <button class="btn-save" onclick="salvarEdicao()">Salvar</button>
     <button class="btn-delete" onclick="excluirTrabalho()">Excluir</button>
@@ -227,6 +216,18 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
   </div>
 </div>
 
+<!-- Pagamentos medium selection overlay -->
+<div class="overlay" id="pag-overlay" onclick="fecharPagamentosSheet()"></div>
+<div class="edit-sheet" id="pag-sheet" style="z-index:96">
+  <div class="sheet-handle"></div>
+  <h2 class="sheet-title">Médiuns que pagaram</h2>
+  <div class="medium-list" id="pagMediumList"></div>
+  <div class="sheet-actions">
+    <button class="btn-save" onclick="confirmarPagamentos()">Confirmar</button>
+    <button class="btn-delete" style="background:var(--bg);color:var(--muted);border:1.5px solid var(--border)" onclick="fecharPagamentosSheet()">Cancelar</button>
+  </div>
+</div>
+
 <div class="bottom-nav">
   <button class="nav-item active" onclick="location.href='index.html'">
     <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M3 12l9-9 9 9v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
@@ -240,6 +241,8 @@ let editRow=null;
 let mediunsAtivos = [];
 let selectedMediums = [];
 let tempSelected = [];
+let editPagamentos = {};
+let tempPagamentos = {};
 
 async function carregarMediuns(){
   try {
@@ -253,9 +256,8 @@ function abrirSheet(row){
   document.getElementById('e-entidade').value=row.dataset.entidade;
   document.getElementById('e-valor').value=row.dataset.valor;
   document.getElementById('e-divisao').value=row.dataset.divisao;
-  const tag=row.querySelector('.tag');
-  const statusMap={realizado:'realizado',pendente:'pendente',futuro:'futuro'};
-  document.getElementById('e-status').value=statusMap[tag.className.replace('tag ','')]||'realizado';
+  editPagamentos = row.dataset.pagamentos ? JSON.parse(row.dataset.pagamentos) : {};
+  atualizarBtnPagamentos();
   document.getElementById('edit-overlay').classList.add('open');
   document.getElementById('edit-sheet').classList.add('open');
 }
@@ -263,30 +265,29 @@ function fecharSheet(){
   document.getElementById('edit-overlay').classList.remove('open');
   document.getElementById('edit-sheet').classList.remove('open');
   editRow=null;
+  editPagamentos = {};
 }
 async function salvarEdicao(){
   if(!editRow) return;
   const entidade=document.getElementById('e-entidade').value.trim();
   const valor=parseFloat(document.getElementById('e-valor').value)||0;
   const divisao=parseInt(document.getElementById('e-divisao').value)||1;
-  const status=document.getElementById('e-status').value;
   if(!entidade||!valor){alert('Preencha a entidade e o valor.');return}
   const mA = getMesAno();
   try {
     const id = parseInt(editRow.dataset.id);
-    await fetch(`${API}/trabalhos/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao, status }) });
+    await fetch(`${API}/trabalhos/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao, pagamentos: editPagamentos }) });
     editRow.dataset.entidade=entidade;
     editRow.dataset.valor=valor;
     editRow.dataset.divisao=divisao;
-    editRow.dataset.status=status;
+    editRow.dataset.pagamentos=JSON.stringify(editPagamentos);
     const cells=editRow.querySelectorAll('td');
     cells[0].textContent=entidade;
     cells[1].textContent='R$ '+valor.toFixed(2).replace('.',',');
     var porMed=divisao>0?valor/divisao:valor;
     cells[2].textContent='R$ '+porMed.toFixed(2).replace('.',',');
-    const tag=editRow.querySelector('.tag');
-    tag.textContent=status.charAt(0).toUpperCase()+status.slice(1);
-    tag.className='tag '+status;
+    const pagos = Object.values(editPagamentos).filter(Boolean).length;
+    cells[3].textContent = pagos + '/' + divisao;
     atualizarTotais();
   } catch(e) { console.error('Erro:', e); alert('Erro ao salvar'); }
   fecharSheet();
@@ -310,15 +311,16 @@ async function carregarTrabalhos(){
     tbody.innerHTML = '';
     trabalhos.forEach(t => {
       const porMed = t.divisao > 0 ? t.valor / t.divisao : t.valor;
+      const pagamentos = t.pagamentos || {};
+      const pagos = Object.values(pagamentos).filter(Boolean).length;
       const tr = document.createElement('tr');
       tr.dataset.id = String(t.id);
       tr.dataset.entidade = t.entidade;
       tr.dataset.valor = String(t.valor);
       tr.dataset.mes = t.mes || '';
       tr.dataset.divisao = String(t.divisao);
-      tr.dataset.status = t.status;
-      const statusLabel = t.status.charAt(0).toUpperCase() + t.status.slice(1);
-      tr.innerHTML = `<td>${t.entidade}</td><td class="value">R$ ${t.valor.toFixed(2).replace('.',',')}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td><span class="tag ${t.status}">${statusLabel}</span></td>`;
+      tr.dataset.pagamentos = JSON.stringify(pagamentos);
+      tr.innerHTML = `<td>${t.entidade}</td><td class="value">R$ ${t.valor.toFixed(2).replace('.',',')}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td>${pagos}/${t.divisao}</td>`;
       tbody.appendChild(tr);
     });
     tbody.addEventListener('click', function(e){
@@ -408,11 +410,10 @@ async function addTrabalho(){
   const entidade=document.getElementById('f-entidade').value.trim();
   const valor=parseFloat(document.getElementById('f-valor').value)||0;
   const divisao=selectedMediums.length || 1;
-  const status=document.getElementById('f-status').value;
   if(!entidade||!valor){alert('Preencha a entidade e o valor.');return}
   const mA = getMesAno();
   try {
-    const res = await fetch(`${API}/trabalhos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao, status }) });
+    const res = await fetch(`${API}/trabalhos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao }) });
     const t = await res.json();
     var porMed=divisao>0?valor/divisao:valor;
     const tr=document.createElement('tr');
@@ -421,9 +422,8 @@ async function addTrabalho(){
     tr.dataset.valor=String(valor);
     tr.dataset.mes=mA.mes;
     tr.dataset.divisao=String(divisao);
-    tr.dataset.status=status;
-    const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
-    tr.innerHTML='<td>'+entidade+'</td><td class="value">R$ '+valor.toFixed(2).replace('.',',')+'</td><td class="value">R$ '+porMed.toFixed(2).replace('.',',')+'</td><td><span class="tag '+status+'>'+statusLabel+'</span></td>';
+    tr.dataset.pagamentos='{}';
+    tr.innerHTML='<td>'+entidade+'</td><td class="value">R$ '+valor.toFixed(2).replace('.',',')+'</td><td class="value">R$ '+porMed.toFixed(2).replace('.',',')+'</td><td>0/'+divisao+'</td>';
     document.getElementById('trabalhos-tbody').appendChild(tr);
     document.getElementById('f-entidade').value='';
     document.getElementById('f-valor').value='';
@@ -435,6 +435,52 @@ async function addTrabalho(){
     atualizarTotais();
   } catch(e) { console.error('Erro:', e); alert('Erro ao adicionar'); }
 }
+
+function abrirPagamentosSheet(){
+  tempPagamentos = { ...editPagamentos };
+  renderPagMediumList();
+  document.getElementById('pag-overlay').classList.add('open');
+  document.getElementById('pag-sheet').classList.add('open');
+}
+function fecharPagamentosSheet(){
+  document.getElementById('pag-overlay').classList.remove('open');
+  document.getElementById('pag-sheet').classList.remove('open');
+}
+function renderPagMediumList(){
+  const list = document.getElementById('pagMediumList');
+  const divisao = parseInt(document.getElementById('e-divisao').value) || 1;
+  const todosMediuns = mediunsAtivos.slice(0, divisao);
+  list.innerHTML = todosMediuns.map(m => {
+    const pago = tempPagamentos[m.id] || false;
+    return `<div class="medium-check ${pago?'selected':''}" onclick="togglePagMedium(${m.id})">
+      <div class="avatar">${m.iniciais}</div>
+      <div class="m-name">${m.nome}</div>
+      <div class="check-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    </div>`;
+  }).join('');
+}
+function togglePagMedium(id){
+  tempPagamentos[id] = !tempPagamentos[id];
+  renderPagMediumList();
+}
+function confirmarPagamentos(){
+  editPagamentos = { ...tempPagamentos };
+  fecharPagamentosSheet();
+  atualizarBtnPagamentos();
+}
+function atualizarBtnPagamentos(){
+  const btn = document.getElementById('e-btnPagamentos');
+  const pagos = Object.values(editPagamentos).filter(Boolean).length;
+  const divisao = parseInt(document.getElementById('e-divisao').value) || 1;
+  if(pagos > 0){
+    btn.classList.add('has-selection');
+    btn.querySelector('span').textContent = pagos + '/' + divisao + ' pagaram';
+  } else {
+    btn.classList.remove('has-selection');
+    btn.querySelector('span').textContent = 'Médiuns que pagaram';
+  }
+}
+
 function atualizarTotais(){
   const rows=document.querySelectorAll('#trabalhos-tbody tr');
   let total=0, realizado=0, pendente=0;
@@ -442,10 +488,12 @@ function atualizarTotais(){
     const txt=r.querySelectorAll('td')[1].textContent.replace('R$ ','').replace(',','.');
     const val=parseFloat(txt)||0;
     total+=val;
-    const tag=r.querySelector('.tag');
-    if(tag){
-      if(tag.classList.contains('realizado')) realizado+=val;
-      else { pendente+=val; }
+    const pagosTxt = r.querySelectorAll('td')[3].textContent;
+    const partes = pagosTxt.split('/');
+    if(partes.length===2 && parseInt(partes[0]) === parseInt(partes[1])){
+      realizado += val;
+    } else {
+      pendente += val;
     }
   });
   const els=document.querySelectorAll('.period-total .value');

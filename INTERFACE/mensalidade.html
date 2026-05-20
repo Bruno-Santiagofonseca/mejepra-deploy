@@ -171,6 +171,8 @@ body>*{position:relative;z-index:1}
     <input type="number" id="inputPago" placeholder="0,00" step="0.01" min="0">
   </div>
 
+  <div id="faltanteDisplay" style="display:none;text-align:center;padding:8px;border-radius:10px;background:color-mix(in srgb,#e67e22 12%,transparent);color:#e67e22;font-size:14px;font-weight:700;margin-bottom:12px"></div>
+
   <div class="status-options">
     <button class="selected" data-status="pago" onclick="selecionarStatus(this)">Pago</button>
     <button data-status="parcial" onclick="selecionarStatus(this)">Parcial</button>
@@ -270,6 +272,7 @@ function abrirSheet(dadosEdicao){
   document.querySelectorAll(".status-options button").forEach(b => {
     b.classList.toggle("selected", b.dataset.status === statusAtual);
   });
+  atualizarFaltante();
   document.getElementById("overlay").classList.add("open");
   document.getElementById("sheet").classList.add("open");
 }
@@ -285,6 +288,23 @@ function selecionarStatus(el){
   document.querySelectorAll(".status-options button").forEach(b => b.classList.remove("selected"));
   el.classList.add("selected");
   statusAtual = el.dataset.status;
+  if(statusAtual === "pago"){
+    const valor = parseFloat(document.getElementById("inputValor").value) || 0;
+    document.getElementById("inputPago").value = valor;
+  }
+  atualizarFaltante();
+}
+
+function atualizarFaltante(){
+  const valor = parseFloat(document.getElementById("inputValor").value) || 0;
+  const pago = parseFloat(document.getElementById("inputPago").value) || 0;
+  const el = document.getElementById("faltanteDisplay");
+  if(valor > 0 && pago < valor){
+    el.style.display = "block";
+    el.textContent = "⏳ Faltam: R$ " + (valor - pago).toFixed(2).replace('.', ',');
+  } else {
+    el.style.display = "none";
+  }
 }
 
 async function salvarMensalidade(){
@@ -350,6 +370,9 @@ async function aplicarParaTodos(){
     carregarDados();
   } catch(e) { console.error('Erro:', e); }
 }
+
+document.getElementById('inputValor').addEventListener('input', atualizarFaltante);
+document.getElementById('inputPago').addEventListener('input', atualizarFaltante);
 
 carregarDados();
 </script>
