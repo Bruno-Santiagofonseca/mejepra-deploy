@@ -47,6 +47,37 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'INTERFACE', 'index.html'));
 });
 
+// Backup: export all data as JSON
+app.get('/api/backup', (req, res) => {
+  const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
+  const backup = {};
+  TABLES.forEach(t => { backup[t] = db.getAll(t); });
+  res.setHeader('Content-Disposition', 'attachment; filename=mejepra-backup-' + new Date().toISOString().slice(0,10) + '.json');
+  res.json(backup);
+});
+
+// Restore: import data from JSON
+app.post('/api/restore', (req, res) => {
+  try {
+    const data = req.body;
+    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
+    TABLES.forEach(t => {
+      if (data[t] && Array.isArray(data[t])) {
+        // Clear existing data
+        db.getAll(t).forEach(r => db.delete(t, r.id));
+        // Insert backup data
+        data[t].forEach(r => {
+          const { created_at, updated_at, ...rest } = r;
+          db.insert(t, rest);
+        });
+      }
+    });
+    res.json({ success: true, message: 'Dados restaurados com sucesso' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Initialize SQLite database, migrate from JSON if needed, then start server
 db.init().then(() => {
   db.migrateFromJSON();
