@@ -1,190 +1,173 @@
+const fs = require('fs');
 const path = require('path');
-const Database = require('better-sqlite3');
+const initSqlJs = require('sql.js');
 
 const DB_DIR = path.join(__dirname, '..', 'data');
 const DB_PATH = path.join(DB_DIR, 'mejepra.db');
 
-const db = new Database(DB_PATH);
+if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
 
-// Enable WAL mode for better performance and crash safety
-db.pragma('journal_mode = WAL');
-db.pragma('foreign_keys = ON');
+let db;
+let SQL;
 
-const SCHEMA = {
-  mediuns: `
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    tipo TEXT DEFAULT 'Médium',
-    tel TEXT DEFAULT '',
-    endereco TEXT DEFAULT '',
-    email TEXT DEFAULT '',
-    nasc TEXT DEFAULT '',
-    obs TEXT DEFAULT '',
-    iniciais TEXT DEFAULT '',
-    data_cadastro TEXT DEFAULT '',
-    status TEXT DEFAULT 'Ativo',
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
-  `,
-  mensalidades: `
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    medium_id INTEGER,
-    nome TEXT NOT NULL,
-    valor REAL DEFAULT 0,
-    pago REAL DEFAULT 0,
-    status TEXT DEFAULT 'pendente',
-    mes TEXT DEFAULT '',
-    ano TEXT DEFAULT '',
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
-  `,
-  faxina: `
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    medium_id INTEGER,
-    nome TEXT NOT NULL,
-    data TEXT,
-    valor REAL DEFAULT 0,
-    presenca TEXT DEFAULT 'feito',
-    pagamento TEXT DEFAULT 'pago',
-    mes TEXT DEFAULT '',
-    ano TEXT DEFAULT '',
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
-  `,
-  despesas: `
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    item TEXT NOT NULL,
-    valor REAL NOT NULL,
-    parcela TEXT DEFAULT '1/1',
-    divisao INTEGER DEFAULT 1,
-    status TEXT DEFAULT 'aberta',
-    mes TEXT DEFAULT '',
-    ano TEXT DEFAULT '',
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
-  `,
-  trabalhos: `
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    entidade TEXT NOT NULL,
-    valor REAL NOT NULL,
-    mes TEXT DEFAULT '',
-    ano TEXT DEFAULT '',
-    divisao INTEGER DEFAULT 1,
-    pagamentos TEXT DEFAULT '{}',
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
-  `,
-  extras: `
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    tipo TEXT DEFAULT 'receita',
-    item TEXT NOT NULL,
-    valor REAL NOT NULL,
-    parcela TEXT DEFAULT '1/1',
-    qtd INTEGER DEFAULT 1,
-    divisao INTEGER DEFAULT 1,
-    mes TEXT DEFAULT '',
-    ano TEXT DEFAULT '',
-    pagamentos TEXT DEFAULT '{}',
-    created_at TEXT DEFAULT (datetime('now')),
-    updated_at TEXT DEFAULT (datetime('now'))
-  `
-};
+async function initDB() {
+  SQL = await initSqlJs();
 
-function ensureTables() {
-  for (const [table, schema] of Object.entries(SCHEMA)) {
-    db.exec(`CREATE TABLE IF NOT EXISTS ${table} (${schema})`);
+  let dbBuffer;
+  if (fs.existsSync(DB_PATH)) {
+    dbBuffer = fs.readFileSync(DB_PATH);
+  }
+
+  if (dbBuffer && dbBuffer.length > 0) {
+    db = new SQL.Database(dbBuffer);
+  } else {
+    db = new SQL.Database();
+  }
+
+  db.run('PRAGMA journal_mode = WAL');
+  db.run('PRAGMA synchronous = NORMAL');
+
+  createTables();
+  saveDB();
+}
+
+function createTables() {
+  const schema = {
+    mediuns: `id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, tipo TEXT DEFAULT 'Médium', tel TEXT DEFAULT '', endereco TEXT DEFAULT '', email TEXT DEFAULT '', nasc TEXT DEFAULT '', obs TEXT DEFAULT '', iniciais TEXT DEFAULT '', data_cadastro TEXT DEFAULT '', status TEXT DEFAULT 'Ativo', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
+    mensalidades: `id INTEGER PRIMARY KEY AUTOINCREMENT, medium_id INTEGER, nome TEXT NOT NULL, valor REAL DEFAULT 0, pago REAL DEFAULT 0, status TEXT DEFAULT 'pendente', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
+    faxina: `id INTEGER PRIMARY KEY AUTOINCREMENT, medium_id INTEGER, nome TEXT NOT NULL, data TEXT, valor REAL DEFAULT 0, presenca TEXT DEFAULT 'feito', pagamento TEXT DEFAULT 'pago', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
+    despesas: `id INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', divisao INTEGER DEFAULT 1, status TEXT DEFAULT 'aberta', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
+    trabalhos: `id INTEGER PRIMARY KEY AUTOINCREMENT, entidade TEXT NOT NULL, valor REAL NOT NULL, mes TEXT DEFAULT '', ano TEXT DEFAULT '', divisao INTEGER DEFAULT 1, pagamentos TEXT DEFAULT '{}', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
+    extras: `id INTEGER PRIMARY KEY AUTOINCREMENT, tipo TEXT DEFAULT 'receita', item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', qtd INTEGER DEFAULT 1, divisao INTEGER DEFAULT 1, mes TEXT DEFAULT '', ano TEXT DEFAULT '', pagamentos TEXT DEFAULT '{}', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`
+  };
+
+  for (const [table, cols] of Object.entries(schema)) {
+    db.run(`CREATE TABLE IF NOT EXISTS ${table} (${cols})`);
   }
 }
-ensureTables();
 
-// Prepared statements for performance
-const stmts = {};
-for (const table of Object.keys(SCHEMA)) {
-  stmts[`getAll_${table}`] = db.prepare(`SELECT * FROM ${table}`);
-  stmts[`getById_${table}`] = db.prepare(`SELECT * FROM ${table} WHERE id = ?`);
-  stmts[`delete_${table}`] = db.prepare(`DELETE FROM ${table} WHERE id = ?`);
+function saveDB() {
+  const data = db.export();
+  const buffer = Buffer.from(data);
+  fs.writeFileSync(DB_PATH, buffer);
 }
 
-function parseRow(row) {
-  const result = { ...row };
-  if (result.pagamentos && typeof result.pagamentos === 'string') {
-    try { result.pagamentos = JSON.parse(result.pagamentos); } catch { result.pagamentos = {}; }
+function rowToObject(columns, values) {
+  const obj = {};
+  columns.forEach((col, i) => { obj[col] = values[i]; });
+  if (obj.pagamentos && typeof obj.pagamentos === 'string') {
+    try { obj.pagamentos = JSON.parse(obj.pagamentos); } catch { obj.pagamentos = {}; }
   }
-  return result;
+  return obj;
 }
 
-function parseRows(rows) {
-  return rows.map(parseRow);
+function queryAll(table) {
+  const result = db.exec(`SELECT * FROM ${table}`);
+  if (result.length === 0) return [];
+  return result[0].values.map(v => rowToObject(result[0].columns, v));
 }
 
-function serializeRow(record) {
-  const copy = { ...record };
-  if (copy.pagamentos && typeof copy.pagamentos !== 'string') {
-    copy.pagamentos = JSON.stringify(copy.pagamentos);
-  }
-  return copy;
+function queryOne(table, id) {
+  const result = db.exec(`SELECT * FROM ${table} WHERE id = ?`, [parseInt(id)]);
+  if (result.length === 0 || result[0].values.length === 0) return null;
+  return rowToObject(result[0].columns, result[0].values[0]);
 }
 
-function generateId(table) {
-  const row = db.prepare(`SELECT MAX(id) as maxId FROM ${table}`).get();
-  return (row.maxId || 0) + 1;
+function serializeValue(val) {
+  if (val === null || val === undefined) return null;
+  if (typeof val === 'object') return JSON.stringify(val);
+  return val;
 }
 
 const dbApi = {
+  async init() {
+    await initDB();
+  },
+
   getAll(table) {
-    const stmt = stmts[`getAll_${table}`];
-    const rows = stmt.all();
-    return parseRows(rows);
+    return queryAll(table);
   },
 
   getById(table, id) {
-    const stmt = stmts[`getById_${table}`];
-    const row = stmt.get(parseInt(id));
-    return row ? parseRow(row) : null;
+    return queryOne(table, id);
   },
 
   insert(table, record) {
     const now = new Date().toISOString();
-    const data = serializeRow(record);
-    const columns = Object.keys(data);
+    const columns = Object.keys(record);
+    const values = columns.map(c => serializeValue(record[c]));
     const placeholders = columns.map(() => '?').join(', ');
-    const values = columns.map(c => data[c]);
 
-    const stmt = db.prepare(`INSERT INTO ${table} (${columns.join(', ')}, created_at, updated_at) VALUES (${placeholders}, ?, ?)`);
-    const result = stmt.run(...values, now, now);
+    db.run(`INSERT INTO ${table} (${columns.join(', ')}, created_at, updated_at) VALUES (${placeholders}, ?, ?)`, [...values, now, now]);
+    saveDB();
 
-    return this.getById(table, result.lastInsertRowid);
+    const maxId = db.exec(`SELECT MAX(id) FROM ${table}`);
+    const id = maxId.length > 0 && maxId[0].values.length > 0 ? maxId[0].values[0][0] : null;
+    return id ? queryOne(table, id) : null;
   },
 
   update(table, id, updates) {
-    const existing = this.getById(table, id);
+    const existing = queryOne(table, id);
     if (!existing) return null;
 
     const now = new Date().toISOString();
-    const data = serializeRow(updates);
-    const columns = Object.keys(data);
+    const columns = Object.keys(updates);
+    const values = columns.map(c => serializeValue(updates[c]));
     const setClause = columns.map(c => `${c} = ?`).join(', ');
-    const values = columns.map(c => data[c]);
 
-    const stmt = db.prepare(`UPDATE ${table} SET ${setClause}, updated_at = ? WHERE id = ?`);
-    stmt.run(...values, now, parseInt(id));
+    db.run(`UPDATE ${table} SET ${setClause}, updated_at = ? WHERE id = ?`, [...values, now, parseInt(id)]);
+    saveDB();
 
-    return this.getById(table, id);
+    return queryOne(table, id);
   },
 
   delete(table, id) {
-    const stmt = stmts[`delete_${table}`];
-    const result = stmt.run(parseInt(id));
-    return result.changes > 0;
+    db.run(`DELETE FROM ${table} WHERE id = ?`, [parseInt(id)]);
+    const changes = db.getRowsModified();
+    saveDB();
+    return changes > 0;
   },
 
   query(table, filterFn) {
-    const rows = this.getAll(table);
-    return rows.filter(filterFn);
+    return queryAll(table).filter(filterFn);
+  },
+
+  migrateFromJSON() {
+    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
+
+    for (const table of TABLES) {
+      const filePath = path.join(DB_DIR, `${table}.json`);
+      if (!fs.existsSync(filePath)) continue;
+
+      try {
+        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        if (!Array.isArray(data) || data.length === 0) continue;
+
+        const count = db.exec(`SELECT COUNT(*) as cnt FROM ${table}`);
+        if (count[0].values[0][0] > 0) continue;
+
+        console.log(`Migrating ${table}.json → SQLite (${data.length} records)`);
+
+        for (const row of data) {
+          const columns = Object.keys(row);
+          const values = columns.map(c => {
+            const val = row[c];
+            if (val === null || val === undefined) return null;
+            if (typeof val === 'object') return JSON.stringify(val);
+            return val;
+          });
+          const placeholders = columns.map(() => '?').join(', ');
+          db.run(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`, values);
+        }
+        saveDB();
+      } catch (e) {
+        console.error(`Error migrating ${table}:`, e.message);
+      }
+    }
   },
 
   initDefaults() {
-    const mediuns = this.getAll('mediuns');
+    const mediuns = queryAll('mediuns');
     if (mediuns.length === 0) {
       const defaults = [
         { nome: 'Ana Clara Silva', tipo: 'Médium', tel: '(11) 99999-0001', endereco: 'Rua A, 123', email: 'ana@email.com', nasc: '1990-03-15', obs: 'Incorporação', iniciais: 'AC', data_cadastro: '2023-03-01', status: 'Ativo' },
@@ -197,9 +180,9 @@ const dbApi = {
       defaults.forEach(d => this.insert('mediuns', d));
     }
 
-    const mensalidades = this.getAll('mensalidades');
+    const mensalidades = queryAll('mensalidades');
     if (mensalidades.length === 0) {
-      const mediunsData = this.getAll('mediuns');
+      const mediunsData = queryAll('mediuns');
       const vals = [120, 100, 150, 80, 200, 90];
       const pagos = [120, 60, 150, 0, 200, 45];
       const stats = ['pago', 'parcial', 'pago', 'pendente', 'pago', 'parcial'];
@@ -208,9 +191,9 @@ const dbApi = {
       });
     }
 
-    const faxina = this.getAll('faxina');
+    const faxina = queryAll('faxina');
     if (faxina.length === 0) {
-      const mediunsData = this.getAll('mediuns');
+      const mediunsData = queryAll('mediuns');
       const nomes = ['Ana Clara Silva', 'Bento Ferreira', 'Carla Rodrigues', 'Daniel Martins', 'Eduarda Lima', 'Fernando Oliveira', 'Gabriela Santos', 'Heitor Costa', 'Isabela Nunes', 'João Pedro', 'Larissa Mendes', 'Marcos Tavares'];
       const presencas = ['feito', 'feito', 'falta', 'feito', 'feito', 'feito', 'falta', 'feito', 'falta', 'feito', 'feito', 'falta'];
       const pagamentos = ['pago', 'pago', 'nao_pago', 'nao_pago', 'pago', 'pago', 'nao_pago', 'pago', 'nao_pago', 'pago', 'pago', 'nao_pago'];
@@ -220,7 +203,7 @@ const dbApi = {
       });
     }
 
-    const despesas = this.getAll('despesas');
+    const despesas = queryAll('despesas');
     if (despesas.length === 0) {
       const items = [
         { item: 'Material escritório', valor: 230, parcela: '1/1', divisao: 1, status: 'paga', mes: '05', ano: '2026' },
@@ -235,64 +218,20 @@ const dbApi = {
       items.forEach(d => this.insert('despesas', d));
     }
 
-    const trabalhos = this.getAll('trabalhos');
+    const trabalhos = queryAll('trabalhos');
     if (trabalhos.length === 0) {
       const items = [
-        { entidade: 'Caboclo Tupinambá', valor: 300, mes: '05', ano: '2026', divisao: 5, status: 'realizado' },
-        { entidade: 'Preta Velha Maria', valor: 250, mes: '05', ano: '2026', divisao: 4, status: 'realizado' },
-        { entidade: 'Baiano Ventania', valor: 350, mes: '06', ano: '2026', divisao: 6, status: 'futuro' },
-        { entidade: 'Indio Pena Branca', valor: 280, mes: '05', ano: '2026', divisao: 3, status: 'pendente' },
-        { entidade: 'Boiadeiro Serra', valor: 320, mes: '05', ano: '2026', divisao: 5, status: 'realizado' },
-        { entidade: 'Marujo Costa', valor: 200, mes: '06', ano: '2026', divisao: 4, status: 'futuro' },
-        { entidade: 'Cigana Esmeralda', valor: 280, mes: '05', ano: '2026', divisao: 7, status: 'realizado' },
-        { entidade: 'Mestre Quintino', valor: 400, mes: '05', ano: '2026', divisao: 6, status: 'realizado' }
+        { entidade: 'Caboclo Tupinambá', valor: 300, mes: '05', ano: '2026', divisao: 5 },
+        { entidade: 'Preta Velha Maria', valor: 250, mes: '05', ano: '2026', divisao: 4 },
+        { entidade: 'Baiano Ventania', valor: 350, mes: '06', ano: '2026', divisao: 6 },
+        { entidade: 'Indio Pena Branca', valor: 280, mes: '05', ano: '2026', divisao: 3 },
+        { entidade: 'Boiadeiro Serra', valor: 320, mes: '05', ano: '2026', divisao: 5 },
+        { entidade: 'Marujo Costa', valor: 200, mes: '06', ano: '2026', divisao: 4 },
+        { entidade: 'Cigana Esmeralda', valor: 280, mes: '05', ano: '2026', divisao: 7 },
+        { entidade: 'Mestre Quintino', valor: 400, mes: '05', ano: '2026', divisao: 6 }
       ];
       items.forEach(t => this.insert('trabalhos', t));
     }
-  },
-
-  // Migration helper: import from JSON files
-  migrateFromJSON() {
-    const fs = require('fs');
-    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
-
-    for (const table of TABLES) {
-      const filePath = path.join(DB_DIR, `${table}.json`);
-      if (!fs.existsSync(filePath)) continue;
-
-      try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-        if (!Array.isArray(data) || data.length === 0) continue;
-
-        // Check if table already has data
-        const count = db.prepare(`SELECT COUNT(*) as cnt FROM ${table}`).get();
-        if (count.cnt > 0) continue;
-
-        console.log(`Migrating ${table}.json → SQLite (${data.length} records)`);
-
-        const insert = db.transaction((rows) => {
-          for (const row of rows) {
-            const columns = Object.keys(row);
-            const placeholders = columns.map(() => '?').join(', ');
-            const values = columns.map(c => {
-              const val = row[c];
-              if (val === null || val === undefined) return null;
-              if (typeof val === 'object') return JSON.stringify(val);
-              return val;
-            });
-            db.prepare(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`).run(...values);
-          }
-        });
-
-        insert(data);
-      } catch (e) {
-        console.error(`Error migrating ${table}:`, e.message);
-      }
-    }
-  },
-
-  close() {
-    db.close();
   }
 };
 

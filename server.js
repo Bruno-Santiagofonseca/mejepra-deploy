@@ -37,12 +37,16 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'INTERFACE', 'index.html'));
 });
 
-// Migrate from JSON files to SQLite (one-time)
-db.migrateFromJSON();
+// Initialize SQLite database, migrate from JSON if needed, then start server
+db.init().then(() => {
+  db.migrateFromJSON();
+  db.initDefaults();
+  console.log('SQLite database initialized');
 
-// Initialize default data if tables are empty
-db.initDefaults();
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Mejepra Financeiro rodando em http://0.0.0.0:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Mejepra Financeiro rodando em http://0.0.0.0:${PORT}`);
+  });
+}).catch(err => {
+  console.error('Failed to initialize database:', err);
+  process.exit(1);
 });
