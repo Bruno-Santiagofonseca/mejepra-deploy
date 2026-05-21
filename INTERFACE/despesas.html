@@ -149,7 +149,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
       <input id="f-valor" type="number" step="0.01" placeholder="Valor (R$)">
     </div>
     <div class="form-field">
-      <input id="f-parcela" type="text" placeholder="Parcela (ex: 1/3)">
+      <input id="f-parcelas" type="number" min="1" step="1" placeholder="Qtd parcelas" value="1">
     </div>
   </div>
   <button class="divisao-btn" id="btnDivisao" onclick="abrirDivisaoSheet()">
@@ -181,8 +181,8 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
       <input id="e-valor" type="number" step="0.01" placeholder="Valor">
     </div>
     <div class="form-field">
-      <label>Parcela</label>
-      <input id="e-parcela" type="text" placeholder="ex: 1/3">
+      <label>Qtd Parcelas</label>
+      <input id="e-parcelas" type="number" min="1" step="1" placeholder="Qtd">
     </div>
   </div>
   <div class="form-row">
@@ -264,7 +264,7 @@ function abrirSheet(row){
   editRow=row;
   document.getElementById('e-item').value=row.dataset.item;
   document.getElementById('e-valor').value=row.dataset.valor;
-  document.getElementById('e-parcela').value=row.dataset.parcela;
+  document.getElementById('e-parcelas').value=row.dataset.total_parcelas || 1;
   document.getElementById('e-divisao').value=row.dataset.divisao;
   const divisaoMediums = row.dataset.divisao_mediums ? JSON.parse(row.dataset.divisao_mediums) : [];
   const pagamentosSalvos = row.dataset.pagamentos ? JSON.parse(row.dataset.pagamentos) : {};
@@ -286,7 +286,7 @@ async function salvarEdicao(){
   if(!editRow) return;
   const item=document.getElementById('e-item').value.trim();
   const valor=parseFloat(document.getElementById('e-valor').value)||0;
-  const parcela=document.getElementById('e-parcela').value.trim()||'1/1';
+  const totalParcelas=parseInt(document.getElementById('e-parcelas').value)||1;
   const divisao=parseInt(document.getElementById('e-divisao').value)||1;
   const status=document.getElementById('e-status').value;
   if(!item||!valor){alert('Preencha o nome do item e o valor.');return}
@@ -294,25 +294,11 @@ async function salvarEdicao(){
   try {
     const id = parseInt(editRow.dataset.id);
     const divisaoMediums = Object.keys(editPagamentos).filter(k => editPagamentos[k]).map(Number);
-    await fetch(`${API}/despesas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status, mes: mA.mes, ano: mA.ano, divisao_mediums: Object.keys(editPagamentos).map(Number), pagamentos: editPagamentos }) });
+    await fetch(`${API}/despesas/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, total_parcelas: totalParcelas, divisao, status, mes: mA.mes, ano: mA.ano, divisao_mediums: Object.keys(editPagamentos).map(Number), pagamentos: editPagamentos }) });
     editRow.dataset.divisao_mediums = JSON.stringify(Object.keys(editPagamentos).map(Number));
     editRow.dataset.pagamentos = JSON.stringify(editPagamentos);
-    const valParcela = calcParcelaValor(valor, parcela);
-    const cadaUm = valParcela / divisao;
-    editRow.dataset.item=item;
-    editRow.dataset.valor=valor;
-    editRow.dataset.parcela=parcela;
-    editRow.dataset.divisao=divisao;
-    const cells=editRow.querySelectorAll('td');
-    cells[0].textContent=item;
-    cells[1].textContent='R$ '+valor.toFixed(2).replace('.',',');
-    cells[2].textContent=parcela;
-    cells[3].textContent='R$ '+valParcela.toFixed(2).replace('.',',');
-    cells[4].textContent='R$ '+cadaUm.toFixed(2).replace('.',',');
-    const tag=editRow.querySelector('.tag');
-    tag.textContent=status.charAt(0).toUpperCase()+status.slice(1);
-    tag.className='tag '+status;
-    atualizarTotais();
+    editRow.dataset.total_parcelas = totalParcelas;
+    carregarDespesas();
   } catch(e) { console.error('Erro:', e); alert('Erro ao salvar'); }
   fecharSheet();
 }
@@ -334,8 +320,8 @@ async function carregarDespesas(){
     const tbody = document.getElementById('despesas-tbody');
     tbody.innerHTML = '';
     despesas.forEach(d => {
-      const valParcela = calcParcelaValor(d.valor, d.parcela);
-      const cadaUm = valParcela / d.divisao;
+      const parcelaLabel = d.parcela_atual && d.total_parcelas ? `${d.parcela_atual}/${d.total_parcelas}` : d.parcela || '1/1';
+      const cadaUm = d.valor / d.divisao;
       const tr = document.createElement('tr');
       tr.dataset.id = d.id;
       tr.dataset.item = d.item;
@@ -343,10 +329,11 @@ async function carregarDespesas(){
       tr.dataset.parcela = d.parcela;
       tr.dataset.divisao = d.divisao;
       tr.dataset.divisao_mediums = JSON.stringify(d.divisao_mediums || []);
+      tr.dataset.total_parcelas = d.total_parcelas || 1;
       const pagamentos = d.pagamentos || {};
       tr.dataset.pagamentos = JSON.stringify(pagamentos);
       const statusLabel = d.status.charAt(0).toUpperCase() + d.status.slice(1);
-      tr.innerHTML = `<td>${d.item}</td><td class="value">R$ ${d.valor.toFixed(2).replace('.',',')}</td><td>${d.parcela}</td><td class="value">R$ ${valParcela.toFixed(2).replace('.',',')}</td><td class="value cada-um">R$ ${cadaUm.toFixed(2).replace('.',',')}</td><td><span class="tag ${d.status}">${statusLabel}</span></td>`;
+      tr.innerHTML = `<td>${d.item}</td><td class="value">R$ ${d.valor.toFixed(2).replace('.',',')}</td><td>${parcelaLabel}</td><td class="value">R$ ${d.valor.toFixed(2).replace('.',',')}</td><td class="value cada-um">R$ ${cadaUm.toFixed(2).replace('.',',')}</td><td><span class="tag ${d.status}">${statusLabel}</span></td>`;
       tbody.appendChild(tr);
       tr.addEventListener('click', function(){ abrirSheet(tr); });
     });
@@ -362,20 +349,20 @@ function calcParcelaValor(valorTotal, parcelaStr){
 }
 function atualizarPreview(){
   const valor = parseFloat(document.getElementById('f-valor').value)||0;
-  const parcela = document.getElementById('f-parcela').value.trim()||'1/1';
-  const divisao = selectedMediums.length || parseInt(document.getElementById('f-divisao')?.value)||0;
+  const totalParcelas = parseInt(document.getElementById('f-parcelas').value)||1;
+  const divisao = selectedMediums.length || 0;
   const preview = document.getElementById('divisao-preview');
   if(divisao>0 && valor>0){
-    const valParcela = calcParcelaValor(valor, parcela);
-    const cadaUm = valParcela/divisao;
+    const valorParcela = valor / totalParcelas;
+    const cadaUm = valorParcela / divisao;
     preview.style.display='block';
-    preview.innerHTML= divisao+' médium'+(divisao>1?'s':'')+' &rarr; <strong>Cada um paga R$ '+cadaUm.toFixed(2).replace('.',',')+'</strong>';
+    preview.innerHTML= totalParcelas+' parcela'+(totalParcelas>1?'s':'')+' · '+divisao+' médium'+(divisao>1?'s':'')+' &rarr; <strong>Cada um paga R$ '+cadaUm.toFixed(2).replace('.',',')+'/mês</strong>';
   } else {
     preview.style.display='none';
   }
 }
 document.getElementById('f-valor').addEventListener('input', atualizarPreview);
-document.getElementById('f-parcela').addEventListener('input', atualizarPreview);
+document.getElementById('f-parcelas').addEventListener('input', atualizarPreview);
 
 function abrirDivisaoSheet(){
   tempSelected = [...selectedMediums];
@@ -416,12 +403,12 @@ function toggleSelectAll(){
 function updateDivPreview(){
   const bar = document.getElementById('divPreviewBar');
   const valor = parseFloat(document.getElementById('f-valor').value)||0;
-  const parcela = document.getElementById('f-parcela').value.trim()||'1/1';
+  const totalParcelas = parseInt(document.getElementById('f-parcelas').value)||1;
   if(tempSelected.length > 0 && valor > 0){
-    const valParcela = calcParcelaValor(valor, parcela);
-    const cadaUm = valParcela / tempSelected.length;
+    const valorParcela = valor / totalParcelas;
+    const cadaUm = valorParcela / tempSelected.length;
     bar.style.display = 'block';
-    bar.innerHTML = tempSelected.length+' médium'+(tempSelected.length>1?'s':'')+' &rarr; <strong>R$ '+cadaUm.toFixed(2).replace('.',',')+' cada</strong>';
+    bar.innerHTML = tempSelected.length+' médium'+(tempSelected.length>1?'s':'')+' &rarr; <strong>R$ '+cadaUm.toFixed(2).replace('.',',')+' cada/mês</strong>';
   } else {
     bar.style.display = 'none';
   }
@@ -443,37 +430,23 @@ function confirmarDivisao(){
 async function addDespesa(){
   const item = document.getElementById('f-item').value.trim();
   const valor = parseFloat(document.getElementById('f-valor').value)||0;
-  const parcela = document.getElementById('f-parcela').value.trim()||'1/1';
+  const totalParcelas = parseInt(document.getElementById('f-parcelas').value)||1;
   const divisao = selectedMediums.length || 1;
   if(!item || !valor){ alert('Preencha o nome do item e o valor.'); return }
   const mA = getMesAno();
   const pagamentos = {};
   selectedMediums.forEach(id => { pagamentos[id] = false; });
   try {
-    const res = await fetch(`${API}/despesas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, parcela, divisao, status: 'aberta', mes: mA.mes, ano: mA.ano, divisao_mediums: [...selectedMediums], pagamentos }) });
-    const d = await res.json();
-    const valParcela = calcParcelaValor(valor, parcela);
-    const cadaUm = valParcela / divisao;
-    const tr = document.createElement('tr');
-    tr.dataset.id = d.id;
-    tr.dataset.item = item;
-    tr.dataset.valor = valor;
-    tr.dataset.parcela = parcela;
-    tr.dataset.divisao = divisao;
-    tr.dataset.divisao_mediums = JSON.stringify(selectedMediums);
-    tr.dataset.pagamentos = JSON.stringify(pagamentos);
-    tr.innerHTML = `<td>${item}</td><td class="value">R$ ${valor.toFixed(2).replace('.',',')}</td><td>${parcela}</td><td class="value">R$ ${valParcela.toFixed(2).replace('.',',')}</td><td class="value cada-um">R$ ${cadaUm.toFixed(2).replace('.',',')}</td><td><span class="tag aberta">Aberta</span></td>`;
-    document.getElementById('despesas-tbody').appendChild(tr);
+    const res = await fetch(`${API}/despesas`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item, valor, total_parcelas: totalParcelas, divisao, status: 'aberta', mes: mA.mes, ano: mA.ano, divisao_mediums: [...selectedMediums], pagamentos }) });
     document.getElementById('f-item').value='';
     document.getElementById('f-valor').value='';
-    document.getElementById('f-parcela').value='';
+    document.getElementById('f-parcelas').value='1';
     document.getElementById('divisao-preview').style.display='none';
     selectedMediums = [];
     const btn = document.getElementById('btnDivisao');
     btn.classList.remove('has-selection');
     btn.querySelector('span').textContent = 'Dividir por médiuns';
-    tr.addEventListener('click',function(){abrirSheet(tr)});
-    atualizarTotais();
+    carregarDespesas();
   } catch(e) { console.error('Erro:', e); alert('Erro ao adicionar'); }
 }
 function atualizarTotais(){

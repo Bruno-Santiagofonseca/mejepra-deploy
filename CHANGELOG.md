@@ -73,6 +73,18 @@
 
 **Correção:** `porMed = t.valor` — valor já é por médium, sem recalcular divisão
 
+### 8. Sistema de parcelamento real para Despesas
+**Problema:** Parcelamento era apenas informativo — só criava registro no mês atual.
+
+**Solução:** Geração automática de registros futuros
+- Novos campos no banco: `parcela_atual`, `total_parcelas`, `despesa_original_id`
+- POST `/despesas`: se `total_parcelas > 1`, gera N registros (um por mês futuro)
+- Cada parcela tem valor = valor_total / total_parcelas
+- DELETE: exclui todas as parcelas relacionadas (cascade)
+- PUT: recalcula todas as parcelas futuras ao editar
+- Frontend: input numérico "Qtd parcelas" em vez de texto "1/3"
+- Display: mostra "1/3", "2/3", "3/3" automaticamente
+
 ---
 
 ## Arquivos alterados nesta sessão

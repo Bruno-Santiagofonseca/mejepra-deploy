@@ -18,7 +18,7 @@ const SCHEMA = {
   mediuns: `id SERIAL PRIMARY KEY, nome TEXT NOT NULL, tipo TEXT DEFAULT 'Médium', tel TEXT DEFAULT '', endereco TEXT DEFAULT '', email TEXT DEFAULT '', nasc TEXT DEFAULT '', obs TEXT DEFAULT '', iniciais TEXT DEFAULT '', data_cadastro TEXT DEFAULT '', status TEXT DEFAULT 'Ativo', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
   mensalidades: `id SERIAL PRIMARY KEY, medium_id INTEGER, nome TEXT NOT NULL, valor REAL DEFAULT 0, pago REAL DEFAULT 0, status TEXT DEFAULT 'pendente', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
   faxina: `id SERIAL PRIMARY KEY, medium_id INTEGER, nome TEXT NOT NULL, data TEXT, valor REAL DEFAULT 0, presenca TEXT DEFAULT 'feito', pagamento TEXT DEFAULT 'pago', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
-  despesas: `id SERIAL PRIMARY KEY, item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', divisao INTEGER DEFAULT 1, divisao_mediums TEXT DEFAULT '[]', pagamentos JSONB DEFAULT '{}'::jsonb, status TEXT DEFAULT 'aberta', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
+  despesas: `id SERIAL PRIMARY KEY, item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', divisao INTEGER DEFAULT 1, divisao_mediums TEXT DEFAULT '[]', pagamentos JSONB DEFAULT '{}'::jsonb, status TEXT DEFAULT 'aberta', mes TEXT DEFAULT '', ano TEXT DEFAULT '', parcela_atual INTEGER DEFAULT 1, total_parcelas INTEGER DEFAULT 1, despesa_original_id INTEGER, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
   trabalhos: `id SERIAL PRIMARY KEY, entidade TEXT NOT NULL, valor REAL NOT NULL, mes TEXT DEFAULT '', ano TEXT DEFAULT '', divisao INTEGER DEFAULT 1, pagamentos JSONB DEFAULT '{}'::jsonb, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
   extras: `id SERIAL PRIMARY KEY, tipo TEXT DEFAULT 'receita', item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', qtd INTEGER DEFAULT 1, divisao INTEGER DEFAULT 1, mes TEXT DEFAULT '', ano TEXT DEFAULT '', pagamentos JSONB DEFAULT '{}'::jsonb, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`
 };
@@ -58,6 +58,7 @@ async function initSQLite() {
 
   createTables();
   migrateAddPagamentosColumn();
+  migrateAddParcelaColumns();
   saveDB();
 }
 
@@ -68,6 +69,21 @@ function migrateAddPagamentosColumn() {
   } catch (e) {
     // Column already exists, ignore
   }
+}
+
+function migrateAddParcelaColumns() {
+  try {
+    db.run("ALTER TABLE despesas ADD COLUMN parcela_atual INTEGER DEFAULT 1");
+    console.log('Added parcela_atual column');
+  } catch (e) {}
+  try {
+    db.run("ALTER TABLE despesas ADD COLUMN total_parcelas INTEGER DEFAULT 1");
+    console.log('Added total_parcelas column');
+  } catch (e) {}
+  try {
+    db.run("ALTER TABLE despesas ADD COLUMN despesa_original_id INTEGER");
+    console.log('Added despesa_original_id column');
+  } catch (e) {}
 }
 
 async function initPG() {
