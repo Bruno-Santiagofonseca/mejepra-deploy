@@ -1,16 +1,45 @@
 const fs = require('fs');
 const path = require('path');
 const initSqlJs = require('sql.js');
+const { Pool } = require('pg');
 
 const DB_DIR = path.join(__dirname, '..', 'data');
 const DB_PATH = path.join(DB_DIR, 'mejepra.db');
+const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos'];
+const USE_PG = !!process.env.DATABASE_URL;
 
 if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
 
 let db;
 let SQL;
+let pool;
+
+const SCHEMA = {
+  mediuns: `id SERIAL PRIMARY KEY, nome TEXT NOT NULL, tipo TEXT DEFAULT 'Médium', tel TEXT DEFAULT '', endereco TEXT DEFAULT '', email TEXT DEFAULT '', nasc TEXT DEFAULT '', obs TEXT DEFAULT '', iniciais TEXT DEFAULT '', data_cadastro TEXT DEFAULT '', status TEXT DEFAULT 'Ativo', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
+  mensalidades: `id SERIAL PRIMARY KEY, medium_id INTEGER, nome TEXT NOT NULL, valor REAL DEFAULT 0, pago REAL DEFAULT 0, status TEXT DEFAULT 'pendente', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
+  faxina: `id SERIAL PRIMARY KEY, medium_id INTEGER, nome TEXT NOT NULL, data TEXT, valor REAL DEFAULT 0, presenca TEXT DEFAULT 'feito', pagamento TEXT DEFAULT 'pago', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
+  despesas: `id SERIAL PRIMARY KEY, item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', divisao INTEGER DEFAULT 1, divisao_mediums TEXT DEFAULT '[]', pagamentos JSONB DEFAULT '{}'::jsonb, status TEXT DEFAULT 'aberta', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
+  trabalhos: `id SERIAL PRIMARY KEY, entidade TEXT NOT NULL, valor REAL NOT NULL, mes TEXT DEFAULT '', ano TEXT DEFAULT '', divisao INTEGER DEFAULT 1, pagamentos JSONB DEFAULT '{}'::jsonb, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`,
+  extras: `id SERIAL PRIMARY KEY, tipo TEXT DEFAULT 'receita', item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', qtd INTEGER DEFAULT 1, divisao INTEGER DEFAULT 1, mes TEXT DEFAULT '', ano TEXT DEFAULT '', pagamentos JSONB DEFAULT '{}'::jsonb, created_at TIMESTAMPTZ DEFAULT now(), updated_at TIMESTAMPTZ DEFAULT now()`
+};
+
+const JSON_COLUMNS = ['pagamentos', 'divisao_mediums'];
+const INTEGER_COLUMNS = ['id', 'medium_id', 'divisao', 'qtd'];
+const FLOAT_COLUMNS = ['valor', 'pago'];
+
+function validateTable(table) {
+  if (!TABLES.includes(table)) throw new Error(`Invalid table: ${table}`);
+}
 
 async function initDB() {
+  if (USE_PG) {
+    await initPG();
+  } else {
+    await initSQLite();
+  }
+}
+
+async function initSQLite() {
   SQL = await initSqlJs();
 
   let dbBuffer;
@@ -28,21 +57,42 @@ async function initDB() {
   db.run('PRAGMA synchronous = NORMAL');
 
   createTables();
+  migrateAddPagamentosColumn();
   saveDB();
 }
 
-function createTables() {
-  const schema = {
-    mediuns: `id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT NOT NULL, tipo TEXT DEFAULT 'Médium', tel TEXT DEFAULT '', endereco TEXT DEFAULT '', email TEXT DEFAULT '', nasc TEXT DEFAULT '', obs TEXT DEFAULT '', iniciais TEXT DEFAULT '', data_cadastro TEXT DEFAULT '', status TEXT DEFAULT 'Ativo', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
-    mensalidades: `id INTEGER PRIMARY KEY AUTOINCREMENT, medium_id INTEGER, nome TEXT NOT NULL, valor REAL DEFAULT 0, pago REAL DEFAULT 0, status TEXT DEFAULT 'pendente', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
-    faxina: `id INTEGER PRIMARY KEY AUTOINCREMENT, medium_id INTEGER, nome TEXT NOT NULL, data TEXT, valor REAL DEFAULT 0, presenca TEXT DEFAULT 'feito', pagamento TEXT DEFAULT 'pago', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
-    despesas: `id INTEGER PRIMARY KEY AUTOINCREMENT, item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', divisao INTEGER DEFAULT 1, divisao_mediums TEXT DEFAULT '[]', status TEXT DEFAULT 'aberta', mes TEXT DEFAULT '', ano TEXT DEFAULT '', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
-    trabalhos: `id INTEGER PRIMARY KEY AUTOINCREMENT, entidade TEXT NOT NULL, valor REAL NOT NULL, mes TEXT DEFAULT '', ano TEXT DEFAULT '', divisao INTEGER DEFAULT 1, pagamentos TEXT DEFAULT '{}', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`,
-    extras: `id INTEGER PRIMARY KEY AUTOINCREMENT, tipo TEXT DEFAULT 'receita', item TEXT NOT NULL, valor REAL NOT NULL, parcela TEXT DEFAULT '1/1', qtd INTEGER DEFAULT 1, divisao INTEGER DEFAULT 1, mes TEXT DEFAULT '', ano TEXT DEFAULT '', pagamentos TEXT DEFAULT '{}', created_at TEXT DEFAULT (datetime('now')), updated_at TEXT DEFAULT (datetime('now'))`
-  };
+function migrateAddPagamentosColumn() {
+  try {
+    db.run("ALTER TABLE despesas ADD COLUMN pagamentos TEXT DEFAULT '{}'");
+    console.log('Added pagamentos column to despesas table');
+  } catch (e) {
+    // Column already exists, ignore
+  }
+}
 
-  for (const [table, cols] of Object.entries(schema)) {
-    db.run(`CREATE TABLE IF NOT EXISTS ${table} (${cols})`);
+async function initPG() {
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+  });
+
+  await pool.query('SELECT 1');
+  await createPgTables();
+}
+
+async function createPgTables() {
+  for (const [table, columns] of Object.entries(SCHEMA)) {
+    await pool.query(`CREATE TABLE IF NOT EXISTS ${table} (${columns})`);
+  }
+}
+
+function createTables() {
+  for (const [table, cols] of Object.entries(SCHEMA)) {
+    const sqliteCols = cols
+      .replace(/SERIAL PRIMARY KEY/g, 'INTEGER PRIMARY KEY AUTOINCREMENT')
+      .replace(/TIMESTAMPTZ DEFAULT now\(\)/g, "TEXT DEFAULT (datetime('now'))")
+      .replace(/JSONB DEFAULT '\{\}'::jsonb/g, "TEXT DEFAULT '{}' ");
+    db.run(`CREATE TABLE IF NOT EXISTS ${table} (${sqliteCols})`);
   }
 }
 
@@ -52,123 +102,190 @@ function saveDB() {
   fs.writeFileSync(DB_PATH, buffer);
 }
 
+function normalizeRow(row) {
+  const normalized = { ...row };
+
+  for (const key of Object.keys(normalized)) {
+    const value = normalized[key];
+    if (value === null || value === undefined) continue;
+
+    if (JSON_COLUMNS.includes(key)) {
+      if (typeof value === 'string') {
+        try { normalized[key] = JSON.parse(value); } catch { normalized[key] = key === 'divisao_mediums' ? [] : {}; }
+      }
+      continue;
+    }
+
+    if (INTEGER_COLUMNS.includes(key) && typeof value === 'string') {
+      normalized[key] = parseInt(value, 10);
+      continue;
+    }
+
+    if (FLOAT_COLUMNS.includes(key) && typeof value === 'string') {
+      normalized[key] = parseFloat(value);
+      continue;
+    }
+  }
+
+  return normalized;
+}
+
 function rowToObject(columns, values) {
   const obj = {};
   columns.forEach((col, i) => { obj[col] = values[i]; });
-  if (obj.pagamentos && typeof obj.pagamentos === 'string') {
-    try { obj.pagamentos = JSON.parse(obj.pagamentos); } catch { obj.pagamentos = {}; }
-  }
-  return obj;
+  return normalizeRow(obj);
 }
 
-function queryAll(table) {
+function serializeValue(val, column) {
+  if (val === null || val === undefined) return null;
+  if (typeof val === 'object') {
+    return JSON.stringify(val);
+  }
+  return val;
+}
+
+async function queryAll(table) {
+  validateTable(table);
+  if (USE_PG) {
+    const result = await pool.query(`SELECT * FROM ${table}`);
+    return result.rows.map(normalizeRow);
+  }
+
   const result = db.exec(`SELECT * FROM ${table}`);
   if (result.length === 0) return [];
   return result[0].values.map(v => rowToObject(result[0].columns, v));
 }
 
-function queryOne(table, id) {
-  const result = db.exec(`SELECT * FROM ${table} WHERE id = ?`, [parseInt(id)]);
+async function queryOne(table, id) {
+  validateTable(table);
+  if (USE_PG) {
+    const result = await pool.query(`SELECT * FROM ${table} WHERE id = $1`, [parseInt(id, 10)]);
+    if (result.rows.length === 0) return null;
+    return normalizeRow(result.rows[0]);
+  }
+
+  const result = db.exec(`SELECT * FROM ${table} WHERE id = ?`, [parseInt(id, 10)]);
   if (result.length === 0 || result[0].values.length === 0) return null;
   return rowToObject(result[0].columns, result[0].values[0]);
 }
 
-function serializeValue(val) {
-  if (val === null || val === undefined) return null;
-  if (typeof val === 'object') return JSON.stringify(val);
-  return val;
+async function insert(table, record) {
+  validateTable(table);
+  const now = new Date().toISOString();
+  const columns = Object.keys(record);
+  const values = columns.map((c) => serializeValue(record[c], c));
+
+  if (USE_PG) {
+    const placeholders = columns.map((_, i) => `$${i + 1}`).join(', ');
+    const query = `INSERT INTO ${table} (${columns.join(', ')}, created_at, updated_at) VALUES (${placeholders}, $${columns.length + 1}, $${columns.length + 2}) RETURNING *`;
+    const params = [...values, now, now];
+    const result = await pool.query(query, params);
+    return normalizeRow(result.rows[0]);
+  }
+
+  const placeholders = columns.map(() => '?').join(', ');
+  db.run(`INSERT INTO ${table} (${columns.join(', ')}, created_at, updated_at) VALUES (${placeholders}, ?, ?)`, [...values, now, now]);
+  saveDB();
+
+  const maxId = db.exec(`SELECT MAX(id) FROM ${table}`);
+  const id = maxId.length > 0 && maxId[0].values.length > 0 ? maxId[0].values[0][0] : null;
+  return id ? queryOne(table, id) : null;
 }
 
-const dbApi = {
-  async init() {
-    await initDB();
-  },
+async function update(table, id, updates) {
+  validateTable(table);
+  const existing = await queryOne(table, id);
+  if (!existing) return null;
 
-  getAll(table) {
-    return queryAll(table);
-  },
+  const now = new Date().toISOString();
+  const columns = Object.keys(updates);
+  const values = columns.map((c) => serializeValue(updates[c], c));
+  const setClause = columns.map((c, i) => `${c} = ${USE_PG ? `$${i + 1}` : '?'}`).join(', ');
 
-  getById(table, id) {
-    return queryOne(table, id);
-  },
+  if (USE_PG) {
+    const query = `UPDATE ${table} SET ${setClause}, updated_at = $${columns.length + 1} WHERE id = $${columns.length + 2} RETURNING *`;
+    const params = [...values, now, parseInt(id, 10)];
+    const result = await pool.query(query, params);
+    return result.rows.length > 0 ? normalizeRow(result.rows[0]) : null;
+  }
 
-  insert(table, record) {
-    const now = new Date().toISOString();
-    const columns = Object.keys(record);
-    const values = columns.map(c => serializeValue(record[c]));
-    const placeholders = columns.map(() => '?').join(', ');
+  db.run(`UPDATE ${table} SET ${setClause}, updated_at = ? WHERE id = ?`, [...values, now, parseInt(id, 10)]);
+  saveDB();
+  return queryOne(table, id);
+}
 
-    db.run(`INSERT INTO ${table} (${columns.join(', ')}, created_at, updated_at) VALUES (${placeholders}, ?, ?)`, [...values, now, now]);
-    saveDB();
+async function deleteRow(table, id) {
+  validateTable(table);
+  if (USE_PG) {
+    const result = await pool.query(`DELETE FROM ${table} WHERE id = $1`, [parseInt(id, 10)]);
+    return result.rowCount > 0;
+  }
 
-    const maxId = db.exec(`SELECT MAX(id) FROM ${table}`);
-    const id = maxId.length > 0 && maxId[0].values.length > 0 ? maxId[0].values[0][0] : null;
-    return id ? queryOne(table, id) : null;
-  },
+  db.run(`DELETE FROM ${table} WHERE id = ?`, [parseInt(id, 10)]);
+  const changes = db.getRowsModified();
+  saveDB();
+  return changes > 0;
+}
 
-  update(table, id, updates) {
-    const existing = queryOne(table, id);
-    if (!existing) return null;
+async function query(table, filterFn) {
+  const rows = await queryAll(table);
+  return rows.filter(filterFn);
+}
 
-    const now = new Date().toISOString();
-    const columns = Object.keys(updates);
-    const values = columns.map(c => serializeValue(updates[c]));
-    const setClause = columns.map(c => `${c} = ?`).join(', ');
+async function migrateFromJSON() {
+  for (const table of TABLES) {
+    const filePath = path.join(DB_DIR, `${table}.json`);
+    if (!fs.existsSync(filePath)) continue;
 
-    db.run(`UPDATE ${table} SET ${setClause}, updated_at = ? WHERE id = ?`, [...values, now, parseInt(id)]);
-    saveDB();
+    try {
+      const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      if (!Array.isArray(data) || data.length === 0) continue;
 
-    return queryOne(table, id);
-  },
+      const count = USE_PG ? await pool.query(`SELECT COUNT(*) FROM ${table}`) : db.exec(`SELECT COUNT(*) as cnt FROM ${table}`);
+      const currentCount = USE_PG ? parseInt(count.rows[0].count, 10) : count[0].values[0][0];
+      if (currentCount > 0) continue;
 
-  delete(table, id) {
-    db.run(`DELETE FROM ${table} WHERE id = ?`, [parseInt(id)]);
-    const changes = db.getRowsModified();
-    saveDB();
-    return changes > 0;
-  },
+      console.log(`Migrating ${table}.json → database (${data.length} records)`);
 
-  query(table, filterFn) {
-    return queryAll(table).filter(filterFn);
-  },
+      for (const row of data) {
+        const columns = Object.keys(row);
+        const values = columns.map((c) => {
+          const val = row[c];
+          if (val === null || val === undefined) return null;
+          if (typeof val === 'object') return JSON.stringify(val);
+          return val;
+        });
 
-  migrateFromJSON() {
-    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
-
-    for (const table of TABLES) {
-      const filePath = path.join(DB_DIR, `${table}.json`);
-      if (!fs.existsSync(filePath)) continue;
-
-      try {
-        const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-        if (!Array.isArray(data) || data.length === 0) continue;
-
-        const count = db.exec(`SELECT COUNT(*) as cnt FROM ${table}`);
-        if (count[0].values[0][0] > 0) continue;
-
-        console.log(`Migrating ${table}.json → SQLite (${data.length} records)`);
-
-        for (const row of data) {
-          const columns = Object.keys(row);
-          const values = columns.map(c => {
-            const val = row[c];
-            if (val === null || val === undefined) return null;
-            if (typeof val === 'object') return JSON.stringify(val);
-            return val;
-          });
+        if (USE_PG) {
+          const placeholders = columns.map((_, i) => `$${i + 1}`).join(', ');
+          await pool.query(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`, values);
+        } else {
           const placeholders = columns.map(() => '?').join(', ');
           db.run(`INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders})`, values);
         }
-        saveDB();
-      } catch (e) {
-        console.error(`Error migrating ${table}:`, e.message);
       }
-    }
-  },
 
-  initDefaults() {
-    // No default data — client starts with clean database
+      if (!USE_PG) saveDB();
+    } catch (e) {
+      console.error(`Error migrating ${table}:`, e.message);
+    }
   }
+}
+
+async function initDefaults() {
+  // No default data — client starts with clean database
+}
+
+const dbApi = {
+  init: initDB,
+  getAll: queryAll,
+  getById: queryOne,
+  insert,
+  update,
+  delete: deleteRow,
+  query,
+  migrateFromJSON,
+  initDefaults
 };
 
 module.exports = dbApi;

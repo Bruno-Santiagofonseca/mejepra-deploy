@@ -2,29 +2,25 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database');
 
-router.get('/', (req, res) => {
-  const mediunsAtivos = db.query('mediuns', m => m.status === 'Ativo').length;
-  const mediunsInativos = db.query('mediuns', m => m.status === 'Inativo').length;
+router.get('/', async (req, res) => {
+  const mediunsAtivos = (await db.query('mediuns', m => m.status === 'Ativo')).length;
+  const mediunsInativos = (await db.query('mediuns', m => m.status === 'Inativo')).length;
 
-  const mensalidades = db.getAll('mensalidades');
+  const mensalidades = await db.getAll('mensalidades');
   const mensPrevisto = mensalidades.reduce((s, m) => s + m.valor, 0);
   const mensRecebido = mensalidades.reduce((s, m) => s + m.pago, 0);
 
-  const faxinas = db.getAll('faxina');
+  const faxinas = await db.getAll('faxina');
   const faxinaFaltas = faxinas.filter(f => f.presenca === 'falta').reduce((s, f) => s + f.valor, 0);
   const faxinaFeitas = faxinas.filter(f => f.presenca === 'feito').length;
 
-  const despesas = db.getAll('despesas');
+  const despesas = await db.getAll('despesas');
   const despesasTotal = despesas.reduce((s, d) => s + d.valor, 0);
   const despesasPagas = despesas.filter(d => d.status === 'paga').reduce((s, d) => s + d.valor, 0);
 
-  const trabalhos = db.getAll('trabalhos');
+  const trabalhos = await db.getAll('trabalhos');
   const trabalhosTotal = trabalhos.reduce((s, t) => s + t.valor, 0);
   const trabalhosRealizados = trabalhosTotal;
-
-  const extras = db.getAll('extras');
-  const extrasReceitas = extras.filter(e => e.tipo === 'receita').reduce((s, e) => s + e.valor, 0);
-  const extrasGastos = extras.filter(e => e.tipo === 'gasto').reduce((s, e) => s + e.valor, 0);
 
   res.json({
     mediuns: { ativos: mediunsAtivos, inativos: mediunsInativos },
@@ -32,11 +28,10 @@ router.get('/', (req, res) => {
     faxina: { total_faltas_valor: faxinaFaltas, feitas: faxinaFeitas },
     despesas: { total: despesasTotal, pagas: despesasPagas, pendentes: despesasTotal - despesasPagas },
     trabalhos: { total: trabalhosTotal, realizados: trabalhosRealizados },
-    extras: { receitas: extrasReceitas, gastos: extrasGastos },
     resumo_geral: {
-      total_receitas: mensRecebido + extrasReceitas,
-      total_despesas: despesasTotal + extrasGastos + faxinaFaltas,
-      saldo: (mensRecebido + extrasReceitas) - (despesasTotal + extrasGastos + faxinaFaltas)
+      total_receitas: mensRecebido,
+      total_despesas: despesasTotal + faxinaFaltas,
+      saldo: mensRecebido - (despesasTotal + faxinaFaltas)
     }
   });
 });
@@ -48,22 +43,18 @@ function getNomeMes(m) {
   return (idx >= 0 && idx < 12 ? meses[idx] : m.mes) + '/' + (m.ano || '');
 }
 
-router.get('/medium/:id', (req, res) => {
-  const medium = db.getById('mediuns', req.params.id);
+router.get('/medium/:id', async (req, res) => {
+  const medium = await db.getById('mediuns', req.params.id);
   if (!medium) return res.status(404).json({ error: 'Médium não encontrado' });
 
   const { mes, ano } = req.query;
 
-  const mensalidades = db.query('mensalidades', m =>
-    m.medium_id === parseInt(req.params.id)
-  ).sort((a, b) => {
+  const mensalidades = (await db.query('mensalidades', m => m.medium_id === parseInt(req.params.id, 10))).sort((a, b) => {
     if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
     return a.mes.localeCompare(b.mes);
   });
 
-  const faxinas = db.query('faxina', f =>
-    f.medium_id === parseInt(req.params.id)
-  ).sort((a, b) => {
+  const faxinas = (await db.query('faxina', f => f.medium_id === parseInt(req.params.id, 10))).sort((a, b) => {
     if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
     return a.mes.localeCompare(b.mes);
   });
@@ -74,9 +65,9 @@ router.get('/medium/:id', (req, res) => {
   let totalFaxFalta = 0;
   faxinas.forEach(f => { if (f.presenca === 'falta') totalFaxFalta += f.valor; });
 
-  const mediumId = parseInt(req.params.id);
+  const mediumId = parseInt(req.params.id, 10);
 
-  const despesas = db.getAll('despesas');
+  const despesas = await db.getAll('despesas');
   const despesasFiltradas = (mes && ano ? despesas.filter(d => d.mes === mes && d.ano === ano) : despesas)
     .filter(d => {
       try {
@@ -85,7 +76,7 @@ router.get('/medium/:id', (req, res) => {
       } catch { return d.divisao > 0; }
     });
   const despesasDetalhadas = despesasFiltradas.map(d => {
-    const valParcela = d.parcela && d.parcela.includes('/') ? d.valor / (parseInt(d.parcela.split('/')[1]) || 1) : d.valor;
+    const valParcela = d.parcela && d.parcela.includes('/') ? d.valor / (parseInt(d.parcela.split('/')[1], 10) || 1) : d.valor;
     const porMed = d.divisao > 0 ? valParcela / d.divisao : valParcela;
     return {
       id: d.id,
@@ -102,60 +93,28 @@ router.get('/medium/:id', (req, res) => {
   });
   const totalDespesasMedium = despesasDetalhadas.reduce((s, d) => s + d.por_medium, 0);
 
-  const trabalhos = db.getAll('trabalhos');
+  const trabalhos = await db.getAll('trabalhos');
   const trabalhosFiltrados = (mes && ano ? trabalhos.filter(t => t.mes === mes && t.ano === ano) : trabalhos)
-    .filter(t => {
-      try {
-        const pg = typeof t.pagamentos === 'string' ? JSON.parse(t.pagamentos) : (t.pagamentos || {});
-        return pg[String(mediumId)] === true;
-      } catch { return t.divisao > 0; }
-    });
+    .filter(t => t.divisao > 0);
   const trabalhosDetalhados = trabalhosFiltrados.map(t => {
-    const porMed = t.divisao > 0 ? t.valor / t.divisao : t.valor;
+    const porMed = t.valor;
+    const pagamentos = typeof t.pagamentos === 'string' ? JSON.parse(t.pagamentos) : (t.pagamentos || {});
+    const pago = pagamentos[String(mediumId)] === true;
     return {
       id: t.id,
       entidade: t.entidade,
-      valor_total: t.valor,
+      valor_total: t.valor * t.divisao,
       divisao: t.divisao,
       por_medium: porMed,
-      status: t.status || 'realizado',
+      status: pago ? 'pago' : (t.status || 'pendente'),
       mes: t.mes,
       ano: t.ano
     };
   });
   const totalTrabalhosMedium = trabalhosDetalhados.reduce((s, t) => s + t.por_medium, 0);
 
-  const extras = db.getAll('extras');
-  const extrasFiltrados = (mes && ano ? extras.filter(e => e.mes === mes && e.ano === ano) : extras)
-    .filter(e => {
-      try {
-        const pg = typeof e.pagamentos === 'string' ? JSON.parse(e.pagamentos) : (e.pagamentos || {});
-        return pg[String(mediumId)] === true;
-      } catch { return e.divisao > 0; }
-    });
-  const extrasDetalhados = extrasFiltrados.map(e => {
-    const valParcela = e.parcela && e.parcela.includes('/') ? e.valor / (parseInt(e.parcela.split('/')[1]) || 1) : e.valor;
-    const totalItem = valParcela * (e.qtd || 1);
-    const porMed = e.divisao > 0 ? totalItem / e.divisao : totalItem;
-    return {
-      id: e.id,
-      tipo: e.tipo,
-      item: e.item,
-      valor_unitario: e.valor,
-      parcela: e.parcela,
-      qtd: e.qtd || 1,
-      valor_total_item: totalItem,
-      divisao: e.divisao,
-      por_medium: porMed,
-      mes: e.mes,
-      ano: e.ano
-    };
-  });
-  const extrasGastosMedium = extrasDetalhados.filter(e => e.tipo === 'gasto').reduce((s, e) => s + e.por_medium, 0);
-  const extrasReceitasMedium = extrasDetalhados.filter(e => e.tipo === 'receita').reduce((s, e) => s + e.por_medium, 0);
-
-  const totalCreditos = pagoMens + extrasReceitasMedium;
-  const totalDebitos = totalDespesasMedium + totalTrabalhosMedium + extrasGastosMedium + totalFaxFalta;
+  const totalCreditos = pagoMens;
+  const totalDebitos = totalDespesasMedium + totalTrabalhosMedium + totalFaxFalta;
   const saldo = totalCreditos - totalDebitos;
 
   res.json({
@@ -164,7 +123,6 @@ router.get('/medium/:id', (req, res) => {
     faxinas,
     despesas: despesasDetalhadas,
     trabalhos: trabalhosDetalhados,
-    extras: extrasDetalhados,
     resumo: {
       mensalidade_total: totalMens,
       mensalidade_pago: pagoMens,
@@ -172,8 +130,6 @@ router.get('/medium/:id', (req, res) => {
       faxina_faltas: totalFaxFalta,
       despesas_total: totalDespesasMedium,
       trabalhos_total: totalTrabalhosMedium,
-      extras_gastos: extrasGastosMedium,
-      extras_receitas: extrasReceitasMedium,
       total_creditos: totalCreditos,
       total_debitos: totalDebitos,
       saldo: saldo

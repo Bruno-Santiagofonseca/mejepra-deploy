@@ -1,0 +1,1747 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - alert [ref=e6]:
+        - generic [ref=e7]:
+          - img [ref=e9]
+          - paragraph [ref=e11]:
+            - text: We use optional cookies to improve your experience on our websites, such as through social media connections, and to display personalized advertising based on your online activity. If you reject optional cookies, only cookies necessary to provide you the services will be used. You may change your selection by clicking “Manage Cookies” at the bottom of the page.
+            - link "Privacy Statement" [ref=e12] [cursor=pointer]:
+              - /url: https://go.microsoft.com/fwlink/?LinkId=521839
+            - link "Third-Party Cookies" [ref=e13] [cursor=pointer]:
+              - /url: https://aka.ms/3rdpartycookies
+        - generic [ref=e14]:
+          - button "Accept" [ref=e15] [cursor=pointer]
+          - button "Reject" [ref=e16] [cursor=pointer]
+          - button "Manage cookies" [ref=e17] [cursor=pointer]
+      - navigation "Top Level" [ref=e18]:
+        - generic [ref=e19]:
+          - link "Visual Studio Code" [ref=e21] [cursor=pointer]:
+            - /url: /
+            - generic: Visual Studio Code
+          - list [ref=e23]:
+            - listitem [ref=e24]:
+              - button "Features" [ref=e25] [cursor=pointer]: Features
+            - listitem [ref=e27]:
+              - button "Docs" [ref=e28] [cursor=pointer]: Docs
+            - listitem [ref=e30]:
+              - link "Updates" [ref=e31] [cursor=pointer]:
+                - /url: /updates
+            - listitem [ref=e32]:
+              - link "Blog" [ref=e33] [cursor=pointer]:
+                - /url: /blogs
+            - listitem [ref=e34]:
+              - link "Extensions" [ref=e35] [cursor=pointer]:
+                - /url: https://marketplace.visualstudio.com/VSCode
+            - listitem [ref=e36]:
+              - link "MCP" [ref=e37] [cursor=pointer]:
+                - /url: /mcp
+            - listitem [ref=e38]:
+              - link "FAQ" [ref=e39] [cursor=pointer]:
+                - /url: /docs/supporting/faq
+            - listitem [ref=e40]:
+              - link "Learn" [ref=e41] [cursor=pointer]:
+                - /url: /learn
+            - listitem [ref=e42]:
+              - link "Events" [ref=e43] [cursor=pointer]:
+                - /url: https://aka.ms/vscode/live
+          - generic [ref=e44]:
+            - button "Open search dialog" [ref=e45] [cursor=pointer]
+            - button "Switch to the light theme" [ref=e47] [cursor=pointer]:
+              - img "Switch to the light theme" [ref=e48]
+            - link "Download" [ref=e49] [cursor=pointer]:
+              - /url: /Download
+    - generic [ref=e50]:
+      - paragraph [ref=e52]:
+        - link "Use the Agents window to build in an agent-first way." [ref=e53] [cursor=pointer]:
+          - /url: https://code.visualstudio.com/docs/copilot/agents/agents-window?source=vsc-website-banner
+      - button "Dismiss this update" [ref=e54] [cursor=pointer]:
+        - generic [ref=e55]: Dismiss this update
+        - generic [ref=e56]: ×
+    - main [ref=e57]:
+      - generic [ref=e59]:
+        - generic [ref=e60]:
+          - heading "The open source AI code editor" [level=1] [ref=e61]
+          - paragraph [ref=e62]: Your home for multi-agent development
+          - generic [ref=e63]:
+            - button "Download for Windows" [ref=e66] [cursor=pointer]:
+              - img [ref=e67]
+              - text: Download for Windows
+            - paragraph [ref=e69]:
+              - link "VS Code for the Web, for quick code edits locally or remotely (opens in new tab)" [ref=e70] [cursor=pointer]:
+                - /url: https://vscode.dev/
+                - text: Web
+              - text: ","
+              - link "Download VS Code Insiders edition" [ref=e71] [cursor=pointer]:
+                - /url: /insiders
+                - text: Insiders edition
+              - text: ", or"
+              - link "Download VS Code for other platforms" [ref=e72] [cursor=pointer]:
+                - /url: /Download
+                - text: other platforms
+            - paragraph [ref=e73]:
+              - text: By using VS Code, you agree to its
+              - generic [ref=e74]:
+                - link "Visual Studio Code license (opens in new tab)" [ref=e75] [cursor=pointer]:
+                  - /url: https://code.visualstudio.com/license
+                  - text: license
+                - text: and
+                - link "Microsoft privacy statement (opens in new tab)" [ref=e76] [cursor=pointer]:
+                  - /url: https://go.microsoft.com/fwlink/?LinkId=521839
+                  - text: privacy statement
+                - text: .
+        - region "Visual demonstration of VS Code editor interface with Agent Sessions sidebar showing active agent tasks and code refactoring workflow" [ref=e77]:
+          - generic [ref=e84]:
+            - generic [ref=e86]:
+              - img [ref=e88]
+              - img [ref=e91]
+              - img [ref=e94]
+              - img [ref=e97]
+              - img [ref=e100]
+            - generic [ref=e102]:
+              - tablist [ref=e103]:
+                - tab "MailList.tsx" [selected] [ref=e104]:
+                  - generic [ref=e105]: MailList.tsx
+                  - img [ref=e107]
+              - tabpanel "MailList.tsx" [ref=e110]:
+                - code [ref=e113]:
+                  - generic [ref=e114]:
+                    - generic [ref=e115]: import
+                    - generic [ref=e116]: "{"
+                  - generic [ref=e117]:
+                    - generic [ref=e118]: For
+                    - generic [ref=e119]: ","
+                  - generic [ref=e120]:
+                    - generic [ref=e121]: Show
+                    - generic [ref=e122]: ","
+                  - generic [ref=e123]:
+                    - generic [ref=e124]: createMemo
+                    - generic [ref=e125]: ","
+                  - generic [ref=e126]:
+                    - generic [ref=e127]: createSignal
+                    - generic [ref=e128]: ","
+                  - generic [ref=e129]:
+                    - generic [ref=e130]: onCleanup
+                    - generic [ref=e131]: ","
+                  - generic [ref=e132]:
+                    - generic [ref=e133]: onMount
+                    - generic [ref=e134]: ","
+                  - generic [ref=e135]:
+                    - generic [ref=e136]: "}"
+                    - generic [ref=e137]: from
+                    - generic [ref=e138]: "\"solid-js\""
+                    - generic [ref=e139]: ;
+                  - generic [ref=e140]:
+                    - generic [ref=e141]: import
+                    - generic [ref=e142]: "{"
+                    - generic [ref=e143]: useMail
+                    - generic [ref=e144]: "}"
+                    - generic [ref=e145]: from
+                    - generic [ref=e146]: "\"./mail\""
+                    - generic [ref=e147]: ;
+                  - generic [ref=e148]:
+                    - generic [ref=e149]: import
+                    - generic [ref=e150]: "{"
+                    - generic [ref=e151]: Item
+                    - generic [ref=e152]: "}"
+                    - generic [ref=e153]: from
+                    - generic [ref=e154]: "\"./Item\""
+                    - generic [ref=e155]: ;
+                  - generic [ref=e157]:
+                    - generic [ref=e158]: const
+                    - generic [ref=e159]: ROW
+                    - generic [ref=e160]: =
+                    - generic [ref=e161]: "56"
+                    - generic [ref=e162]: ;
+                  - generic [ref=e163]:
+                    - generic [ref=e164]: const
+                    - generic [ref=e165]: PAGE
+                    - generic [ref=e166]: =
+                    - generic [ref=e167]: "24"
+                    - generic [ref=e168]: ;
+                  - generic [ref=e170]:
+                    - generic [ref=e171]: export
+                    - generic [ref=e172]: function
+                    - generic [ref=e173]: MailList
+                    - generic [ref=e174]: "() {"
+                  - generic [ref=e175]:
+                    - generic [ref=e176]: const
+                    - generic [ref=e177]: "{"
+                    - generic [ref=e178]: items
+                    - generic [ref=e179]: ","
+                    - generic [ref=e180]: query
+                    - generic [ref=e181]: ","
+                    - generic [ref=e182]: load
+                    - generic [ref=e183]: "} ="
+                  - generic [ref=e184]:
+                    - generic [ref=e185]: useMail
+                    - generic [ref=e186]: ();
+                  - generic [ref=e187]:
+                    - generic [ref=e188]: const
+                    - generic [ref=e189]: "["
+                    - generic [ref=e190]: focus
+                    - generic [ref=e191]: ","
+                    - generic [ref=e192]: setFocus
+                    - generic [ref=e193]: "] ="
+                  - generic [ref=e194]:
+                    - generic [ref=e195]: createSignal
+                    - generic [ref=e196]: (
+                    - generic [ref=e197]: "0"
+                    - generic [ref=e198]: );
+                  - generic [ref=e199]:
+                    - generic [ref=e200]: const
+                    - generic [ref=e201]: "["
+                    - generic [ref=e202]: top
+                    - generic [ref=e203]: ","
+                    - generic [ref=e204]: setTop
+                    - generic [ref=e205]: "] ="
+                  - generic [ref=e206]:
+                    - generic [ref=e207]: createSignal
+                    - generic [ref=e208]: (
+                    - generic [ref=e209]: "0"
+                    - generic [ref=e210]: );
+                  - generic [ref=e212]:
+                    - generic [ref=e213]: const
+                    - generic [ref=e214]: visible
+                    - generic [ref=e215]: =
+                    - generic [ref=e216]: createMemo
+                    - generic [ref=e217]: (()
+                    - generic [ref=e218]: =>
+                    - generic [ref=e219]: "{"
+                  - generic [ref=e220]:
+                    - generic [ref=e221]: const
+                    - generic [ref=e222]: q
+                    - generic [ref=e223]: =
+                    - generic [ref=e224]: query
+                    - generic [ref=e225]: ().
+                    - generic [ref=e226]: toLowerCase
+                    - generic [ref=e227]: ();
+                  - generic [ref=e228]:
+                    - generic [ref=e229]: return
+                    - generic [ref=e230]: items
+                    - generic [ref=e231]: ()
+                  - generic [ref=e232]:
+                    - generic [ref=e233]: .
+                    - generic [ref=e234]: filter
+                    - generic [ref=e235]: ((
+                    - generic [ref=e236]: m
+                    - generic [ref=e237]: )
+                    - generic [ref=e238]: =>
+                  - generic [ref=e239]:
+                    - generic [ref=e240]: m
+                    - generic [ref=e241]: .
+                    - generic [ref=e242]: subject
+                  - generic [ref=e243]:
+                    - generic [ref=e244]: .
+                    - generic [ref=e245]: toLowerCase
+                    - generic [ref=e246]: ()
+                  - generic [ref=e247]:
+                    - generic [ref=e248]: .
+                    - generic [ref=e249]: includes
+                    - generic [ref=e250]: (
+                    - generic [ref=e251]: q
+                    - generic [ref=e252]: ),
+                  - generic [ref=e254]: )
+                  - generic [ref=e255]:
+                    - generic [ref=e256]: .
+                    - generic [ref=e257]: slice
+                    - generic [ref=e258]: (
+                    - generic [ref=e259]: top
+                    - generic [ref=e260]: (),
+                    - generic [ref=e261]: top
+                    - generic [ref=e262]: () +
+                    - generic [ref=e263]: PAGE
+                    - generic [ref=e264]: );
+                  - generic [ref=e266]: "});"
+                  - generic [ref=e268]:
+                    - generic [ref=e269]: const
+                    - generic [ref=e270]: onKey
+                    - generic [ref=e271]: = (
+                    - generic [ref=e272]: e
+                    - generic [ref=e273]: ":"
+                    - generic [ref=e274]: KeyboardEvent
+                    - generic [ref=e275]: )
+                    - generic [ref=e276]: =>
+                    - generic [ref=e277]: "{"
+                  - generic [ref=e278]:
+                    - generic [ref=e279]: if
+                    - generic [ref=e280]: (
+                    - generic [ref=e281]: e
+                    - generic [ref=e282]: .
+                    - generic [ref=e283]: key
+                    - generic [ref=e284]: ===
+                    - generic [ref=e285]: "\"ArrowDown\""
+                    - generic [ref=e286]: ") {"
+                  - generic [ref=e287]:
+                    - generic [ref=e288]: setFocus
+                    - generic [ref=e289]: ((
+                    - generic [ref=e290]: i
+                    - generic [ref=e291]: )
+                    - generic [ref=e292]: =>
+                  - generic [ref=e293]:
+                    - generic [ref=e294]: Math
+                    - generic [ref=e295]: .
+                    - generic [ref=e296]: min
+                    - generic [ref=e297]: (
+                    - generic [ref=e298]: i
+                    - generic [ref=e299]: +
+                    - generic [ref=e300]: "1"
+                    - generic [ref=e301]: ","
+                    - generic [ref=e302]: PAGE
+                    - generic [ref=e303]: "-"
+                    - generic [ref=e304]: "1"
+                    - generic [ref=e305]: ),
+                  - generic [ref=e307]: );
+                  - generic [ref=e308]:
+                    - generic [ref=e309]: "}"
+                    - generic [ref=e310]: else
+                    - generic [ref=e311]: if
+                    - generic [ref=e312]: (
+                    - generic [ref=e313]: e
+                    - generic [ref=e314]: .
+                    - generic [ref=e315]: key
+                    - generic [ref=e316]: ===
+                    - generic [ref=e317]: "\"ArrowUp\""
+                    - generic [ref=e318]: ") {"
+                  - generic [ref=e319]:
+                    - generic [ref=e320]: setFocus
+                    - generic [ref=e321]: ((
+                    - generic [ref=e322]: i
+                    - generic [ref=e323]: )
+                    - generic [ref=e324]: =>
+                  - generic [ref=e325]:
+                    - generic [ref=e326]: Math
+                    - generic [ref=e327]: .
+                    - generic [ref=e328]: max
+                    - generic [ref=e329]: (
+                    - generic [ref=e330]: i
+                    - generic [ref=e331]: "-"
+                    - generic [ref=e332]: "1"
+                    - generic [ref=e333]: ","
+                    - generic [ref=e334]: "0"
+                    - generic [ref=e335]: ),
+                  - generic [ref=e337]: );
+                  - generic [ref=e338]:
+                    - generic [ref=e339]: "}"
+                    - generic [ref=e340]: else
+                    - generic [ref=e341]: if
+                    - generic [ref=e342]: (
+                    - generic [ref=e343]: e
+                    - generic [ref=e344]: .
+                    - generic [ref=e345]: key
+                    - generic [ref=e346]: ===
+                    - generic [ref=e347]: "\"Enter\""
+                    - generic [ref=e348]: ") {"
+                  - generic [ref=e349]:
+                    - generic [ref=e350]: open
+                    - generic [ref=e351]: (
+                    - generic [ref=e352]: visible
+                    - generic [ref=e353]: ()[
+                    - generic [ref=e354]: focus
+                    - generic [ref=e355]: ()].
+                    - generic [ref=e356]: id
+                    - generic [ref=e357]: );
+                  - generic [ref=e359]: "}"
+                  - generic [ref=e361]: "};"
+                  - generic [ref=e363]:
+                    - generic [ref=e364]: onMount
+                    - generic [ref=e365]: (()
+                    - generic [ref=e366]: =>
+                    - generic [ref=e367]: "{"
+                  - generic [ref=e368]:
+                    - generic [ref=e369]: load
+                    - generic [ref=e370]: ();
+                  - generic [ref=e371]:
+                    - generic [ref=e372]: window
+                    - generic [ref=e373]: .
+                    - generic [ref=e374]: addEventListener
+                    - generic [ref=e375]: (
+                  - generic [ref=e376]:
+                    - generic [ref=e377]: "\"keydown\""
+                    - generic [ref=e378]: ","
+                  - generic [ref=e379]:
+                    - generic [ref=e380]: onKey
+                    - generic [ref=e381]: ","
+                  - generic [ref=e383]: );
+                  - generic [ref=e384]:
+                    - generic [ref=e385]: onCleanup
+                    - generic [ref=e386]: (()
+                    - generic [ref=e387]: =>
+                  - generic [ref=e388]:
+                    - generic [ref=e389]: window
+                    - generic [ref=e390]: .
+                    - generic [ref=e391]: removeEventListener
+                    - generic [ref=e392]: (
+                  - generic [ref=e393]:
+                    - generic [ref=e394]: "\"keydown\""
+                    - generic [ref=e395]: ","
+                  - generic [ref=e396]:
+                    - generic [ref=e397]: onKey
+                    - generic [ref=e398]: ","
+                  - generic [ref=e400]: ),
+                  - generic [ref=e402]: );
+                  - generic [ref=e404]: "});"
+                  - generic [ref=e406]:
+                    - generic [ref=e407]: return
+                    - generic [ref=e408]: (
+                  - generic [ref=e409]:
+                    - generic [ref=e410]: <
+                    - generic [ref=e411]: Show
+                  - generic [ref=e412]:
+                    - generic [ref=e413]: when
+                    - generic [ref=e414]: =
+                    - generic [ref=e415]: "{"
+                    - generic [ref=e416]: visible
+                    - generic [ref=e417]: ().
+                    - generic [ref=e418]: length
+                    - generic [ref=e419]: "}"
+                  - generic [ref=e420]:
+                    - generic [ref=e421]: fallback
+                    - generic [ref=e422]: =
+                    - generic [ref=e423]: "{"
+                    - generic [ref=e424]: <
+                    - generic [ref=e425]: Empty
+                    - generic [ref=e426]: />
+                    - generic [ref=e427]: "}"
+                  - generic [ref=e429]: ">"
+                  - generic [ref=e430]:
+                    - generic [ref=e431]: <
+                    - generic [ref=e432]: For
+                    - generic [ref=e433]: each
+                    - generic [ref=e434]: =
+                    - generic [ref=e435]: "{"
+                    - generic [ref=e436]: visible
+                    - generic [ref=e437]: ()
+                    - generic [ref=e438]: "}"
+                    - generic [ref=e439]: ">"
+                  - generic [ref=e440]:
+                    - generic [ref=e441]: "{"
+                    - generic [ref=e442]: (
+                    - generic [ref=e443]: m
+                    - generic [ref=e444]: ","
+                    - generic [ref=e445]: i
+                    - generic [ref=e446]: )
+                    - generic [ref=e447]: =>
+                    - generic [ref=e448]: (
+                  - generic [ref=e449]:
+                    - generic [ref=e450]: <
+                    - generic [ref=e451]: Item
+                  - generic [ref=e452]:
+                    - generic [ref=e453]: mail
+                    - generic [ref=e454]: =
+                    - generic [ref=e455]: "{"
+                    - generic [ref=e456]: m
+                    - generic [ref=e457]: "}"
+                  - generic [ref=e458]:
+                    - generic [ref=e459]: active
+                    - generic [ref=e460]: =
+                    - generic [ref=e461]: "{"
+                    - generic [ref=e462]: i
+                    - generic [ref=e463]: ()
+                    - generic [ref=e464]: ===
+                    - generic [ref=e465]: focus
+                    - generic [ref=e466]: ()
+                    - generic [ref=e467]: "}"
+                  - generic [ref=e468]:
+                    - generic [ref=e469]: onOpen
+                    - generic [ref=e470]: =
+                    - generic [ref=e471]: "{"
+                    - generic [ref=e472]: open
+                    - generic [ref=e473]: "}"
+                  - generic [ref=e475]: />
+                  - generic [ref=e476]:
+                    - generic [ref=e477]: )
+                    - generic [ref=e478]: "}"
+                  - generic [ref=e479]:
+                    - generic [ref=e480]: </
+                    - generic [ref=e481]: For
+                    - generic [ref=e482]: ">"
+                  - generic [ref=e483]:
+                    - generic [ref=e484]: </
+                    - generic [ref=e485]: Show
+                    - generic [ref=e486]: ">"
+                  - generic [ref=e488]: );
+                  - generic [ref=e490]: "}"
+              - text: See more
+            - generic [ref=e491]:
+              - generic [ref=e493]: Refactor MailList component
+              - generic [ref=e494]:
+                - generic [ref=e495]:
+                  - text: Extract each row in
+                  - code [ref=e496]: MailList.tsx
+                  - text: into a standalone
+                  - code [ref=e497]: MailListItem
+                  - text: component. Preserve selection state, keyboard navigation, and the existing virtualization behavior.
+                - generic [ref=e498]:
+                  - text: Read
+                  - generic [ref=e499]: MailList.tsx
+                  - text: ","
+                  - generic [ref=e500]: useSelection.ts
+                - generic [ref=e501]:
+                  - text: Created
+                  - generic [ref=e502]: MailListItem.tsx
+                  - generic [ref=e503]: "+62"
+                - generic [ref=e504]:
+                  - text: Edited
+                  - generic [ref=e505]: MailList.tsx
+                  - generic [ref=e506]: "+18"
+                  - generic [ref=e507]: −74
+                - group [ref=e508]:
+                  - generic "Mapped the MailList layout" [ref=e509] [cursor=pointer]
+                - generic [ref=e510]:
+                  - text: "Here's the plan I followed:"
+                  - list [ref=e511]:
+                    - listitem [ref=e512]:
+                      - text: Create
+                      - code [ref=e513]: MailListItem.tsx
+                      - text: with props for
+                      - code [ref=e514]: message
+                      - text: ","
+                      - code [ref=e515]: selected
+                      - text: ", and"
+                      - code [ref=e516]: onSelect
+                      - text: .
+                    - listitem [ref=e517]:
+                      - text: Wrap it in
+                      - code [ref=e518]: React.memo
+                      - text: with a comparator on
+                      - code [ref=e519]: message.id
+                      - text: +
+                      - code [ref=e520]: selected
+                      - text: .
+                    - listitem [ref=e521]:
+                      - text: Lift
+                      - code [ref=e522]: useSelection
+                      - text: into
+                      - code [ref=e523]: MailList
+                      - text: and pass handlers down.
+                - generic [ref=e524]: Make sure arrow‑key focus still works after the split.
+                - generic [ref=e525]:
+                  - text: Good call — I'll forward a ref to the row's root and call
+                  - code [ref=e526]: focus()
+                  - text: when the active index changes, then re‑run the suite.
+                - generic [ref=e527]:
+                  - text: Ran
+                  - generic [ref=e528]: npm test -- MailList
+                - generic [ref=e529]:
+                  - text: All 184 tests pass. Render time on the 10k‑message fixture dropped from
+                  - strong [ref=e530]: 41ms to 12ms
+                - generic [ref=e531]:
+                  - generic [ref=e532]: Queued
+                  - generic [ref=e533]:
+                    - text: Now extract the toolbar actions into a
+                    - code [ref=e534]: MailListToolbar
+                    - text: component and add a Storybook story for it.
+              - generic [ref=e535]:
+                - generic [ref=e536]: Describe what to build
+                - generic [ref=e537]:
+                  - generic [ref=e538]:
+                    - img [ref=e540]
+                    - img [ref=e543]
+                    - generic [ref=e545]:
+                      - text: Claude Opus 4.7
+                      - img [ref=e546]
+                  - img [ref=e550]
+              - generic [ref=e553]:
+                - generic [ref=e554]:
+                  - img [ref=e555]
+                  - text: Local
+                  - img [ref=e557]
+                - generic [ref=e559]:
+                  - img [ref=e560]
+                  - text: Autopilot (Preview)
+                  - img [ref=e562]
+              - generic [ref=e564]:
+                - generic [ref=e566]: Sessions
+                - generic [ref=e567]: New Session
+                - generic [ref=e568]:
+                  - generic [ref=e569]:
+                    - img [ref=e571]
+                    - generic [ref=e573]:
+                      - generic [ref=e574]: Refactor MailList component
+                      - generic [ref=e575]: Thinking…
+                  - generic [ref=e576]:
+                    - img [ref=e578]
+                    - generic [ref=e580]:
+                      - generic [ref=e581]: Wire MCP server for telemetry pipeline
+                      - generic [ref=e582]: Editing mcp.config.ts
+                  - generic [ref=e583]:
+                    - img [ref=e585]
+                    - generic [ref=e587]:
+                      - generic [ref=e588]: Add language server for .prisma files
+                      - generic [ref=e589]: Running tests in parser.test.ts
+                  - generic [ref=e592]:
+                    - generic [ref=e593]: Refactor command palette to fluent API
+                    - generic [ref=e594]:
+                      - generic [ref=e595]: "+639"
+                      - generic [ref=e596]: "-323"
+                      - text: · 2 hrs ago
+                  - generic [ref=e599]:
+                    - generic [ref=e600]: Scaffold extension for inline chat actions
+                    - generic [ref=e601]: 5 hrs ago
+                  - generic [ref=e604]:
+                    - generic [ref=e605]: Theme tokens for high-contrast mode
+                    - generic [ref=e606]:
+                      - generic [ref=e607]: "+752"
+                      - generic [ref=e608]: "-367"
+                      - text: · yesterday
+                  - generic [ref=e609]:
+                    - img [ref=e611]
+                    - generic [ref=e613]:
+                      - generic [ref=e614]: Generate typed SDK from OpenAPI 3.1 spec
+                      - generic [ref=e615]:
+                        - generic [ref=e616]: "+218"
+                        - generic [ref=e617]: "-12"
+                        - text: · 2 days ago
+                  - generic [ref=e618]:
+                    - img [ref=e620]
+                    - generic [ref=e622]:
+                      - generic [ref=e623]: Diagnose flaky CI run on macOS arm64
+                      - generic [ref=e624]: 4 days ago
+                  - generic [ref=e627]:
+                    - generic [ref=e628]: Optimize Live Share session bootstrap
+                    - generic [ref=e629]:
+                      - generic [ref=e630]: "+52"
+                      - generic [ref=e631]: "-1"
+                      - text: · 3 days ago
+                  - generic [ref=e634]:
+                    - generic [ref=e635]: Add devcontainer for monorepo workspace
+                    - generic [ref=e636]: 6 days ago
+                  - generic [ref=e639]:
+                    - generic [ref=e640]: Port debug adapter to DAP 1.65
+                    - generic [ref=e641]: 1 wk ago
+        - generic [ref=e642]: 0 0 0 0 1 0 1 1 1 0 1 1 1 0 1 0 0 1 1 0 0 0 0 0 1 1 1 0 1 0 0 0 1 1 1 1 0 0 1 1 0 0 0 0 0 1 1 1 0 0 1 1 1 1 1 1 0 0 0 1 0 0 1 1 1 0 0 0 1 1 0 0 1 1 0 0 1 1 1 0 0 1 1 0 1 1 0 0 0 1 0 0 1 1 0 1 0 1 1 1 1 0 1 1 0 1 0 0 0 0 1 1 1 1 0 0 0 1 0 0 1 1 1 0 1 1 1 1 1 0 0 1 1 1 0 1 1 1 0 1 0 1 0 1 0 1 1 1 0 1 0 0 1 1 0 0 1 1 1 1 0 1 1 0 0 1 0 0 0 1 1 1 1 0 0 0 1 1 0 0 0 1 1 1 1 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 0 1 1 1 1 0 1 0 1 0 1 1 1 1 0 1 0 1 0 0 1 1 1 0 1 1 0 1 1 1 0 0 0 1 1 0 1 1 1 1 1 0 1 1 1 0 1 0 0 1 0 0 1 0 1 1 0 0 1 0 0 1 1 1 0 1 0 0 0 1 0 0 0 0 0 1 1 0 1 0 0 0 0 0 1 1 0 1 1 1 1 1 0 1 1 1 1 1 1 0 1 1 0 0 0 1 1 0 0 0 1 1 0 0 0 1 0 1 0 0 0 0 0 0 0 1 0 1 1 0 1 1 1 0 0 1 1 0 0 0 1 0 0 0 0 0 1 0 0 1 0 0 1 0 1 1 1 0 0 0 1 1 1 0 1 0 0 1 0 0 0 0 1 0 0 1 0 0 0 1 0 1 0 0 1 1 0 1 0 0 0 0 0 1 1 0 0 0 0 1 1 1 0 1 1 1 1 0 1 1 1 0 1 0 1 H A P P Y _ C O D I N G ! 0 0 0 1 0 1 0 0 0 1 0 0 0 0 1 0 0 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 0 1 1 0 0 0 0 0 1 0 1 0 0 0 0 1 1 1 1 0 1 1 1 1 1 0 0 0 1 1 0 1 1 0 1 0 0 1 0 0 1 1 1 1 0 1 0 1 0 0 1 1 0 1 1 1 0 1 1 1 0 0 1 0 0 1 1 1 1 1 0 0 1 1 0 0 0 1 0 0 1 0 1 0 0 0 1 1 1 0 1 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 1 0 1 1 0 1 0 1 1 0 0 0 0 1 0 1 1 0 0 1 0 0 1 1 1 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 0 0 0 0 0 1 1 1 0 0 0 0 1 0 0 0 1 1 0 1 0 0 0 1 1 1 0 1 0 0 0 1 1 1 1 0 1 1 1 0 1 1 0 0 0 0 0 1 0 0 1 0 0 0 1 0 1 1 1 0 0 0 0 1 0 0 1 1 0 0 0 0 0 0 0 0 1 1 1 0 1 1 1 0 1 1 0 0 1 0 0 0 0 1 0 1 0 0 0 0 1 1 0 1 0 0 0 1 1 0 0 1 0 1 0 1 1 0 1 0 1 1 1 0 0 0 1 0 1 0 0 1 1 0 0 1 1 1 0 1 1 1 0 1 1 0 0 0 0 1 0 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 1 0 1 1 0 1 1 1 1 0 0 1 0 0 0 0 1 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 1 0 1 0 0 0 1 0 1 1 1 0 0 1 0 1 1 0 0 1 1 1 1 0 0 0 0 0 1 1 1 1 1 0 1 0 1 0 0 0 0 1 0 1 0 1 0 0 1 1 1 1 0 0 1 0 1 1 0 1 0 1 1 0 1 0 0 1 0 0 1 1 0 0 1 1 0 1 1 0 1 0 1 1 0 0 0 1 1 0 1 1 0 0 0 1 1 1 0 0 1 1 0 0 0 0 1 0 1 1 0 1 0 1 1 1 1 1 0 0 0 0 1 0 0 0 0 0 0 0 1 1 1 0 1 0 1 0 1 1 1 0 1 0 0 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 1 0 0 1 0 0 1 0 0 1 1 0 1 1 1 0 0 1 1 1 1 1 0 0 1 1 0 1 0 1 1 1 0 0 0 0 1 0 0 0 0 1 0 1 0 0 1 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 0 1 0 0 1 1 0 0 1 0 1 0 0 1 1 0 1 0 1 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 1 0 1 0 0 1 1 0 0 1 1 0 1 1 1 1 1 1 0 1 1 0 0 1 1 1 1 1 0 1 1 0 1 0 1 1 1 1 1 0 1 1 1 0 0 0 1 1 1 1 1 1 0 1 0 0 1 0 1 1 0 0 1 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 1 1 0 1 0 1 1 1 1 0 1 0 0 1 1 1 0 0 0 1 0 0 0 0 0 1 0 1 0 0 1 0 0 1 1 0 0 1 0 0 0 1 1 0 0 1 0 0 1 1 1 0 1 1 0 1 0 0 1 1 0 0 1 1 0 1 0 1 0 0 0 0 1 0 0 1 0 0 1 1 0 0 0 1 1 0 0 0 0 1 1 0 1 1 0 0 0 1 1 0 0 1 1 0 1 0 1 1 1 1 1 0 1 0 0 1 1 0 0 1 1 0 0 0 0 0 1 1 0 0 1 1 0 0 0 1 1 0 0 0 1 1 0 1 0 0 1 0 1 1 1 0 0 1 0 1 0 0 1 1 0 1 1 1 1 1 0 0 1 1 1 1 0 0 1 1 0 0 1 0 1 1 0 0 1 0 0 1 0 0 0 1 1 1 1 0 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 0 1 0 1 1 0 0 0 0 0 1 1 0 0 1 1 1 1 0 1 0 1 0 1 1 0 0 1 1 0 1 0 0 0 1 1 0 1 0 0 0 1 0 0 0 1 0 0 0 0 1 1 1 0 1 0 0 1 1 1 0 1 0 1 1 0 0 1 1 1 0 1 0 0 1 1 1 0 0 0 0 1 0 0 0 1 1 0 1 1 0 0 0 0 1 1 1 0 1 1 0 0 1 1 1 0 0 1 1 1 0 0 0 1 0 0 0 0 1 0 1 0 1 1 1 1 0 1 1 1 1 0 1 1 1 0 1 0 1 0 1 1 0 0 0 1 1 0 1 0 1 1 0 1 0 1 0 1 0 1 1 0 1 1 1 0 0 1 0 1 1 0 1 0 0 1 0 0 1 0 0 1 1 0 0 1 1 1 1 0 1 1 0 1 1 1 1 1 1 1 0 0 1 1 1 0 1 0 0 0 1 1 1 1 0 0 1 0 1 0 0 1 0 0 0 1 0 0 0 1 1 0 0 0 1 0 0 1 1 0 0 1 1 0 0 1 0 0 0 0 0 1 0 0 1 0 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 0 1 1 1 1 0 1 0 0 0 1 1 1 1 0 1 1 0 0 0 1 1 0 1 0 1 0 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 0 1 1 1 1 0 1 0 0 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 0 0 1 0 0 0 0 1 0 0 1 1 0 1 0 1 1 1 0 0 1 0 1 0 0 0 0 1 1 0 0 0 0 1 1 0 1 0 0 0 1 1 0 1 0 0 0 1 1 0 0 1 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 0 1 1 1 0 0 1 1 0 0 0 0 0 1 0 1 0 0 1 0 1 0 0 0 0 1 0 0 1 1 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1 0 0 0 0 0 1 1 0 1 0 0 1 1 0 1 1 1 1 0 1 0 1 1 1 0 0 1 0 0 0 0 1 0 1 1 0 1 1 1 1 0 1 1 0 0 0 0 0 0 1 1 0 0 0 0 1 1 1 0 0 0 0 1 1 1 1 1 0 1 0 1 1 0 1 1 0 1 0 1 0 1 0 0 1 1 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 1 0 0 1 1 1 0 0 0 0 1 0 1 1 0 0 0 1 1 1 1 0 0 0 1 1 0 0 0 1 1 0 1 1 1 1 1 0 0 1 1 1 1 1 0 0 0 1 1 0 0 1 0 0 1 0 1 1 1 0 1 1 0 1 0 0 1 0 1 1 1 1 1 1 1 0 0 1 1 1 0 0 0 1 0 0 1 1 1 1 0 0 1 1 0 0 0 1 0 0 0 0 1 0 1 1 0 1 1 0 0 1 1 0 1 1 0 1 1 1 0 0 0 0 0 1 1 1 0 1 0 0 0 0 0 0 1 0 1 1 1 0 0 0 1 1 0 0 0 1 0 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 0 1 1 1 0 1 0 0 1 0 1 0 1 1 0 1 0 1 1 0 0 0 1 0 1 0 0 0 0 1 0 0 1 0 0 0 1 1 1 0 0 0 0 0 1 0 0 1 1 0 0 0 1 1 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 1 0 0 1 0 1 1 0 1 1 0 1 1 0 1 1 0 0 1 1 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 0 1 1 1 0 0 0 1 1 1 1 0 0 1 0 0 1 1 1 0 1 1 0 1 0 0 0 0 0 0 1 1 0 1 0 1 1 0 1 0 1 0 0 1 1 0 0 0 1 1 1 0 1 1 1 0 1 0 0 1 1 1 0 0 1 0 0 0 0 1 1 1 1 0 1 1 1 0 1 1 1 1 1 1 0 0 1 1 0 1 1 0 0 0 0 1 1 0 0 1 1 1 0 1 0 0 0 1 1 1 1 1 0 1 0 0 1 1 0 1 0 1 0 0 0 0 0 0 0 1 0 1 0 0 1 0 0 1 0 1 1 1 1 0 1 1 1 0 1 0 1 1 1 1 1 1 0 1 0 0 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 1 1 0 1 0 0 1 0 0 1 0 1 1 0 0 1 1 0 0 1 1 0 1 1 0 1 1 1 1 1 1 0 0 0 0 0 1 1 0 1 0 1 0 0 0 1 0 1 0 0 1 1 0 1 0 0 0 1 0 0 0 0 1 0 1 1 1 0 1 1 0 0 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 1 1 0 0 0 0 1 0 1 1 0 1 0 1 0 0 1 0 1 0 1 1 1 0 0 1 0 0 1 0 1 0 1 0 0 1 0 0 0 1 1 1 0 0 1 0 0 1 1 1 0 1 0 0 1 0 1 0 1 0 0 0 1 1 0 0 0 1 1 1 0 0 0 1 1 1 0 1 1 1 1 1 0 0 1 0 0 0 1 1 0 1 0 0 0 1 0 0 1 0 1 1 1 1 0 1 0 0 1 0 0 1 1 0 0 1 0 0 1 1 1 0 0 0 1 1 1 1 1 1 0 1 1 1 0 1 1 0 0 1 1 0 0 0 0 1 1 0 1 1 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 1 0 0 1 0 1 1 1 1 1 0 1 1 1 1 1 1 0 1 0 1 1 1 1 1 1 0 1 1 1 0 1 1 1 1 1 1 1 1 1 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 1 1 1 0 0 0 1 0 1 0 1 0 1 0 1 0 0 1 1 0 0 0 0 1 1 0 0 0 0 1 1 1 0 0 0 1 1 1 0 1 0 1 1 1 0 1 0 0 1 0 1 1 0 1 0 0 1 0 1 1 0 0 0 1 1 1 1 0 0 0 0 1 0 1 0 0 0 0 1 1 0 1 1 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 0 0 0 1 0 0 0 0 0 1 0 0 1 0 1 1 0 1 1 0 1 0 0 1 1 1 1 0 1 0 1 0 0 0 0 1 0 0 0 0 0 0 1 1 0 0 0 1 0 1 1 1 1 0 0 1 0 0 0 1 1 0 1 0 1 1 1 0 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 1 1 1 1 0 0 1 0 0 1 1 1 0 1 1 1 0 0 1 0 1 1 1 1 0 1 1 0 1 0 0 0 1 1 0 0 0 0 1 1 1 0 1 1 0 0 1 0 0 1 0 1 0 0 0 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 0 0 1 0 1 1 1 0 1 0 0 1 0 1 0 1 0 1 1 0 0 0 1 0 1 0 0 1 0 0 0 0 1 0 0 0 1 0 1 1 0 1 1 1 1 0 0 1 1 0 1 0 1 1 1 0 0 0 1 1 1 1 0 0 1 1 0 0 0 1 0 0 1 0 0 1 1 0 1 1 0 0 0 1 1 1 1 1 0 1 0 1 0 1 0 0 1 0 1 0 0 1 1 0 1 0 0 0 1 1 1 0 0 0 1 1 1 0 1 0 1 0 1 0 1 1 1 1 0 1 1 0 0 0 1 1 0 0 0 1 0 0 0 1 0 0 1 0 0 1 1 1 0 0 1 1 1 1 1 0 1 0 1 1 0 1 0 0 0 0 0 1 1 1 1 0 1 1 1 0 0 1 1 0 1 1 0 1 1 0 1 0 0 0 0 1 1 1 1 1 1 1 1 0 0 1 0 1 0 1 0 0 1 1 0 1 0 1 1 1 1 0 1 0 1 0 1 1 0 1 0 1 1 1 1 0 0 0 1 1 0 1 0 0 1 1 0 1 1 1 1 0 1 1 1 1 1 1 1 0 1 1 1 1 1 0 1 0 1 1 0 0 0 1 1 0 1 0 1 1 1 1 0 1 0 0 1 0 0 0 1 0 0 0 1 1 1 1 0 1 0 1 0 1 0 1 1 0 1 1 0 1 0 0 1 1 1 0 0 1 1 1 1 1 1 0 0 1 0 0 0 1 0 1 1 0 0 1 0 1 1 0 1 0 0 0 1 0 0 1 1 1 0 0 0 0 1 0 0 1 0 1 0 1 1 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 0 1 0 1 0 1 1 1 0 0 1 0 0 0 1 1 0 0 1 0 1 1 0 1 0 1 0 0 1 0 0 1 1 1 0 0 1 0 0 0 0 0 0 0 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 0 0 0 1 0 0 1 0 0 1 0 0 0 0 1 1 0 1 0 0 0 1 1 0 0 1 0 0 0 1 1 1 0 0 0 0 0 0 1 0 1 0 0 1 1 1 0 1 1 0 0 1 1 0 1 1 1 0 0 1 0 1 0 0 0 0 0 0 1 0 1 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 1 0 0 1 0 0 1 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 1 1 1 0 1 1 1 1 1 0 1 0 1 0 0 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 0 1 0 0 0 0 0 0 0 1 1 0 0 0 0 1 0 1 0 1 1 1 0 0 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 0 0 0 1 1 1 0 1 1 1 0 0 1 1 1 0 1 1 1 1 0 0 0 0 0 0 1 1 0 0 1 0 0 1 1 1 0 0 0 1 0 0 0 0 0 1 1 0 1 0 1 1 1 0 1 0 1 0 1 0 1 0 0 1 1 1 1 0 0 1 0 0 1 1 1 1 0 1 1 1 1 0 1 1 0 0 1 1 0 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 1 1 1 0 1 0 1 0 0 1 0 1 1 1 0 0 1 1 0 0 0 0 1 0 0 1 1 0 0 1 0 1 1 0 0 0 1 0 1 1 0 0 0 1 0 1 1 0 0 1 0 0 0 0 1 1 1 0 1 1 0 0 0 0 0 1 1 0 0 1 1 1 1 0 1 1 0 0 1 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0 1 1 0 1 1 0 0 0 0 0 0 0 0 1 1 1 0 1 0 0 1 1 1 1 1 0 1 1 1 1 1 1 1 0 1 1 1 1 0 1 1 1 1 1 1 0 1 0 0 0 0 0 0 1 0 1 1 1 1 0 0 1 1 1 0 1 0 1 0 1 1 0 0 1 0 1 1 0 1 1 0 1 0 1 0 1 0 0 0 1 1 1 0 1 1 0 0 1 0 0 0 0 1 0 1 0 0 1 0 0 0 1 1 0 1 1 0 0 1 0 0 1 0 0 0 0 0 1 1 1 0 1 1 0 1 0 0 0 1 0 0 1 0 0 0 1 0 0 0 0 0 1 0 1 1 0 1 0 1 1 1 1 0 0 1 0 1 0 0 0 0 0 0 1 1 1 0 0 0 1 1 0 1 0 0 0 0 1 0 0 0 1 1 1 1 1 0 1 0 0 1 1 0 0 1 1 1 1 0 1 0 0 1 0 1 1 1 1 1 0 1 0 1 0 1 1 0 0 0 1 0 1 1 0 1 1 0 0 1 0 0 0 1 0 1 0 1 1 1 0 0 1 1 0 1 1 1 1 0 1 1 0 1 1 0 1 1 1 1 0 0 0 0 1 0 1 1 1 1 1 1 0 1 0 0 0 1 0 0 0 1 0 0 0 1 1 1 1 0 1 1 1 0 1 0 0 0 1 1 0 0 1 0 0 1 0 1 1 1 0 1 0 1 0 0 1 0 1 1 0 0 1 0 1 0 0 1 0 0 1 0 1 1 1 0 0 1 1 0 0 0 0 0 0 1 0 1 1 0 0 0 0 1 0 1 0 0 0 1 0 0 0 0 1 1 1 1 0 0 1 0 0 1 1 0 0 0 1 1 1 0 1 1 1 1 0 0 1 0 0 1 0 0 0 0 0 1 1 0 1 1 1 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 0 0 1 1 1 0 1 0 1 0 1 0 0 0 0 0 1 0 1 1 1 1 1 0 1 1 0 0 0 1 1 0 1 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 0 1 1 1 0 0 1 1 0 1 0 1 0 0 1 0 0 1 0 0 0 1 0 1 0 1 0 1 1 0 1 1 1 0 1 1 1 0 1 1 0 1 0 0 1 0 1 0 1 1 0 1 1 0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 1 1 1 1 1 0 0 0 0 0 0 1 1 0 1 0 0 1 1 0 0 0 1 1 0 1 1 0 1 1 0 0 0 0 1 0 0 1 1 0 1 0 1 0 1 1 0 0 1 0 1 1 0 1 1 0 1 1 0 1 0 1 1 0 0 0 0 1 1 1 0 0 0 0 1 1 1 1 0 1 1 0 0 0 1 1 1 0 0 0 0 1 0 0 1 1 1 0 1 0 1 0 1 0 0 0 1 1 1 0 1 1 0 1 0 0 1 1 1 0 1 1 1 0 1 1 0 1 0 1 0 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0 1 0 0 0 0 0 0 1 0 0 1 0 1 1 0 0 1 0 0 1 0 0 1 0 0 1 1 0 0 0 0 0 1 0 1 0 1 1 0 0 0 0 0 0 0 1 0 0 1 1 0 1 0 0 1 1 1 1 1 1 1 0 1 1 0 0 0 1 1 1 1 1 1 1 0 1 0 1 0 0 1 0 1 0 0 1 0 0 1 0 0 1 0 0 0 1 1 0 1 1 0 1 0 0 1 0 1 1 1 0 1 1 1 1 0 1 0 1 1 0 1 0 1 1 1 1 1 0 1 1 0 1 1 0 1 1 0 0 1 1 0 0 1 0 1 1 1 1 1 1 0 1 0 0 1 1 1 1 0 1 1 0 1 0 0 1 0 1 0 0 1 0 0 1 1 0 0 1 1 1 0 1 0 1 1 0 1 0 1 0 0 0 1 0 0 1 0 0 0 1 0 0 0 0 1 1 0 0 0 0 1 0 1 1 1 0 0 1 0 0 1 0 1 1 1 1 0 0 0 0 1 0 0 1 1 1 0 1 0 0 0 1 1 0 0 0 0 1 1 0 1 1 1 0 0 0 1 0 0 0 1 1 0 1 1 0 0 0 1 0 0 1 0 0 0 1 1 0 0 1 0 0 1 0 0 0 0 0 0 1 0 1 0 0 1 0 0 0 1 0 0 1 0 1 0 1 1 1 0 0 0 1 0 1 0 0 0 0 1 0 0 0 1 1 1 0 1 0 0 1 0 0 0 1 0 0 0 1 0 1 1 0 0 1 1 1 0 1 1 1 0 1 1 1 0 1 0 0 0 0 0 1 1 0 1 1 1 0 0 1 1 1 0 0 1 1 1 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 0 0 0 1 1 0 1 0 0 0 1 1 0 0 0 1 0 1 1 1 1 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1 0 1 1 1 0 0 1 0 1 1 1 1 1 1 1 0 0 1 1 1 0 1 0 1 0 1 0 1 1 1 1 1 0 1 0 1 0 0 0 1 0 0 0 0 1 1 1 1 1 1 0 1 1 0 0 1 0 1 1 1 0 0 0 1 0 1 1 0 0 1 0 0 0 1 1 1 0 1 1 1 1 0 0 1 1 0 1 1 1 0 1 1 0 0 1 0 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 1 0 0 0 1 0 0 1 1 0 0 0 1 0 1 0 1 0 1 1 1 0 0 1 0 0 0 1 1 1 1 1 0 0 0 0 1 0 1 0 1 1 0 0 0 0 1 1 0 0 0 1 0 1 0 0 0 1 0 1 1 0 1 1 1 1 0 1 1 1 0 1 0 0 1 1 1 1 1 1 1 1 1 0 0 0 1 0 0 1 1 0 1 0 1 1 1 0 1 1 0 1 1 1 0 1 0 0 0 1 1 1 1 1 1 0 0 0 1 1 1 0 0 1 0 1 1 0 0 0 1 1 0 1 0 1 0 0 0 0 1 1 0 1 0 0 0 1 0 0 1 0 0 1 1 0 1 1 0 1 1 1 1 1 0 1 1 0 1 0 0 1 0 0 1 0 1 1 1 1 0 1 0 1 0 1 0 1 1 0 1 0 1 1 0 1 0 1 0 0 0 0 1 1 1 1 1 0 1 0 0 0 1 0 1 1 0 0 1 0 1 1 1 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 0 1 0 1 0 0 0 0 1 0 1 1 1 1 1 0 1 0 1 1 0 1 0 1 1 1 0 0 1 0 1 1 0 1 1 1 1 0 1 1 1 0 0 0 0 0 1 1 1 1 1 0 1 1 1 1 1 1 0 1 0 0 0 1 0 0 1 0 1 1 1 0 1 0 0 0 1 1 0 0 1 1 1 1 0 1 0 1 0 0 1 0 1 1 1 1 0 0 1 1 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 1 0 1 1 1 0 1 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 1 0 0 0 1 1 1 1 1 1 0 0 0 0 0 0 1 0 0 1 1 1 1 0 0 1 1 1 1 1 0 0 0 1 1 1 1 0 0 0 0 1 1 0 0 1 1 0 0 0 1 1 1 1 1 0 1 0 1 1 0 0 0 0 1 1 1 1 1 0 1 1 0 0 0 0 1 1 1 0 1 1 1 1 0 1 1 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 0 1 1 0 1 1 1 0 1 1 0 0 0 0 0 1 1 1 0 1 1 1 1 1 1 0 0 0 1 1 0 1 0 0 0 1 0 1 1 0 0 0 1 1 1 1 0 0 1 1 1 0 0 0 0 1 1 0 0 1 1 1 1 0 1 0 1 0 1 0 0 0 1 1 0 0 1 0 1 0 0 1 1 0 0 1 0 0 0 1 0 0 1 0 1 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1 0 1 0 1 1 1 0 1 1 0 0 1 1 0 1 1 0 1 1 1 1 1 0 0 1 0 1 1 1 0 1 1 1 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 0 0 0 1 1 1 0 0 0 0 1 0 0 1 0 1 0 1 1 1 1 0 1 0 1 1 1 1 0 0 1 0 1 0 0 1 0 1 1 1 0 1 1 0 1 1 0 1 1 1 0 1 1 1 0 0 1 1 1 1 0 1 0 1 1 0 1 0 1 0 0 0 1 1 1 0 1 1 0 0 1 0 1 1 0 0 0 1 0 1 1 1 0 0 0 0 1 1 1 0 1 1 0 0 0 0 1 0 0 0 1 1 0 1 1 1 0 1 1 0 0 1 1 0 1 1 1 1 1 1 0 1 1 0 1 1 0 0 0 1 0 1 1 1 0 0 1 1 0 0 1 0 1 1 0 0 0 0 0 1 0 0 1 1 0 1 1 0 1 0 1 0 0 0 0 0 1 0 1 1 0 0 1 1 1 0 1 1 1 1 0 1 0 0 0 0 1 1 0 1 1 0 1 1 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 0 1 0 1 1 0 1 0 0 1 1 1 0 1 0 1 1 1 0 1 1 0 0 0 0 0 1 0 0 0 0 1 1 1 0 0 1 1 1 1 1 1 0 0 0 0 1 0 1 0 1 1 1 1 1 1 1 0 0 1 0 0 0 0 1 1 1 0 1 1 0 1 1 1 1 1 0 1 1 0 1 1 0 1 0 1 0 1 1 0 0 1 1 0 1 1 0 0 0 1 0 1 0 0 0 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 0 0 1 0 1 0 0 1 0 1 0 1 1 1 1 1 0 1 0 0 1 1 1 0 0 1 0 1 0 0 1 1 0 1 0 1 1 0 1 0 0 1 0 0 1 1 0 1 1 0 1 0 0 1 0 1 0 1 1 0 1 0 0 1 1 1 0 1 0 0 1 1 0 0 0 0 0 1 1 0 0 0 1 0 0 0 0 1 1 1 0 0 0 1 1 1 1 1 0 1 1 0 0 0 0 0 0 0 1 1 0 1 0 1 0 1 0 1 0 1 1 0 0 0 0 1 1 1 0 1 1 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 1 0 1 1 0 0 0 0 0 0 0 0 0 1 1 0 1 1 1 0 0 1 1 1 1 1 0 0 0 0 0 0 0 1 0 1 0 1 1 1 0 0 0 0 0 1 1 0 0 1 1 0 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 1 1 1 0 0 0 0 0 0 0 1 1 1 1 0 0 1 0 0 1 1 1 0 1 0 0 0 1 1 1 1 0 1 1 1 0 0 0 1 1 0 1 0 1 0 0 1 0 0 1 1 0 1 0 0 0 1 0 0 0 0 0 0 1 0 0 0 0 1 0 1 1 1 0 0 0 0 0 0 0 0 1 0 1 0 0 0 0 1 0 0 1 0 0 0 1 1 0 1 0 1 1 0 0 0 0 0 1 1 0 1 0 1 0 0 1 0 0 0 1 0 1 0 1 1 1 1 1 1 0 0 1 1 1 0 0 0 1 0 1 1 0 0 0 0 1 1 1 1 0 0 1 1 1 1 1 1 1 0 0 1 1 1 1 1 1 0 1 0 0 0 0 0 0 1 1 0 0 0 0 1 0 1 1 1 1 0 0 0 1 0 1 0 0 1 0 1 0 0 0 1 0 0 1 0 1 0 0 1 1 1 0 1 1 0 0 0 0 0 1 0 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 0 0 0 1 0 0 0 1 1 1 0 0 1 1 1 0 0 1 1 0 0 1 0 0 1 1 0 1 1 0 1 0 0 0 1 1 1 1 1 1 0 0 0 0 1 0 1 1 0 0 0 1 0 0 1 0 1 1 0 1 0 0 0 1 0 1 1 0 1 0 0 0 0 1 1 1 0 0 1 0 1 1 0 1 0 0 1 0 1 1 1 1 1 1 1 0 1 0 0 1 1 1 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 1 1 0 0 1 0 0 0 1 1 0 0 0 1 1 1 1 0 1 0 0 1 1 0 1 1 1 1 1 1 0 0 0 1 0 0 1 1 1 0 1 0 0 1 1 0 1 0 0 0 0 0 1 0 1 1 1 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 1 1 1 0 1 1 1 1 1 0 0 1 1 1 1 0 1 0 0 1 0 1 0 0 0 0 0 1 1 0 0 1 1 1 1 1 1 0 0 0 1 1 0 0 0 0 0 1 0 0 1 1 1 0 1 0 0 1 1 1 0 0 0 1 0 1 0 1 0 0 1 1 0 0 1 1 1 0 1 1 1 0 1 1 1 1 1 1 1 0 0 1 0 0 0 0 0 1 0 1 1 1 0 1 0 1 0 0 1 1 1 1 0 1 0 0 1 1 0 0 0 1 1 0 1 1 0 1 1 1 0 1 1 1 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1 1 0 0 1 1 1 0 0 1 1 0 0 1 0 1 1 1 0 0 0 1 0 1 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 0 0 0 0 0 0 0 1 1 0 0 1 1 0 1 1 1 1 0 0 1 1 0 1 1 0 0 0 0 0 0 0 1 0 1 1 1 1 0 0 1 1 0 0 0 0 1 1 0 1 0 0 0 1 1 1 1 0 1 0 1 0 1 0 0 1 1 0 1 0 1 1 0 0 1 0 1 0 0 0 1 1 0 0 1 1 1 1 1 1 1 0 1 0 1 1 0 1 1 0 0 0 1 0 1 0 1 0 1 0 1 0 1 0 0 1 0 1 0 0 0 1 1 0 0 1 1 1 0 0 1 1 0 1 0 0 1 0 0 0 0 0 1 0 1 1 1 0 0 1 0 1 0 1 0 0 0 0 1 1 0 1 0 0 1 1 1 0 1 1 1 0 0 0 1 0 0 1 0 0 0 0 0 0 0 1 1 1 1 1 0 1 1 1 0 0 0 0 0 1 0 0 0 0 1 1 1 0 1 1 1 0 1 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 1 0 1 0 1 0 0 0 1 1 0 0 0 0 1 0 1 1 0 0 1 0 1 0 1 1 0 1 1 0 0 0 0 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 0 0 1 0 1 0 0 0 0 0 0 0 0 0 1 1 0 1 1 0 1 0 0 0 1 0 1 1 0 0 1 1 1 1 0 0 0 0 0 1 1 1 1 0 1 1 1 1 1 0 1 0 1 0 1 1 1 1 1 1 1 1 0 1 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 0 0 1 0 1 0 0 1 1 0 0 1 1 0 0 0 0 0 1 1 0 0 1 1 0 1 0 1 1 1 0 0 0 1 1 0 0 0 0 1 1 1 1 1 0 1 0 1 1 0 1 1 0 0 1 0 0 1 1 0 0 0 0 0 1 1 0 1 1 1 0 0 0 1 1 0 1 1 1 1 1 0 1 0 1 0 0 0 1 0 1 1 1 1 0 0 0 1 0 1 0 1 1 1 1 1 1 0 0 1 0 1 0 0 0 1 0 0 0 0 0 1 1 0 0 1 0 1 1 0 1 1 0 0 1 0 0 0 1 1 1 1 1 0 1 1 1 1 1 0 1 0 1 1 0 1 0 1 1 0 1 0 0 0 0 0 0 0 1 0 0 1 1 1 0 1 1 1 0 1 0 0 1 0 1 1 1 0 0 1 1 1 1 1 1 1 0 1 0 0 1 0 1 0 0 0 1 1 1 1 0 1 0 0 1 0 1 0 1 0 0 0 0 0 0 1 0 1 1 0 0 0 1 1 0 0 1 0 1 0 0 0 1 1 0 1 0 0 1 0 1 0 1 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 1 1 0 0 0 0 0 1 0 1 0 1 0 0 0 0 1 1 0 1 1 0 0 1 0 1 0 0 1 1 0 0 1 0 0 0 0 0 1 0 1 0 1 0 1 1 0 0 1 0 0 1 0 1 0 1 1 0 1 1 0 0 1 1 0 1 1 0 1 1 0 0 1 1 0 0 0 0 1 1 0 0 1 0 0 0 1 0 1 1 1 1 1 1 0 1 0 1 0 0 1 1 1 0 1 0 1 1 0 1 1 1 1 0 0 1 1 1 0 1 0 0 0 1 1 0 1 1 1 1 0 1 1 0 1 0 1 1 1 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 1 1 1 0 1 0 1 1 1 1 0 0 1 0 1 0 0 0 1 0 1 0 1 0 0 0 1 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 1 0 1 1 0 0 0 1 0 1 1 0 1 1 1 1 1 1 1 1 1 0 1 0 1 0 1 0 0 1 1 1 1 0 0 1 1 1 0 0 0 1 1 0 1 1 1 0 1 1 0 0 1 0 0 0 0 1 1 0 1 1 0 1 0 0 1 1 0 0 0 1 0 0 1 0 1 0 0 1 0 0 1 0 0 0 0 0 1 0 1 0 0 1 1 1 1 0 0 1 0 0 1 1 1 1 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 1 0 0 1 0 1 0 0 1 0 0 1 0 0 1 1 1 0 0 1 1 1 1 0 1 0 0 1 0 0 0 0 0 0 1 1 1 0 1 1 1 0 0 1 0 0 1 1 0 1 0 0 1 0 0 0 1 0 1 0 0 0 1 1 1 1 0 1 0 1 0 0 0 0 0 0 0 1 0 1 1 0 1 1 1 1 0 0 1 1 1 0 1 0 1 0 1 1 0 0 0 1 1 0 0 0 1 0 0 1 0 1 1 1 0 0 1 0 1 1 0 0 1 1 0 0 0 0 0 0 1 0 0 0 1 1 1 0 0 0 0 0 1 0 1 1 0 1 1 0 0 1 1 0 1 1 0 0 0 0 0 1 1 0 1 0 1 1 1 0 0 0 0 0 1 1 1 1 0 1 0 1 0 1 1 1 0 1 1 1 0 1 0 1 1 1 1 1 1 1 0 0 0 0 1 1 0 1 0 0 1 0 0 0 0 1 1 1 0 0 1 1 0 0 1 0 1 0 1 1 0 0 1 1 0 1 0 0 0 0 1 1 1 1 0 0 0 1 0 1 0 1 1 0 0 0 1 1 1 0 1 1 1 1 1 0 0 1 1 1 0 0 1 0 1 1 0 0 0 0 0 0 1 0 0 1 0 1 1 0 1 1 0 1 1 1 1 0 1 1 1 0 1 0 1 1 0 1 0 0 0 1 1 1 0 0 0 1 0 0 0 1 1 0 0 0 0 0 0 1 0 0 1 0 1 0 0 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 0 1 1 1 1 1 1 1 1 1 0 1 1 1 0 0 1 0 0 0 1 0 1 1 1 1 1 1 0 0 0 1 1 1 1 0 1 0 1 1 0 0 0 1 0 1 0 0 1 1 0 0 1 0 1 1 0 1 1 1 0 0 1 0 0 0 1 1 1 0 1 0 1 1 0 0 1 0 1 1 0 1 0 1 1 1 0 0 1 1 0 0 1 1 0 0 1 0 1 1 0 0 1 1 0 0 1 1 0 1 1 1 1 0 1 0 1 1 0 0 1 1 0 0 0 0 1 0 0 0 1 1 0 1 1 0 0 0 0 1 1 0 1 0 1 1 1 1 0 0 0 1 1 0 1 1 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 1 1 0 1 0 1 1 1 0 1 1 1 1 1 0 0 0 0 1 1 1 0 0 1 1 1 1 1 0 1 0 1 0 1 1 1 1 1 0 0 0 1 1 1 1 0 0 1 0 1 1 0 1 1 1 0 0 1 1 0 0 1 0 0 0 0 0 0 0 1 0 1 0 1 1 0 1 0 0 0 0 1 0 0 0 1 1 0 0 0 1 0 1 0 1 1 1 0 1 1 1 0 0 1 0 0 1 0 1 0 0 0 1 0 1 1 1 0 1 0 1 0 1 0 1 0 1 1 0 0 0 1 1 1 1 0 0 1 1 0 0 1 0 1 1 1 0 0 0 1 1 0 0 1 0 1 0 0 1 1 0 1 1 0 0 1 1 0 1 1 1 0 1 1 0 1 0 1 0 1 1 0 0 0 1 0 0 0 0 1 0 1 0 1 0 0 1 1 1 1 1 0 0 1 0 0 1 1 1 0 0 0 1 0 1 0 0 0 1 1 1 1 1 0 1 1 0 1 0 1 1 0 1 0 0 0 1 0 1 1 1 1 0 1 1 0 0 1 0 1 1 1 0 1 1 0 1 0 0 1 1 1 0 0 1 0 1 1 1 1 0 0 1 0 1 1 1 1 1 0 1 0 0 1 0 1 0 0 0 1 0 0 1 0 1 1 0 1 1 1 0 0 0 1 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 1 0 0 1 1 1 0 1 0 0 1 0 0 0 0 0 0 1 1 0 1 1 1 1 1 0 0 1 1 0 0 1 1 0 0 1 1 1 0 1 1 1 1 0 1 0 1 1 0 1 0 0 1 0 0 0 1 1 0 0 1 1 1 0 0 0 1 0 0 0 1 0 0 1 0 1 0 1 1 0 1 0 1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 1 1 1 1 0 1 1 0 1 0 0 0 1 0 0 1 0 0 1 1 1 0 1 1 0 1 1 0 0 1 0 0 1 0 0 1 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 1 1 1 1 0 1 0 0 0 0 0 0 1 1 1 1 0 0 0 0 1 1 0 1 0 1 1 1 1 0 1 1 0 0 0 1 0 1 1 1 0 1 1 1 0 0 1 0 1 0 1 0 1 0 0 0 0 0 1 0 0 1 1 1 0 0 1 1 0 1 1 0 0 1 1 0 0 0 1 0 0 1 0 1 0 1 1 1 1 0 1 0 0 0 0 0 0 1 1 1 1 0 1 1 1 0 0 1 1 1 0 1 1 1 0 0 1 1 1 1 0 0 1 0 0 0 1 0 1 0 0 0 1 0 1 1 1 1 1 1 0 0 0 1 1 0 0 1 1 1 1 1 0 0 0 1 1 1 0 0 0 1 1 1 0 0 0 0 1 1 1 0 1 0 0 1 1 1 0 1 0 0 0 1 1 0 0 1 1 0 1 0 1 1 1 0 1 1 0 0 0 0 1 0 1 0 0 1 1 0 0 0 1 0 0 0 1 0 1 1 1 0 0 0 1 0 1 0 1 1 0 1 0 1 0 0 1 1 0 1 1 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 1 1 0 1 0 1 1 0 0 1 1 0 0 0 1 0 1 0 1 0 1 0 0 0 0 1 0 0 1 1 0 1 0 1 1 0 0 0 0 1 0 1 1 0 1 0 1 0 1 0 0 1 1 1 0 0 1 0 1 0 0 1 0 0 0 0 0 1 1 1 0 1 1 1 1 1 1 0 1 1 0 0 1 1 0 0 0 1 1 1 0 1 0 0 0 0 0 0 1 0 0 0 1 0 0 1 1 1 0 0 0 1 0 0 1 0 0 1 0 0 1 0 1 1 1 0 0 0 0 0 1 1 0 0 0 1 0 0 1 0 0 1 0 1 1 1 1 0 1 1 0 0 0 0 0 1 0 1 1 0 0 1 1 1 1 0 1 0 0 0 1 0 1 0 1 1 0 0 0 0 1 1 1 1 1 1 0 1 1 0 0 0 0 1 0 0 0 0 1 1 1 0 1 1 1 0 1 0 1 1 1 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0 1 1 0 0 1 1 0 0 0 0 0 1 1 0 1 1 0 1 1 0 1 1 0 1 1 1 1 1 0 0 1 1 0 1 1 1 1 0 0 0 1 0 1 1 1 1 0 0 0 1 1 1 1 1 1 1 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 1 0 1 0 1 1 1 1 1 0 0 1 0 0 1 1 1 0 0 1 0 1 1 1 0 1 1 1 1 1 1 1 1 1 0 0 0 0 1 0 1 1 1 1 0 1 1 1 0 0 1 0 0 1 1 1 0 0 0 0 1 1 0 1 0 1 0 0 1 1 0 0 0 1 0 1 1 1 0 0 0 0 1 1 0 0 1 0 1 1 1 0 0 1 1 0 1 0 0 1 1 1 1 0 1 0 1 0 0 1 0 0 1 1 0 1 0 1 0 0 0 0 1 0 1 1 0 1 1 0 0 0 1 1 0 0 1 1 1 1 0 0 0 0 1 0 1 0 0 0 1 0 0 1 1 1 1 0 1 1 0 0 1 0 1 0 0 0 1 0 1 1 1 0 0 1 1 1 1 0 1 1 1 0 1 0 1 0 1 1 0 1 0 1 0 0 1 0 1 0 1 0 1 1 1 0 1 1 1 1 1 0 0 1 0 1 1 1 1 1 0 1 1 1 1 0 0 1 1 0 1 0 1 0 1 0 1 1 1 1 0 0 1 1 0 0 0 1 0 0 0 0 0 0 0 1 0 0 1 1 1 1 0 1 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 0 0 1 1 0 0 1 1 0 0 0 0 0 0 0 0 1 0 0 1 1 0 1 1 1 0 0 0 1 1 0 0 1 1 1 1 1 0 0 1 0 1 1 1 1 1 1 1 1 0 1 0 0 0 0 1 1 1 0 1 1 0 1 0 1 1 0 1 1 1 0 0 1 0 0 1 0 1 1 1 1 1 0 1 1 0 0 1 1 0 1 1 1 0 0 1 1 1 0 1 0 0 0 0 0 0 0 1 1 1 0 0 0 0 1 1 1 1 0 1 1 0 0 1 1 1 1 1 1 1 1 0 0 0 1 1 1 1 0 1 0 0 1 0 1 0 0 0 0 1 1 1 0 0 1 0 0 0 1 0 1 1 0 0 0 0 1 1 1 0 1 0 1 1 1 0 1 1 0 0 0 0 1 1 0 1 0 0 0 0 0 0 0 1 1 1 0 1 0 0 0 0 0 1 1 0 1 0 1 0 1 0 1 0 0 0 0 1 1 1 0 0 0 0 0 0 1 1 0 0 1 1 1 1 1 1 0 0 0 0 0 1 0 1 1 0 0 0 0 1 0 1 1 0 0 0 0 1 1 0 0 0 1 1 0 1 0 1 0 1 0 0 1 0 1 0 0 0 1 1 0 1 1 0 1 0 0 0 0 0 1 1 0 0 0 1 1 0 1 0 0 1 0 0 1 1 0 1 1 0 0 0 1 0 1 1 1 1 0 1 0 0 1 0 0 0 1 1 1 0 1 1 0 0 0 1 0 0 0 1 0 1 1 0 1 0 1 0 0 1 0 1 0 0 0 0 1 1 1 0 0 1 0 1 1 1 0 1 1 1 0 1 1 1 1 0 0 0 0 0 1 0 0 1 0 1 0 0 0 1 1 0 0 0 1 1 0 0 1 0 0 0 1 1 1 1 1 0 1 1 1 1 0 1 1 0 0 0 0 0 1 1 1 0 0 0 1 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 0 0 0 1 1 1 0 1 0 1 0 1 0 0 1 1 0 1 1 1 1 1 0 0 1 0 0 0 0 0 0 1 1 1 0 0 1 1 0 0 1 0 1 0 0 1 1 0 1 1 1 1 1 1 1 1 1 0 0 0 1 1 1 0 0 0 0 1 0 1 1 1 0 1 1 1 1 1 1 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 1 0 1 0 1 0 1 1 1 1 1 1 0 1 1 1 1 1 1 0 1 0 1 0 1 1 0 0 1 1 1 0 0 0 1 0 0 0 1 0 0 0 1 1 0 0 0 1 0 0 0 1 0 1 0 1 0 1 0 1 1 1 0 0 1 0 1 0 1 0 1 1 1 0 0 0 1 1 1 0 0 1 1 1 0 0 1 1 1 1 0 0 1 1 0 1 0 0 1 1 1 1 0 0 0 1 1 0 0 0 0 0 1 1 1 0 1 1 0 1 1 1 1 1 1 0 1 1 1 0 0 0 0 0 1 0 1 0 1 0 0 0 1 1 0 0 0 1 0 0 0 0 1 0 0 0 1 0 1 1 0 1 0 1 1 1 0 0 0 1 0 0 1 1 1 0 1 0 1 1 0 0 1 0 0 1 1 1 0 1 1 1 1 1 0 1 0 0 1 1 0 0 1 0 0 0 1 0 1 1 1 1 0 0 0 0 1 0 1 0 0 1 0 0 1 1 0 1 1 0 1 0 0 1 1 0 0 0 0 1 1 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 0 0 1 1 0 0 1 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 1 0 1 1 0 1 0 1 1 0 0 0 1 0 1 0 0 0 0 1 1 0 0 1 1 1 0 0 0 0 1 0 0 0 1 1 0 1 1 0 1 0 0 0 1 1 1 0 0 1 0 1 0 1 0 0 1 0 0 0 0 0 0 0 1 0 0 1 0 1 0 1 1 0 0 0 0 1 1 1 1 1 0 1 0 1 1 1 0 0 1 0 0 0 1 1 0 0 0 0 1 0 1 1 0 0 0 0 1 0 0 1 0 0 0 0 0 1 1 1 0 0 1 0 0 0 1 0 1 0 0 1 0 0 1 0 0 1 1 1 0 1 1 0 0 1 0 0 0 0 1 1 1 1 1 1 0 1 0 0 0 0 1 1 0 1 1 1 0 1 0 0 0 0 0 0 1 0 1 1 0 0 1 1 0 0 0 1 0 0 0 1 1 1 1 1 1 1 0 1 1 1 1 0 1 1 0 1 1 0 1 1 0 0 1 1 0 1 1 1 0 0 1 0 0 0 0 1 1 1 0 0 0 0 0 0 0 1 0 1 0 0 1 0 0 0 0 0 1 0 1 1 0 1 1 1 1 0 1 0 1 1 1 0 0 1 1 1 0 1 0 1 1 1 0 1 0 0 1 0 1 1 1 0 1 1 1 0 1 1 0 1 1 1 0 0 1 0 1 1 0 0 1 1 1 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 1 0 0 1 1 0 0 0 0 0 1 1 1 0 0 1 1 0 1 1 1 1 1 1 0 0 1 1 1 0 0 1 0 1 1 0 0 0 0 0 0 0 0 0 0 1 1 0 0 1 1 1 0 0 1 0 0 1 0 0 0 0 1 0 0 0 1 0 1 0 1 0 1 1 1 1 1 1 1 0 0 0 1 1 1 0 1 0 0 1 1 0 0 0 1 0 1 1 1 0 0 1 0 0 0 1 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 1 0 0 1 0 1 0 1 1 1 0 1 0 1 0 1 1 1 0 0 0 0 1 0 0 1 1 0 1 0 0 0 1 0 0 1 1 1 1 1 1 0 1 0 1 1 0 1 1 0 0 0 0 0 1 1 1 1 1 1 0 1 0 1 0 0 0 0 0 0 0 0 1 1 1 1 0 1 1 0 1 1 0 1 0 0 0 1 1 0 1 0 0 0 1 0 0 1 1 1 0 0 1 1 0 1 0 0 1 0 0 0 1 1 1 1 1 1 1 0 1 0 1 1 0 0 0 1 1 0 0 1 0 1 0 0 1 0 1 0 0 0 1 0 1 0 1 1 0 1 0 0 0 0 1 1 1 0 0 0 1 0 0 1 0 1 1 0 0 1 1 0 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 0 0 0 1 1 1 0 0 0 0 0 1 1 1 0 0 1 0 1 0 0 1 1 0 0 1 1 1 0 0 0 0 0 1 0 1 0 0 1 1 0 1 1 0 0 1 0 0 1 1 0 0 0 0 1 0 1 0 1 0 0 0 0 1 1 1 1 1 1 0 0 0 0 1 0 0 1 0 1 0 1 0 0 0 0 1 0 0 0 1 1 1 0 1 0 0 0 0 1 1 0 0 1 0 0 0 0 1 1 1 1 1 0 1 1 0 0 0 1 0 0 0 0 1 0 0 1 1 1 1 0 1 0 0 0 1 1 1 0 0 0 0 0 0 0 0 1 0 0 0 0 1 0 1 0 1 0 1 1 0 0 0 0 0 1 0 0 0 0 1 1 0 1 0 0 1 1 1 0 1 0 0 1 0 1 0 1 1 0 0 1 1 0 0 0 0 0 0 0 1 1 1 1 0 0 1 0 0 1 1 1 1 0 1 0 1 1 0 1 1 0 1 0 0 1 0 0 0 0 0 1 1 1 0 1 0 0 0 0 0 0 0 1 0 0 1 1 1 1 0 0 1 0 1 0 1 0 1 1 1 1 1 1 1 0 0 1 0 0 0 1 0 1 0 1 1 0 1 1 1 0 1 0 0 0 0 0 0 0 0 1 1 0 1 1 1 0 1 0 0 1 1 1 0 0 0 1 1 1 0 1 1 0 0 1 1 1 1 1 0 0 1 0 0 1 1 1 1 1 1 1 1 0 0 0 0 1 1 1 1 1 0 0 1 0 1 0 1 0 1 0 0 0 1 1 0 1 1 1 1 1 1 1 0 1 0 0 1 0 1 0 1 1 1 1 0 1 1 1 0 0 1 1 0 1 1 0 0 0 1 1 1 0 1 1 0 0 1 1 0 0 1 0 0 0 1 1 0 1 0 0 0 1 0 0 0 0 0 0 1 1 1 1 1 0 0 1 0 1 1 1 1 0 1 1 0 0 1 1 1 0 1 1 0 0 1 0 0 1 0 0 0 1 1 1 1 0 1 1 0 1 0 1 0 1 0 1 1 1 1 1 0 1 0 1 0 1 1 0 1 0 1 0 1 0 0 0 1 0 0 0 1 0 0 0 0 0 1 0 1 0 1 1 0 1 1 0 1 1 1 0 1 0 0 1 1 1 1 0 0 1 1 1 1 0 1 1 0 1 0 1 0 1 0 0 1 1 1 0 1 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 1 0 0 1 0 1 0 1 0 0 1 1 1 0 1 0 1 0 0 1 1 0 0 0 1 1 0 0 1 1 1 1 1 1 1 0 0 1 0 0 1 1 1 0 0 0 0 0 1 0 0 0 1 1 0 0 0 0 1 0 1 1 1 0 1 0 1 0 0 0 1 0 0 1 1 1 0 1 0 0 1 1 0 1 0 1 0 1 0 0 1 1 1 1 1 0 1 0 0 1 1 1 0 0 0 0 0 1 1 1 1 1 0 1 1 1 0 0 1 0 1 1 1 1 1 1 0 1 0 0 1 1 1 0 1 1 0 1 1 0 0 1 1 1 0 1 0 0 0 0 1 0 0 0 1 1 0 1 1 0 0 0 0 0 1 1 0 1 0 0 0 0 0 1 0 1 1 1 1 1 0 1 0 0 1 1 0 0 1 0 1 1 1 1 0 0 0 0 1 0 1 0 1 1 1 1 1 0 0 1 1 1 1 0 0 0 0 0 1 0 0 1 0 1 1 1 0 0 1 0 1 0 1 0 1 0 0 1 1 1 0 1 0 1 1 0 1 0 1 0 0 0 0 0 1 0 1 1 0 0 1 1 0 1 1 1 0 0 1 1 0 1 1 0 1 0 1 0 1 0 1 1 1 0 0 1 1 0 1 1 0 1 0 1 1 0 0 1 1 1 0 0 0 0 0 0 1 1 0 1 1 0 0 1 1 0 0 1 0 1 0 1 0 0 1 1 1 0 0 0 0 1 1 0 0 0 0 0 1 0 1 1 0 0 0 0 1 1 1 0 1 0 0 1 1 1 0 1 0 0 0 0 1 1 1 0 0 1 1 0 1 0 0 1 1 1 0 0 0 1 0 1 0 0 0 1 0 1 1 0 1 0 0 0 1 1 1 1 1 1 0 1 0 1 0 0 1 1 0 0 1 1 1 1 0 1 1 1 0 1 1 1 1 0 1 0 0 0 0 1 1 1 0 0 0 1 0 0 0 1 1 0 1 1 1 1 1 1 0 1 1 1 1 0 0 0 0 0 1 1 0 1 0 1 1 0 0 0 0 0 1 1 0 1 0 1 1 1 1 0 0 0 0 0 0 1 1 1 0 1 0 1 0 0 0 0 0 0 0 1 1 0 0 0 1 0 1 0 0 0 1 0 1 0 1 1 0 0 0 0 0 1 1 1 1 0 1 1 1 1 0 1 0 0 0 1 1 0 1 0 0 1 1 1 0 1 1 0 1 0 1 0 1 1 1 0 0 1 0 1 0 0 1 0 1 1 1 1 1 1 0 1 1 0 1 0 0 1 1 0 0 1 0 0 1 0 0 1 0 1 1 0 1 1 1 1 1 0 1 0 1 0 1 0 1 1 0 0 0 1 0 1 0 0 1 1 0 0 1 0 1 1 0 0 0 0 1 0 1 0 1 1 1 1 0 1 1 0 1 1 0 0 0 0 1 1 1 1 0 1 1 1 0 1 1 1 0 0 1 1 1 0 0 0 0 0 1 1 1 1 0 1 1 1 1 0 0 0 1 0 1 1 1 1 1 0 0 1 0 0 1 0 0 1 1 1 1 0 0 0 1 1 0 1 1 1 1 1 0 1 1 0 0 0 0 0 1 1 1 0 1 1 1 1 0 0 0 1 0 1 1 1 0 0 0 1 1 1 0 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 0 0 1 0 0 0 0 1 0 1 1 0 0 0 0 0 0 1 0 1 0 0 1 0 1 1 1 1 0 0 1 0 0 1 0 0 1 1 0 1 0 0 0 0 1 0 0 1 1 1 0 0 1 1 0 0 1 0 1 1 0 1 1 1 0 1 1 0 0 0 1 1 0 0 0 0 0 1 1 0 1 1 0 1 0 1 1 1 0 0 0 0 1 1 1 0 1 1 0 1 1 1 0 0 0 1 1 1 1 1 1 0 1 1 1 0 1 1 0 1 1 0 1 1 1 1 1 1 1 0 1 0 1 1 1 0 1 0 1 1 1 1 1 0 0 0 1 1 0 0 0 0 1 1 0 0 0 1 0 1 0 0 0 0 0 1 1 0 0 0 1 1 1 1 0 1 1 0 1 1 0 0 0 0 1 1 0 1 1 1 0 1 0 0 1 1 1 0 0 1 1 0 1 0 1 1 1 0 0 0 0 0 0 0 1 0 1 1 0 0 1 1 0 0 0 1 1 1 1 0 0 1 1 0 1 0 1 0 1 0 0 1 0 1 1 0 1 1 1 0 1 0 1 0 1 1 1 1 0 1 0 1 1 0 1 1 0 1 1 1 0 1 1 0 1 1 0 0 0 0 1 1 1 1 1 1 1 0 1 1 1 1 1 1 0 1 0 1 1 1 0 1 0 1 1 0 1 1 1 0 1 0 1 0 1 0 1 0 0 0 0 0 0 0 0 1 1 0 0 1 1 0 1 1 0 1 1 1 1 0 1 0 1 1 1 0 0 0 1 1 1 1 1 0 1 1 0 1 1 0 1 0 0 1 0 0 1 1 1 1 1 0 1 1 1 0 0 0 1 0 0 1 0 1 0 0 0 1 0 1 0 1 1 0 0 1 0 1 1 1 0 1 1 0 1 0 0 0 1 0 1 0 0 0 1 0 1 0 0 0 0 1 1 1 0 0 0 1 0 1 1 1 1 1 1 0 0 0 1 1 0 1 1 0 1 1 0 1 1 0 0 0 0 0 0 0 0 1 0 0 0 1 0 1 0 1 0 0 0 0 0 0 1 0 0 1 1 1 1 0 1 1 0 1 1 0 0 1 0 0 0 1 1 1 1 1 0 0 0 1 1 0 1 1 1 1 1 1 0 0 0 0 0 1 1 0 1 0 1 0 0 0 0 0 0 1 0 0 0 1 1 0 1 0 1 1 0 1 0 1 0 1 0 1 0 0 1 1 1 1 1 1 0 1 1 1 0 1 0 0 1 1 1 1 0 1 0 0 1 1 0 0 0 0 1 0 1 0 1 0 0 1 0 0 0 1 1 1 0 0 0 0 1 1 1 1 1 1 1 1 0 0 0 0 0 0 1 1 1 1 1 0 0 0 0 1 1 0 0 0 1 1 0 1 1 0 1 1 0 1 0 0 1 1 1 1 1 0 1 0 1 0 1 0 1 0 0 0 0 0 0 0 0 1 0 1 1 0 0 0 1 0 1 1 0 0 0 0 1 0 1 0 1 0 1 0 1 0 1 1 1 0 1 1 1 1 1 1 0 1 0 0 1 0 0 0 0 0 1 1 0 1 0 1 0 1 1 0 1 0 1 1 1 0 1 0 0 1 1 0 0 1 1 1 1 0 0 1 0 1 1 1 0 0 0 0 0 1 0 1 0 1 1 1 1 1 1 1 1 1 0 1 1 1 1 0 0 1 0 0 1 1 0 0 1 1 1 0 1 1 0 1 1 0 0 0 0 0 0 1 1 1 0 0 0 0 1 1 1 0 1 0 0 0 0 1 0 1 0 0 1 0 1 1 1 0 0 1 0 1 1 0 0 0 1 0 1 1 0 1 0 1 0 1 1 0 0 0 0 0 1 0 0 1 0 0 0 1 0 0 0 1 1 1 0 1 0 0 1 1 0 1 0 0 0 0 0 1 1 0 1 1 0 0 0 1 1 1 1 0 1 1 1 0 0 1 1 1 0 1 0 1 1 0 0 1 0 1 0 0 1 0 0 1 1 1 1 0 1 0 1 1 1 1 1 1 1 1 1 0 0 0 1 1 0 0 1 0 0 0 1 1 1 1 1 1 1 0 0 0 1 0 1 1 0 1 1 0 1 1 1 1 0 0 1 1 1 0 0 1 1 0 1 1 0 0 1 1 0 1 1 1 0 0 0 1 0 0 1 1 1 1 1 0 1 0 0 0 1 0 1 1 1 1 0 1 1 0 0 1 0 0 1 1 1 0 1 0 0 0 1 0 1 1 0 0 0 1 0 1 1 1 0 1 1 0 0 1 1 0 1 1 0 1 1 1 0 0 1 0 0 0 1 1 0 0 1 1 1 1 0 1 0 0 0 0 1 0 1 1 1 0 0 1 1 0 0 1 1 1 1 0 0 1 1 0 1 0 1 0 1 0 1 0 1 1 0 0 0 0 1 1 0 1 1 1 1 1 1 1 0 1 1 0 0 1 0 0 0 0 1 1 0 0 0 0 0 1 0 0 1 0 1 1 1 0 1 1 1 0 1 0 1 1 0 1 1 0 0 1 1 1 0 1 0 1 1 1 1 1 0 1 0 0 1 0 1 1 1 1 0 1 0 1 1 1 1 0 0 1 0 0 0 1 0 0 1 0 1 1 1 0 1 1 1 0 0 1 0 1 1 1 0 1 1 0 1 0 0 0 0 1 1 0 0 0 1 1 1 1 0 1 0 1 1 0 1 0 1 1 1 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 1 1 0 0 1 1 0 1 1 0 0 1 0 1 1 1 1 1 1 0 0 0 1 1 0 1 1 0 0 0 1 0 0 1 1 1 1 1 0 1 0 0 1 0 0 0 1 0 1 1 1 1 0 0 0 0 0 0 0 1 0 0 0 1 0 1 0 0 0 1 1 1 0 0 1 1 1 0 1 1 1 0 0 0 1 0 1 0 0 0 0 1 0 0 0 0 1 0 1 1 0 1 0 0 0 0 0 0 1 0 1 1 0 0 0 1 1 0 0 0 0 0 0 0 1 1 0 0 0 1 1 1 1 0 0 0 0 0 0 1 1 0 1 1 1 0 1 1 1 1 0 0 0 0 1 0 0 1 0 0 1 0 1 0 1 1 1 1 1 0 0 1 1 1 0 1 1 0 0 1 1 0 1 1 0 0 0 1 0 1 1 0 0 0 0 0 1 0 1 0 1 1 0 1 1 1 0 0 0 0 1 1 0 1 1 1 1 1 0 1 0 1 1 0 1 1 1 1 1 0 1 0 0 1 1 0 1 0 0 0 0 0 0 1 1 0 1 1 0 0 0 1 0 1 1 0 0 1 1 0 0 1 0 1 1 0 0 0 0 1 1 0 1 0 0 1 0 0 1 1 1 0 0 1 0 1 0 1 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 1 0 1 1 0 0 1 0 0 0 1 0 0 0 1 1 0 0 1 1 0 0 0 0 0 0 1 1 1 0 1 0 0 1 1 0 1 1 0 1 1 1 1 0 0 0 0 0 1 0 0 1 0 1 0 0 0 1 0 0 1 1 0 1 1 0 1 1 1 0 1 1 0 1 0 0 1 1 1 1 1 1 1 0 0 1 0 1 1 0 0 0 0 0 1 1 1 1 0 0 1 1 1 1 0 1 0 1 0 0 1 1 1 1 1 0 0 1 0 0 0 1 0 0 0 0 1 0 1 0 0 1 1 1 1 0 0 1 1 1 0 1 0 0 0 0 1 0 0 1 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 1 1 1 0 1 1 1 1 1 0 0 1 0 1 1 0 0 0 0 1 0 1 1 1 1 0 1 1 1 0 0 0 1 1 0 1 1 1 0 1 0 1 0 1 0 0 1 0 0 0 0 0 1 0 0 1 1 0 0 1 0 0 0 0 0 1 0 1 1 0 0 0 1 0 1 1 1 0 0 1 0 0 1 0 0 1 1 0 0 1 1 1 1 0 0 1 0 1 0 0 0 1 1 1 0 0 1 0 0 1 1 0 1 1 1 0 1 1 1 0 0 0 1 0 0 1 1 0 0 0 0 0 1 1 0 0 0 0 0 1 0 1 1 1 0 1 0 0 0 0 0 0 1 1 1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 0 1 0 1 1 1 1 0 0 1 0 1 1 1 1 0 0 0 0 1 1 1 0 0 0 1 0 0 0 0 1 1 0 0 0 1 1 0 0 0 0 0 1 0 1 1 1 0 0 0 1 0 1 0 1 0 0 1 1 0 1 0 1 0 1 1 1 0 1 0 1 1 1 1 1 0 1 0 1 1 0 1 0 0 1 1 0 1 1 0 0 1 0 1 1 1 0 1 0 0 0 1 0 0 0 0 0 1 0 0 1 1 1 1 0 0 1 0 0 1 0 1 0 0 1 1 0 1 0 1 0 1 1 1 0 0 1 1 0 1 1 1 1 1 1 0 1 1 1 1 1 0 1 0 0 0 0 0 0 1 0 0 0 1 0 1 1 1 1 0 1 0 0 0 1 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0 1 1 0 0 0 1 1 0 0 0 1 0 0 0 1 1 0 1 0 0 0 1 1 0 0 0 0 0 1 0 1 1 0 0 0 1 0 1 1 0 1 1 0 1 0 0 1 0 0 1 1 1 1 0 1 1 1 0 1 0 0 1 0 0 1 1 1 0 1 1 0 0 1 0 1 0 0 1 0 1 0 1 1 0 1 0 0 1 1 1 0 1 0 0 1 1 1 1 1 0 1 0 1 0 0 0 1 1 0 1 0 0 0 1 1 1 0 0 1 0 1 1 0 1 0 1 1 0 0 0 0 0 0 1 0 0 0 1 1 0 1 1 1 1 1 1 1 0 1 0 0 0 0 0 1 1 0 0 0 0 1 1 0 1 0 1 0 1 1 0 1 0 1 0 0 0 0 1 0 1 0 1 0 1 0 1 1 0 1 1 1 1 0 0 1 0 1 0 1 1 0 0 0 1 0 0 0 1 1 1 0 1 1 1 0 1 1 0 0 0 1 1 0 0 1 0 1 0 1 1 0 1 0 0 1 1 1 1 0 1 1 0 1 0 1 1 1 1 1 0 1 0 0 0 1 0 1 0 1 1 0 0 0 0 0 0 0 1 0 1 0 1 0 1 1 1 0 1 1 1 1 0 0 1 0 1 1 1 1 0 1 0 0 1 1 0 1 1 1 1 0 1 0 1 1 0 0 0 1 0 0 1 1 0 1 0 1 0 1 0 0 0 1 1 1 1 1 1 0 1 0 1 0 0 1 0 0 0 1 0 1 0 0 1 1 0 1 1 0 0 0 0 1 1 0 1 1 1 0 0 0 1 1 1 1 1 0 0 1 1 0 0 0 1 1 1 1 1 0 1 1 0 0 1 1 0 1 0 0 1 0 1 1 0 1 1 0 0 0 0 0 1 1 1 1 0 1 1 0 1 0 1 0 1 0 1 1 1 0 0 0 1 0 1 1 1 1 0 0 0 0 0 1 1 1 0 0 0 1 0 0 0 1 0 1 1 0 1 0 0 0 0 0 1 1 0 0 0 1 0 0 1 0 1 0 0 0 0 1 0 0 0 0 0 1 1 1 1 1 0 0 0 0 1 1 0 0 0 0 1 1 1 0 1 1 0 0 1 1 1 0 0 0 1 1 1 0 0 0 1 0 1 0 0 1 1 0 1 0 0 0 0 0 0 0 1 0
+      - generic [ref=e643]:
+        - generic [ref=e645]:
+          - generic [ref=e647]:
+            - heading "Agents that build for you" [level=2] [ref=e648]
+            - paragraph [ref=e649]: Hand off tasks to AI agents that autonomously plan, make code changes, run commands, and iterate until the job is done.
+            - paragraph [ref=e650]: For example, assign a CLI-based agent to triage and fix bugs in the background, interact with another agent to implement a feature using live validation in the integrated browser, and delegate a homepage redesign to a cloud agent that opens a pull request for your team to review.
+            - link "Get started with agents" [ref=e651] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/copilot/agents/agents-tutorial
+          - region "Visual demonstration of an autonomous agent workflow showing multi-step task execution with file changes, terminal commands, and automated code implementation for batch image processing" [ref=e653]:
+            - generic [ref=e660]:
+              - generic [ref=e661]:
+                - generic [ref=e663]:
+                  - generic [ref=e664]: batch.go
+                  - img [ref=e666]
+                - code [ref=e672]:
+                  - generic [ref=e673]:
+                    - generic [ref=e674]: package
+                    - generic [ref=e675]: http
+                  - generic [ref=e677]:
+                    - generic [ref=e678]: import
+                    - generic [ref=e679]: (
+                  - generic [ref=e681]: "\"context\""
+                  - generic [ref=e683]: "\"encoding/json\""
+                  - generic [ref=e685]: "\"errors\""
+                  - generic [ref=e687]: "\"io\""
+                  - generic [ref=e689]: "\"log/slog\""
+                  - generic [ref=e691]: "\"mime/multipart\""
+                  - generic [ref=e693]: "\"net/http\""
+                  - generic [ref=e695]: "\"time\""
+                  - generic [ref=e698]: "\"golang.org/x/sync/errgroup\""
+                  - generic [ref=e700]: "\"golang.org/x/sync/semaphore\""
+                  - generic [ref=e702]: "\"go.opentelemetry.io/otel\""
+                  - generic [ref=e704]: )
+                  - generic [ref=e706]:
+                    - generic [ref=e707]: type
+                    - generic [ref=e708]: Result
+                    - generic [ref=e709]: "["
+                    - generic [ref=e710]: T
+                    - generic [ref=e711]: any
+                    - generic [ref=e712]: "]"
+                    - generic [ref=e713]: struct
+                    - generic [ref=e714]: "{"
+                  - generic [ref=e715]:
+                    - generic [ref=e716]: Name
+                    - generic [ref=e717]: string
+                    - generic [ref=e718]: "`json:\"name\"`"
+                  - generic [ref=e719]:
+                    - generic [ref=e720]: Value
+                    - generic [ref=e721]: T
+                    - generic [ref=e722]: "`json:\"value,omitempty\"`"
+                  - generic [ref=e723]:
+                    - generic [ref=e724]: Error
+                    - generic [ref=e725]: string
+                    - generic [ref=e726]: "`json:\"error,omitempty\"`"
+                  - generic [ref=e728]: "}"
+                  - generic [ref=e730]:
+                    - generic [ref=e731]: type
+                    - generic [ref=e732]: Meta
+                    - generic [ref=e733]: struct
+                    - generic [ref=e734]: "{"
+                  - generic [ref=e735]:
+                    - generic [ref=e736]: Format
+                    - generic [ref=e737]: string
+                    - generic [ref=e738]: "`json:\"format\"`"
+                  - generic [ref=e739]:
+                    - generic [ref=e740]: Width
+                    - generic [ref=e741]: int
+                    - generic [ref=e742]: "`json:\"width\"`"
+                  - generic [ref=e743]:
+                    - generic [ref=e744]: Height
+                    - generic [ref=e745]: int
+                    - generic [ref=e746]: "`json:\"height\"`"
+                  - generic [ref=e747]:
+                    - generic [ref=e748]: Bytes
+                    - generic [ref=e749]: int64
+                    - generic [ref=e750]: "`json:\"bytes\"`"
+                  - generic [ref=e752]: "}"
+                  - generic [ref=e754]:
+                    - generic [ref=e755]: const
+                    - generic [ref=e756]: (
+                  - generic [ref=e757]:
+                    - generic [ref=e758]: perRequestTimeout
+                    - generic [ref=e759]: =
+                    - generic [ref=e760]: "30"
+                    - generic [ref=e761]: "*"
+                    - generic [ref=e762]: time
+                    - generic [ref=e763]: .
+                    - generic [ref=e764]: Second
+                  - generic [ref=e765]:
+                    - generic [ref=e766]: maxParallel
+                    - generic [ref=e767]: =
+                    - generic [ref=e768]: "8"
+                  - generic [ref=e770]: )
+                  - generic [ref=e772]:
+                    - generic [ref=e773]: func
+                    - generic [ref=e774]: (
+                    - generic [ref=e775]: s
+                    - generic [ref=e776]: "*"
+                    - generic [ref=e777]: Server
+                    - generic [ref=e778]: )
+                    - generic [ref=e779]: handleBatch
+                    - generic [ref=e780]: (
+                  - generic [ref=e781]:
+                    - generic [ref=e782]: w
+                    - generic [ref=e783]: http
+                    - generic [ref=e784]: .
+                    - generic [ref=e785]: ResponseWriter
+                    - generic [ref=e786]: ","
+                  - generic [ref=e787]:
+                    - generic [ref=e788]: r
+                    - generic [ref=e789]: "*"
+                    - generic [ref=e790]: http
+                    - generic [ref=e791]: .
+                    - generic [ref=e792]: Request
+                    - generic [ref=e793]: ","
+                  - generic [ref=e795]: ") {"
+                  - generic [ref=e796]:
+                    - generic [ref=e797]: ctx
+                    - generic [ref=e798]: ","
+                    - generic [ref=e799]: span
+                    - generic [ref=e800]: :=
+                    - generic [ref=e801]: otel
+                    - generic [ref=e802]: .
+                    - generic [ref=e803]: Tracer
+                    - generic [ref=e804]: (
+                    - generic [ref=e805]: "\"http\""
+                    - generic [ref=e806]: ).
+                  - generic [ref=e807]:
+                    - generic [ref=e808]: Start
+                    - generic [ref=e809]: (
+                    - generic [ref=e810]: r
+                    - generic [ref=e811]: .
+                    - generic [ref=e812]: Context
+                    - generic [ref=e813]: (),
+                    - generic [ref=e814]: "\"batch\""
+                    - generic [ref=e815]: )
+                  - generic [ref=e816]:
+                    - generic [ref=e817]: defer
+                    - generic [ref=e818]: span
+                    - generic [ref=e819]: .
+                    - generic [ref=e820]: End
+                    - generic [ref=e821]: ()
+                  - generic [ref=e823]:
+                    - generic [ref=e824]: ctx
+                    - generic [ref=e825]: ","
+                    - generic [ref=e826]: cancel
+                    - generic [ref=e827]: :=
+                    - generic [ref=e828]: context
+                    - generic [ref=e829]: .
+                    - generic [ref=e830]: WithTimeout
+                    - generic [ref=e831]: (
+                  - generic [ref=e832]:
+                    - generic [ref=e833]: ctx
+                    - generic [ref=e834]: ","
+                    - generic [ref=e835]: perRequestTimeout
+                    - generic [ref=e836]: ","
+                  - generic [ref=e838]: )
+                  - generic [ref=e839]:
+                    - generic [ref=e840]: defer
+                    - generic [ref=e841]: cancel
+                    - generic [ref=e842]: ()
+                  - generic [ref=e844]:
+                    - generic [ref=e845]: r
+                    - generic [ref=e846]: .
+                    - generic [ref=e847]: Body
+                    - generic [ref=e848]: =
+                    - generic [ref=e849]: http
+                    - generic [ref=e850]: .
+                    - generic [ref=e851]: MaxBytesReader
+                    - generic [ref=e852]: (
+                  - generic [ref=e853]:
+                    - generic [ref=e854]: w
+                    - generic [ref=e855]: ","
+                    - generic [ref=e856]: r
+                    - generic [ref=e857]: .
+                    - generic [ref=e858]: Body
+                    - generic [ref=e859]: ","
+                    - generic [ref=e860]: s
+                    - generic [ref=e861]: .
+                    - generic [ref=e862]: cfg
+                    - generic [ref=e863]: .
+                    - generic [ref=e864]: MaxBytes
+                    - generic [ref=e865]: ","
+                  - generic [ref=e867]: )
+                  - generic [ref=e868]:
+                    - generic [ref=e869]: if
+                    - generic [ref=e870]: err
+                    - generic [ref=e871]: :=
+                    - generic [ref=e872]: r
+                    - generic [ref=e873]: .
+                    - generic [ref=e874]: ParseMultipartForm
+                    - generic [ref=e875]: (
+                  - generic [ref=e876]:
+                    - generic [ref=e877]: s
+                    - generic [ref=e878]: .
+                    - generic [ref=e879]: cfg
+                    - generic [ref=e880]: .
+                    - generic [ref=e881]: MaxBytes
+                    - generic [ref=e882]: ","
+                  - generic [ref=e883]:
+                    - generic [ref=e884]: );
+                    - generic [ref=e885]: err
+                    - generic [ref=e886]: "!="
+                    - generic [ref=e887]: nil
+                    - generic [ref=e888]: "{"
+                  - generic [ref=e889]:
+                    - generic [ref=e890]: s
+                    - generic [ref=e891]: .
+                    - generic [ref=e892]: fail
+                    - generic [ref=e893]: (
+                    - generic [ref=e894]: w
+                    - generic [ref=e895]: ","
+                    - generic [ref=e896]: http
+                    - generic [ref=e897]: .
+                    - generic [ref=e898]: StatusBadRequest
+                    - generic [ref=e899]: ","
+                    - generic [ref=e900]: err
+                    - generic [ref=e901]: )
+                  - generic [ref=e903]: return
+                  - generic [ref=e905]: "}"
+                  - generic [ref=e906]:
+                    - generic [ref=e907]: files
+                    - generic [ref=e908]: :=
+                    - generic [ref=e909]: pickFiles
+                    - generic [ref=e910]: (
+                    - generic [ref=e911]: r
+                    - generic [ref=e912]: .
+                    - generic [ref=e913]: MultipartForm
+                    - generic [ref=e914]: )
+                  - generic [ref=e915]:
+                    - generic [ref=e916]: if
+                    - generic [ref=e917]: len
+                    - generic [ref=e918]: (
+                    - generic [ref=e919]: files
+                    - generic [ref=e920]: ) ==
+                    - generic [ref=e921]: "0"
+                    - generic [ref=e922]: "{"
+                  - generic [ref=e923]:
+                    - generic [ref=e924]: s
+                    - generic [ref=e925]: .
+                    - generic [ref=e926]: fail
+                    - generic [ref=e927]: (
+                    - generic [ref=e928]: w
+                    - generic [ref=e929]: ","
+                    - generic [ref=e930]: http
+                    - generic [ref=e931]: .
+                    - generic [ref=e932]: StatusBadRequest
+                    - generic [ref=e933]: ","
+                  - generic [ref=e934]:
+                    - generic [ref=e935]: errors
+                    - generic [ref=e936]: .
+                    - generic [ref=e937]: New
+                    - generic [ref=e938]: (
+                    - generic [ref=e939]: "\"no files\""
+                    - generic [ref=e940]: ))
+                  - generic [ref=e942]: return
+                  - generic [ref=e944]: "}"
+                  - generic [ref=e946]:
+                    - generic [ref=e947]: out
+                    - generic [ref=e948]: :=
+                    - generic [ref=e949]: make
+                    - generic [ref=e950]: (
+                  - generic [ref=e951]:
+                    - generic [ref=e952]: "[]"
+                    - generic [ref=e953]: Result
+                    - generic [ref=e954]: "["
+                    - generic [ref=e955]: Meta
+                    - generic [ref=e956]: "],"
+                    - generic [ref=e957]: len
+                    - generic [ref=e958]: (
+                    - generic [ref=e959]: files
+                    - generic [ref=e960]: ),
+                  - generic [ref=e962]: )
+                  - generic [ref=e963]:
+                    - generic [ref=e964]: sem
+                    - generic [ref=e965]: :=
+                    - generic [ref=e966]: semaphore
+                    - generic [ref=e967]: .
+                    - generic [ref=e968]: NewWeighted
+                    - generic [ref=e969]: (
+                    - generic [ref=e970]: maxParallel
+                    - generic [ref=e971]: )
+                  - generic [ref=e972]:
+                    - generic [ref=e973]: g
+                    - generic [ref=e974]: ","
+                    - generic [ref=e975]: gctx
+                    - generic [ref=e976]: :=
+                    - generic [ref=e977]: errgroup
+                    - generic [ref=e978]: .
+                    - generic [ref=e979]: WithContext
+                    - generic [ref=e980]: (
+                    - generic [ref=e981]: ctx
+                    - generic [ref=e982]: )
+                  - generic [ref=e984]:
+                    - generic [ref=e985]: for
+                    - generic [ref=e986]: i
+                    - generic [ref=e987]: ","
+                    - generic [ref=e988]: fh
+                    - generic [ref=e989]: :=
+                    - generic [ref=e990]: range
+                    - generic [ref=e991]: files
+                    - generic [ref=e992]: "{"
+                  - generic [ref=e993]:
+                    - generic [ref=e994]: i
+                    - generic [ref=e995]: ","
+                    - generic [ref=e996]: fh
+                    - generic [ref=e997]: :=
+                    - generic [ref=e998]: i
+                    - generic [ref=e999]: ","
+                    - generic [ref=e1000]: fh
+                  - generic [ref=e1001]:
+                    - generic [ref=e1002]: if
+                    - generic [ref=e1003]: err
+                    - generic [ref=e1004]: :=
+                    - generic [ref=e1005]: sem
+                    - generic [ref=e1006]: .
+                    - generic [ref=e1007]: Acquire
+                    - generic [ref=e1008]: (
+                    - generic [ref=e1009]: gctx
+                    - generic [ref=e1010]: ","
+                    - generic [ref=e1011]: "1"
+                    - generic [ref=e1012]: );
+                    - generic [ref=e1013]: err
+                    - generic [ref=e1014]: "!="
+                    - generic [ref=e1015]: nil
+                    - generic [ref=e1016]: "{"
+                  - generic [ref=e1018]: break
+                  - generic [ref=e1020]: "}"
+                  - generic [ref=e1021]:
+                    - generic [ref=e1022]: g
+                    - generic [ref=e1023]: .
+                    - generic [ref=e1024]: Go
+                    - generic [ref=e1025]: (
+                    - generic [ref=e1026]: func
+                    - generic [ref=e1027]: ()
+                    - generic [ref=e1028]: error
+                    - generic [ref=e1029]: "{"
+                  - generic [ref=e1030]:
+                    - generic [ref=e1031]: defer
+                    - generic [ref=e1032]: sem
+                    - generic [ref=e1033]: .
+                    - generic [ref=e1034]: Release
+                    - generic [ref=e1035]: (
+                    - generic [ref=e1036]: "1"
+                    - generic [ref=e1037]: )
+                  - generic [ref=e1038]:
+                    - generic [ref=e1039]: out
+                    - generic [ref=e1040]: "["
+                    - generic [ref=e1041]: i
+                    - generic [ref=e1042]: "] ="
+                    - generic [ref=e1043]: process
+                    - generic [ref=e1044]: (
+                    - generic [ref=e1045]: gctx
+                    - generic [ref=e1046]: ","
+                    - generic [ref=e1047]: s
+                    - generic [ref=e1048]: ","
+                    - generic [ref=e1049]: fh
+                    - generic [ref=e1050]: )
+                  - generic [ref=e1051]:
+                    - generic [ref=e1052]: return
+                    - generic [ref=e1053]: nil
+                  - generic [ref=e1055]: "})"
+                  - generic [ref=e1057]: "}"
+                  - generic [ref=e1058]:
+                    - generic [ref=e1059]: _
+                    - generic [ref=e1060]: =
+                    - generic [ref=e1061]: g
+                    - generic [ref=e1062]: .
+                    - generic [ref=e1063]: Wait
+                    - generic [ref=e1064]: ()
+                  - generic [ref=e1066]:
+                    - generic [ref=e1067]: s
+                    - generic [ref=e1068]: .
+                    - generic [ref=e1069]: log
+                    - generic [ref=e1070]: .
+                    - generic [ref=e1071]: LogAttrs
+                    - generic [ref=e1072]: (
+                    - generic [ref=e1073]: ctx
+                    - generic [ref=e1074]: ","
+                  - generic [ref=e1075]:
+                    - generic [ref=e1076]: slog
+                    - generic [ref=e1077]: .
+                    - generic [ref=e1078]: LevelInfo
+                    - generic [ref=e1079]: ","
+                    - generic [ref=e1080]: "\"batch.done\""
+                    - generic [ref=e1081]: ","
+                  - generic [ref=e1082]:
+                    - generic [ref=e1083]: slog
+                    - generic [ref=e1084]: .
+                    - generic [ref=e1085]: Int
+                    - generic [ref=e1086]: (
+                    - generic [ref=e1087]: "\"count\""
+                    - generic [ref=e1088]: ","
+                    - generic [ref=e1089]: len
+                    - generic [ref=e1090]: (
+                    - generic [ref=e1091]: out
+                    - generic [ref=e1092]: )),
+                  - generic [ref=e1093]:
+                    - generic [ref=e1094]: slog
+                    - generic [ref=e1095]: .
+                    - generic [ref=e1096]: Duration
+                    - generic [ref=e1097]: (
+                    - generic [ref=e1098]: "\"budget\""
+                    - generic [ref=e1099]: ","
+                  - generic [ref=e1100]:
+                    - generic [ref=e1101]: perRequestTimeout
+                    - generic [ref=e1102]: ),
+                  - generic [ref=e1104]: )
+                  - generic [ref=e1106]:
+                    - generic [ref=e1107]: w
+                    - generic [ref=e1108]: .
+                    - generic [ref=e1109]: Header
+                    - generic [ref=e1110]: ().
+                    - generic [ref=e1111]: Set
+                    - generic [ref=e1112]: (
+                  - generic [ref=e1113]:
+                    - generic [ref=e1114]: "\"Content-Type\""
+                    - generic [ref=e1115]: ","
+                    - generic [ref=e1116]: "\"application/json\""
+                    - generic [ref=e1117]: ","
+                  - generic [ref=e1119]: )
+                  - generic [ref=e1120]:
+                    - generic [ref=e1121]: _
+                    - generic [ref=e1122]: =
+                    - generic [ref=e1123]: json
+                    - generic [ref=e1124]: .
+                    - generic [ref=e1125]: NewEncoder
+                    - generic [ref=e1126]: (
+                    - generic [ref=e1127]: w
+                    - generic [ref=e1128]: ).
+                    - generic [ref=e1129]: Encode
+                    - generic [ref=e1130]: (
+                    - generic [ref=e1131]: out
+                    - generic [ref=e1132]: )
+                  - generic [ref=e1134]: "}"
+                  - generic [ref=e1136]:
+                    - generic [ref=e1137]: func
+                    - generic [ref=e1138]: process
+                    - generic [ref=e1139]: (
+                  - generic [ref=e1140]:
+                    - generic [ref=e1141]: ctx
+                    - generic [ref=e1142]: context
+                    - generic [ref=e1143]: .
+                    - generic [ref=e1144]: Context
+                    - generic [ref=e1145]: ","
+                  - generic [ref=e1146]:
+                    - generic [ref=e1147]: s
+                    - generic [ref=e1148]: "*"
+                    - generic [ref=e1149]: Server
+                    - generic [ref=e1150]: ","
+                  - generic [ref=e1151]:
+                    - generic [ref=e1152]: fh
+                    - generic [ref=e1153]: "*"
+                    - generic [ref=e1154]: multipart
+                    - generic [ref=e1155]: .
+                    - generic [ref=e1156]: FileHeader
+                    - generic [ref=e1157]: ","
+                  - generic [ref=e1158]:
+                    - generic [ref=e1159]: )
+                    - generic [ref=e1160]: Result
+                    - generic [ref=e1161]: "["
+                    - generic [ref=e1162]: Meta
+                    - generic [ref=e1163]: "] {"
+                  - generic [ref=e1164]:
+                    - generic [ref=e1165]: res
+                    - generic [ref=e1166]: :=
+                    - generic [ref=e1167]: Result
+                    - generic [ref=e1168]: "["
+                    - generic [ref=e1169]: Meta
+                    - generic [ref=e1170]: "]{"
+                    - generic [ref=e1171]: Name
+                    - generic [ref=e1172]: ":"
+                    - generic [ref=e1173]: fh
+                    - generic [ref=e1174]: .
+                    - generic [ref=e1175]: Filename
+                    - generic [ref=e1176]: "}"
+                  - generic [ref=e1177]:
+                    - generic [ref=e1178]: f
+                    - generic [ref=e1179]: ","
+                    - generic [ref=e1180]: err
+                    - generic [ref=e1181]: :=
+                    - generic [ref=e1182]: fh
+                    - generic [ref=e1183]: .
+                    - generic [ref=e1184]: Open
+                    - generic [ref=e1185]: ()
+                  - generic [ref=e1186]:
+                    - generic [ref=e1187]: if
+                    - generic [ref=e1188]: err
+                    - generic [ref=e1189]: "!="
+                    - generic [ref=e1190]: nil
+                    - generic [ref=e1191]: "{"
+                  - generic [ref=e1192]:
+                    - generic [ref=e1193]: res
+                    - generic [ref=e1194]: .
+                    - generic [ref=e1195]: Error
+                    - generic [ref=e1196]: =
+                    - generic [ref=e1197]: err
+                    - generic [ref=e1198]: .
+                    - generic [ref=e1199]: Error
+                    - generic [ref=e1200]: ()
+                  - generic [ref=e1201]:
+                    - generic [ref=e1202]: return
+                    - generic [ref=e1203]: res
+                  - generic [ref=e1205]: "}"
+                  - generic [ref=e1206]:
+                    - generic [ref=e1207]: defer
+                    - generic [ref=e1208]: f
+                    - generic [ref=e1209]: .
+                    - generic [ref=e1210]: Close
+                    - generic [ref=e1211]: ()
+                  - generic [ref=e1213]:
+                    - generic [ref=e1214]: data
+                    - generic [ref=e1215]: ","
+                    - generic [ref=e1216]: err
+                    - generic [ref=e1217]: :=
+                    - generic [ref=e1218]: io
+                    - generic [ref=e1219]: .
+                    - generic [ref=e1220]: ReadAll
+                    - generic [ref=e1221]: (
+                  - generic [ref=e1222]:
+                    - generic [ref=e1223]: io
+                    - generic [ref=e1224]: .
+                    - generic [ref=e1225]: LimitReader
+                    - generic [ref=e1226]: (
+                    - generic [ref=e1227]: f
+                    - generic [ref=e1228]: ","
+                    - generic [ref=e1229]: s
+                    - generic [ref=e1230]: .
+                    - generic [ref=e1231]: cfg
+                    - generic [ref=e1232]: .
+                    - generic [ref=e1233]: MaxBytes
+                    - generic [ref=e1234]: ),
+                  - generic [ref=e1236]: )
+                  - generic [ref=e1237]:
+                    - generic [ref=e1238]: if
+                    - generic [ref=e1239]: err
+                    - generic [ref=e1240]: "!="
+                    - generic [ref=e1241]: nil
+                    - generic [ref=e1242]: "{"
+                  - generic [ref=e1243]:
+                    - generic [ref=e1244]: res
+                    - generic [ref=e1245]: .
+                    - generic [ref=e1246]: Error
+                    - generic [ref=e1247]: =
+                    - generic [ref=e1248]: err
+                    - generic [ref=e1249]: .
+                    - generic [ref=e1250]: Error
+                    - generic [ref=e1251]: ()
+                  - generic [ref=e1252]:
+                    - generic [ref=e1253]: return
+                    - generic [ref=e1254]: res
+                  - generic [ref=e1256]: "}"
+                  - generic [ref=e1257]:
+                    - generic [ref=e1258]: m
+                    - generic [ref=e1259]: ","
+                    - generic [ref=e1260]: err
+                    - generic [ref=e1261]: :=
+                    - generic [ref=e1262]: s
+                    - generic [ref=e1263]: .
+                    - generic [ref=e1264]: proc
+                    - generic [ref=e1265]: .
+                    - generic [ref=e1266]: ExtractCtx
+                    - generic [ref=e1267]: (
+                    - generic [ref=e1268]: ctx
+                    - generic [ref=e1269]: ","
+                    - generic [ref=e1270]: data
+                    - generic [ref=e1271]: )
+                  - generic [ref=e1272]:
+                    - generic [ref=e1273]: if
+                    - generic [ref=e1274]: err
+                    - generic [ref=e1275]: "!="
+                    - generic [ref=e1276]: nil
+                    - generic [ref=e1277]: "{"
+                  - generic [ref=e1278]:
+                    - generic [ref=e1279]: res
+                    - generic [ref=e1280]: .
+                    - generic [ref=e1281]: Error
+                    - generic [ref=e1282]: =
+                    - generic [ref=e1283]: err
+                    - generic [ref=e1284]: .
+                    - generic [ref=e1285]: Error
+                    - generic [ref=e1286]: ()
+                  - generic [ref=e1287]:
+                    - generic [ref=e1288]: return
+                    - generic [ref=e1289]: res
+                  - generic [ref=e1291]: "}"
+                  - generic [ref=e1292]:
+                    - generic [ref=e1293]: res
+                    - generic [ref=e1294]: .
+                    - generic [ref=e1295]: Value
+                    - generic [ref=e1296]: =
+                    - generic [ref=e1297]: Meta
+                    - generic [ref=e1298]: "{"
+                  - generic [ref=e1299]:
+                    - generic [ref=e1300]: Format
+                    - generic [ref=e1301]: ":"
+                    - generic [ref=e1302]: m
+                    - generic [ref=e1303]: .
+                    - generic [ref=e1304]: Format
+                    - generic [ref=e1305]: ","
+                  - generic [ref=e1306]:
+                    - generic [ref=e1307]: Width
+                    - generic [ref=e1308]: ":"
+                    - generic [ref=e1309]: m
+                    - generic [ref=e1310]: .
+                    - generic [ref=e1311]: Width
+                    - generic [ref=e1312]: ","
+                  - generic [ref=e1313]:
+                    - generic [ref=e1314]: Height
+                    - generic [ref=e1315]: ":"
+                    - generic [ref=e1316]: m
+                    - generic [ref=e1317]: .
+                    - generic [ref=e1318]: Height
+                    - generic [ref=e1319]: ","
+                  - generic [ref=e1320]:
+                    - generic [ref=e1321]: Bytes
+                    - generic [ref=e1322]: ":"
+                    - generic [ref=e1323]: int64
+                    - generic [ref=e1324]: (
+                    - generic [ref=e1325]: len
+                    - generic [ref=e1326]: (
+                    - generic [ref=e1327]: data
+                    - generic [ref=e1328]: )),
+                  - generic [ref=e1330]: "}"
+                  - generic [ref=e1331]:
+                    - generic [ref=e1332]: return
+                    - generic [ref=e1333]: res
+                  - generic [ref=e1335]: "}"
+              - generic [ref=e1336]:
+                - generic [ref=e1337]:
+                  - generic [ref=e1338]: Batch image processing endpoint
+                  - img [ref=e1341]
+                - generic [ref=e1343]:
+                  - generic [ref=e1344]:
+                    - text: Add a
+                    - code [ref=e1345]: POST /process/batch
+                    - text: endpoint to the image service. Process up to 8 files in parallel with per-request budget, structured logging, and OpenTelemetry spans. Return per-item results.
+                  - generic [ref=e1346]:
+                    - text: Read
+                    - generic [ref=e1347]: server.go
+                    - text: ","
+                    - generic [ref=e1348]: processor.go
+                    - text: ","
+                    - generic [ref=e1349]: config.go
+                  - generic [ref=e1350]:
+                    - text: Created
+                    - generic [ref=e1351]: batch.go
+                    - generic [ref=e1352]: "+128"
+                  - generic [ref=e1353]:
+                    - text: Edited
+                    - generic [ref=e1354]: server.go
+                    - generic [ref=e1355]: "+4"
+                    - generic [ref=e1356]: −0
+                  - generic [ref=e1357]:
+                    - text: Created
+                    - generic [ref=e1358]: batch_test.go
+                    - generic [ref=e1359]: "+96"
+                  - group [ref=e1360]:
+                    - generic "Mapped the service layout" [ref=e1361] [cursor=pointer]
+                  - generic [ref=e1362]:
+                    - text: grep
+                    - code [ref=e1363]: http.HandleFunc
+                    - text: across
+                    - generic [ref=e1364]: internal/
+                  - generic [ref=e1365]:
+                    - text: "Here's the plan I followed:"
+                    - list [ref=e1366]:
+                      - listitem [ref=e1367]:
+                        - text: Add
+                        - code [ref=e1368]: handleBatch
+                        - text: in
+                        - code [ref=e1369]: batch.go
+                        - text: using a generic
+                        - code [ref=e1370]: Result[Meta]
+                        - text: type.
+                      - listitem [ref=e1371]:
+                        - text: Cap concurrency with
+                        - code [ref=e1372]: semaphore.NewWeighted(8)
+                        - text: and wrap fan‑out in
+                        - code [ref=e1373]: errgroup
+                        - text: .
+                      - listitem [ref=e1374]: Wrap the request in an OTel span and a 30s context deadline.
+                      - listitem [ref=e1375]:
+                        - text: Wire the route in
+                        - code [ref=e1376]: server.go
+                        - text: and add table tests.
+                  - generic [ref=e1377]:
+                    - text: Ran
+                    - code [ref=e1378]: go test ./internal/http -run Batch -race
+                  - generic [ref=e1379]:
+                    - text: All 23 tests pass with
+                    - code [ref=e1380]: "-race"
+                    - text: "clean. Throughput on a 64‑image batch (avg 1.2MB JPEG):"
+                    - strong [ref=e1381]: 184ms to 31ms
+                    - text: end‑to‑end
+                  - generic [ref=e1382]:
+                    - text: Nice. Stream results as NDJSON instead of buffering, and add a
+                    - code [ref=e1383]: k6
+                    - text: script.
+                  - generic [ref=e1384]:
+                    - generic [ref=e1385]: Queued
+                    - generic [ref=e1386]:
+                      - text: Then expose a
+                      - code [ref=e1387]: p99_ms
+                      - text: Prometheus histogram and wire it into the existing Grafana dashboard.
+                - generic [ref=e1388]:
+                  - generic [ref=e1389]: Describe what to build next
+                  - generic [ref=e1390]:
+                    - generic [ref=e1391]:
+                      - img [ref=e1393]
+                      - img [ref=e1396]
+                      - generic [ref=e1398]:
+                        - text: GPT 5.5
+                        - img [ref=e1399]
+                    - img [ref=e1403]
+                - generic [ref=e1406]:
+                  - generic [ref=e1407]:
+                    - img [ref=e1408]
+                    - text: Local
+                    - img [ref=e1410]
+                  - generic [ref=e1412]:
+                    - img [ref=e1413]
+                    - text: Autopilot (Preview)
+                    - img [ref=e1415]
+        - generic [ref=e1418]:
+          - generic [ref=e1421]:
+            - heading "Any agent, any model" [level=2] [ref=e1422]
+            - paragraph [ref=e1423]: Use the agent harness that fits your workflow. Run agents locally or in the cloud, with Copilot or third-party providers like Claude and OpenAI.
+            - paragraph [ref=e1424]: Choose from dozens of models across providers, from fast completion models to advanced reasoning models. Or bring your own key to use any model from any provider.
+          - generic [ref=e1427]:
+            - heading "All your sessions, one view" [level=2] [ref=e1428]
+            - paragraph [ref=e1429]: Stay productive while multiple agents work on tasks in parallel. Track all your agent sessions from a single view, regardless of where they run.
+            - paragraph [ref=e1430]: Quickly filter and monitor sessions, or dive into an individual agent interaction, without switching to a different tool or terminal.
+          - generic [ref=e1433]:
+            - heading "Your rules, your agents" [level=2] [ref=e1434]
+            - paragraph [ref=e1435]: Ensure agents follow your practices and team workflows. Define custom instructions, add agent skills, or build custom agents tailored to your project.
+            - paragraph [ref=e1436]: Connect to external tools and services with MCP servers, or install agent plugins or extensions to expand the agent's capabilities.
+        - generic [ref=e1438]:
+          - heading "Start building with AI agents for free" [level=2] [ref=e1440]
+          - generic [ref=e1441]:
+            - paragraph [ref=e1442]: No trial. No credit card required. Just your GitHub account.
+            - link "Try free" [ref=e1443] [cursor=pointer]:
+              - /url: vscode://GitHub.Copilot-Chat/chat?mode=agent&referrer=vscode-agentmainbanner
+        - generic [ref=e1445]:
+          - generic [ref=e1447]:
+            - heading "A world-class code editor at its core" [level=2] [ref=e1448]
+            - paragraph [ref=e1449]: VS Code has been the editor of choice for millions of developers for over a decade. AI-powered inline suggestions, intelligent completions, and a rich editing experience make it just as powerful when you're writing code yourself.
+            - paragraph [ref=e1450]: Seamlessly switch between working with agents and hands-on coding, all within the same editor.
+            - link "Get started with VS Code" [ref=e1451] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/getstarted/getting-started
+          - region "Visual demonstration of next edit suggestions feature showing AI-powered code completion and predictive editing in Python" [ref=e1453]:
+            - generic [ref=e1461]:
+              - generic [ref=e1463]:
+                - generic [ref=e1464]: main.py
+                - img [ref=e1466]
+              - code [ref=e1472]:
+                - generic [ref=e1473]:
+                  - generic [ref=e1474]: import
+                  - generic [ref=e1475]: numpy
+                  - generic [ref=e1476]: as
+                  - generic [ref=e1477]: np
+                - generic [ref=e1478]:
+                  - generic [ref=e1479]: import
+                  - generic [ref=e1480]: pandas
+                  - generic [ref=e1481]: as
+                  - generic [ref=e1482]: pd
+                - generic [ref=e1484]:
+                  - generic [ref=e1485]:
+                    - generic [ref=e1486]: iris_
+                    - text: data = pd.read_csv(
+                  - generic [ref=e1487]: "\"iris_dataset.csv\""
+                  - generic [ref=e1488]: )
+                - generic [ref=e1490]:
+                  - generic [ref=e1491]: def
+                  - generic [ref=e1492]: describe
+                  - generic [ref=e1493]: (
+                  - generic [ref=e1494]: species
+                  - generic [ref=e1495]: ":"
+                  - generic [ref=e1496]: str
+                  - generic [ref=e1497]: ") -> pd.Series:"
+                - generic [ref=e1498]:
+                  - generic [ref=e1499]: "7"
+                  - img [ref=e1500]
+                - generic [ref=e1502]:
+                  - generic [ref=e1503]:
+                    - text: subset =
+                    - generic [ref=e1504]: data
+                    - text: "["
+                    - generic [ref=e1505]: data
+                    - text: "["
+                  - generic [ref=e1506]: "\"species\""
+                  - generic [ref=e1507]: "] == species]"
+                - generic [ref=e1509]:
+                  - generic [ref=e1510]:
+                    - text: subset =
+                    - generic [ref=e1511]: iris_data
+                    - text: "["
+                    - generic [ref=e1512]: iris_data
+                    - text: "["
+                  - generic [ref=e1513]: "\"species\""
+                  - generic [ref=e1514]: "] == species]"
+                - generic [ref=e1515]:
+                  - generic [ref=e1516]: if
+                  - generic [ref=e1517]: "subset.empty:"
+                - generic [ref=e1518]:
+                  - generic [ref=e1519]: raise
+                  - generic [ref=e1520]: ValueError
+                  - generic [ref=e1521]: (
+                  - generic [ref=e1522]: f
+                  - generic [ref=e1523]: "\""
+                  - generic [ref=e1524]: "{"
+                  - generic [ref=e1525]: species
+                  - generic [ref=e1526]: "}"
+                  - generic [ref=e1527]: missing from sample"
+                  - generic [ref=e1528]: )
+                - generic [ref=e1529]:
+                  - generic [ref=e1530]: return
+                  - generic [ref=e1531]: subset[[
+                  - generic [ref=e1532]: "\"petal\""
+                  - generic [ref=e1533]: ","
+                  - generic [ref=e1534]: "\"sepal\""
+                  - generic [ref=e1535]: "]].agg(["
+                  - generic [ref=e1536]: "\"mean\""
+                  - generic [ref=e1537]: ","
+                  - generic [ref=e1538]: "\"std\""
+                  - generic [ref=e1539]: "]).loc["
+                  - generic [ref=e1540]: "\"mean\""
+                  - generic [ref=e1541]: "]"
+                - generic [ref=e1543]:
+                  - generic [ref=e1544]: def
+                  - generic [ref=e1545]: summary
+                  - generic [ref=e1546]: "():"
+                - generic [ref=e1547]:
+                  - generic [ref=e1548]: "13"
+                  - img [ref=e1549]
+                - generic [ref=e1551]:
+                  - generic [ref=e1552]: for
+                  - generic [ref=e1553]: species
+                  - generic [ref=e1554]: in
+                  - generic [ref=e1555]:
+                    - text: np.sort(
+                    - generic [ref=e1556]: data
+                    - text: "["
+                  - generic [ref=e1557]: "\"species\""
+                  - generic [ref=e1558]: "].unique()):"
+                - generic [ref=e1560]:
+                  - generic [ref=e1561]: for
+                  - generic [ref=e1562]: species
+                  - generic [ref=e1563]: in
+                  - generic [ref=e1564]:
+                    - text: np.sort(
+                    - generic [ref=e1565]: iris_data
+                    - text: "["
+                  - generic [ref=e1566]: "\"species\""
+                  - generic [ref=e1567]: "].unique()):"
+                - generic [ref=e1568]:
+                  - generic [ref=e1569]: try
+                  - generic [ref=e1570]: ":"
+                - generic [ref=e1572]: stats = describe(species)
+                - generic [ref=e1573]:
+                  - generic [ref=e1574]: except
+                  - generic [ref=e1575]: ValueError
+                  - generic [ref=e1576]: ":"
+                - generic [ref=e1577]:
+                  - generic [ref=e1578]: print
+                  - generic [ref=e1579]: (
+                  - generic [ref=e1580]: f
+                  - generic [ref=e1581]: "\""
+                  - generic [ref=e1582]: "{"
+                  - generic [ref=e1583]: species
+                  - generic [ref=e1584]: "}"
+                  - generic [ref=e1585]: ": no records\""
+                  - generic [ref=e1586]: )
+                - generic [ref=e1588]: continue
+                - generic [ref=e1589]:
+                  - generic [ref=e1590]: print
+                  - generic [ref=e1591]: (
+                  - generic [ref=e1592]: f
+                  - generic [ref=e1593]: "\""
+                  - generic [ref=e1594]: "{"
+                  - generic [ref=e1595]: species
+                  - generic [ref=e1596]: "}"
+                  - generic [ref=e1597]: ": petal="
+                  - generic [ref=e1598]: "{"
+                  - generic [ref=e1599]: stats[
+                  - generic [ref=e1600]: "'petal'"
+                  - generic [ref=e1601]: "]"
+                  - generic [ref=e1602]: ":.2f}"
+                  - generic [ref=e1603]: sepal=
+                  - generic [ref=e1604]: "{"
+                  - generic [ref=e1605]: stats[
+                  - generic [ref=e1606]: "'sepal'"
+                  - generic [ref=e1607]: "]"
+                  - generic [ref=e1608]: ":.2f}"
+                  - generic [ref=e1609]: "\""
+                  - generic [ref=e1610]: )
+                - generic [ref=e1612]:
+                  - generic [ref=e1613]: if
+                  - generic [ref=e1614]: __name__
+                  - generic [ref=e1615]: ==
+                  - generic [ref=e1616]: "\"__main__\""
+                  - generic [ref=e1617]: ":"
+                - generic [ref=e1619]: summary()
+        - generic [ref=e1621]:
+          - generic [ref=e1622]:
+            - heading "Code with extensions" [level=2] [ref=e1623]
+            - paragraph [ref=e1624]:
+              - text: Extend your agents with tools from extensions and Model Context Protocol servers. Or,
+              - link "build your own extension" [ref=e1625] [cursor=pointer]:
+                - /url: https://code.visualstudio.com/docs/copilot/copilot-extensibility-overview
+              - text: to power your team's unique scenarios.
+          - generic [ref=e1626]:
+            - generic [ref=e1627]:
+              - generic [ref=e1628]:
+                - link "Python extension icon" [ref=e1629] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=ms-python.python
+                  - img "Python extension icon"
+                - link "Stripe extension icon" [ref=e1630] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=Stripe.vscode-stripe
+                  - img "Stripe extension icon"
+                - link "C/C extension icon" [ref=e1631] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools
+                  - img "C/C extension icon"
+              - generic [ref=e1632]:
+                - link "Jupyter extension icon" [ref=e1633] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter
+                  - img "Jupyter extension icon"
+                - link "GitLens extension icon" [ref=e1634] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens
+                  - img "GitLens extension icon"
+                - link "C# Dev Kit extension icon" [ref=e1635] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit
+                  - img "C# Dev Kit extension icon"
+              - generic [ref=e1636]:
+                - link "MongoDB extension icon" [ref=e1637] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=mongodb.mongodb-vscode
+                  - img "MongoDB extension icon"
+                - link "GitHub Copilot for Azure extension icon" [ref=e1638] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azure-github-copilot
+                  - img "GitHub Copilot for Azure extension icon"
+                - link "Remote Development extension icon" [ref=e1639] [cursor=pointer]:
+                  - /url: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack
+                  - img "Remote Development extension icon"
+            - paragraph [ref=e1641]:
+              - text: View 80k+ extensions in the
+              - link "Extension Marketplace" [ref=e1642] [cursor=pointer]:
+                - /url: https://marketplace.visualstudio.com/vscode
+        - generic [ref=e1644]:
+          - generic [ref=e1646]:
+            - heading "Code in any language" [level=2] [ref=e1647]
+            - paragraph [ref=e1648]: VS Code supports almost every major programming language. Several ship in the box, like JavaScript, TypeScript, CSS, and HTML, but extensions for others can be found in the VS Code Marketplace.
+          - generic [ref=e1649]:
+            - generic [ref=e1650]:
+              - img "JavaScript icon" [ref=e1651]
+              - code [ref=e1652]: JavaScript
+            - generic [ref=e1653]:
+              - img "TypeScript icon" [ref=e1654]
+              - code [ref=e1655]: TypeScript
+            - generic [ref=e1656]:
+              - img "Python icon" [ref=e1657]
+              - code [ref=e1658]: Python
+            - generic [ref=e1659]:
+              - img "C# icon" [ref=e1660]
+              - code [ref=e1661]: C#
+            - generic [ref=e1662]:
+              - img "C++ icon" [ref=e1663]
+              - code [ref=e1664]: C++
+            - generic [ref=e1665]:
+              - img "HTML icon" [ref=e1666]
+              - code [ref=e1667]: HTML
+            - generic [ref=e1668]:
+              - img "Java icon" [ref=e1669]
+              - code [ref=e1670]: Java
+            - generic [ref=e1671]:
+              - img "JSON icon" [ref=e1672]
+              - code [ref=e1673]: JSON
+            - generic [ref=e1674]:
+              - img "PHP icon" [ref=e1675]
+              - code [ref=e1676]: PHP
+            - generic [ref=e1677]:
+              - img "Markdown icon" [ref=e1678]
+              - code [ref=e1679]: Markdown
+            - generic [ref=e1680]:
+              - img "Powershell icon" [ref=e1681]
+              - code [ref=e1682]: Powershell
+            - generic [ref=e1683]:
+              - img "YAML icon" [ref=e1684]
+              - code [ref=e1685]: YAML
+        - generic [ref=e1687]:
+          - generic [ref=e1688]:
+            - generic [ref=e1689]:
+              - heading "Fully customizable" [level=2] [ref=e1690]
+              - paragraph [ref=e1691]: Customize your VS Code UI and layout so that it fits your coding style.
+            - paragraph [ref=e1693]:
+              - link "Color themes" [ref=e1694] [cursor=pointer]:
+                - /url: https://code.visualstudio.com/docs/configure/themes
+              - text: let you modify the colors in VS Code's user interface to suit your preferences and work environment.
+            - paragraph [ref=e1696]:
+              - link "Settings Sync" [ref=e1697] [cursor=pointer]:
+                - /url: https://code.visualstudio.com/docs/configure/settings#_settings-sync
+              - text: enables you to share your user settings across your VS Code instances with the Settings Sync feature.
+            - paragraph [ref=e1699]:
+              - link "Profiles" [ref=e1700] [cursor=pointer]:
+                - /url: https://code.visualstudio.com/docs/configure/profiles
+              - text: let you create sets of customizations and quickly switch between them or share them with others.
+          - generic [ref=e1701]:
+            - img "Selecting the GitHub Dark theme with a quick pick"
+        - generic [ref=e1703]:
+          - generic [ref=e1704]:
+            - generic [ref=e1705]:
+              - heading "Code anywhere" [level=2] [ref=e1706]
+              - paragraph [ref=e1707]: Code wherever you're most productive, whether you're connected to the cloud, a remote repository, or in the browser with VS Code for the Web (vscode.dev).
+            - paragraph [ref=e1709]:
+              - link "Built-in Source Control" [ref=e1710] [cursor=pointer]:
+                - /url: https://code.visualstudio.com/docs/sourcecontrol/overview
+              - text: empowers you with Git support out-of-the-box. Many other source control providers are available through extensions.
+            - paragraph [ref=e1712]:
+              - link "GitHub Codespaces" [ref=e1713] [cursor=pointer]:
+                - /url: https://code.visualstudio.com/docs/remote/codespaces
+              - text: provides cloud-powered development environments for any activity - whether it's a long-term project, or a short-term task like reviewing a pull request.
+          - generic [ref=e1714]:
+            - img "vscode.dev in an Edge browser tab"
+        - generic [ref=e1715]:
+          - generic [ref=e1716]:
+            - heading "Code with rich features" [level=2] [ref=e1717]
+            - paragraph [ref=e1718]: There's a lot more to an editor. Whether it's using built-in features or rich extensions, there's something for everyone.
+          - generic [ref=e1719]:
+            - link "terminal icon Integrated terminal Use your favorite shell whether it's zsh, pwsh, or git bash, all inside the editor." [ref=e1720] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/terminal/basics
+              - img "terminal icon" [ref=e1721]
+              - heading "Integrated terminal" [level=3] [ref=e1722]
+              - paragraph [ref=e1723]: Use your favorite shell whether it's zsh, pwsh, or git bash, all inside the editor.
+            - link "debug icon Run code Run and debug your code without leaving your editor." [ref=e1724] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/debugtest/debugging
+              - img "debug icon" [ref=e1725]
+              - heading "Run code" [level=3] [ref=e1726]
+              - paragraph [ref=e1727]: Run and debug your code without leaving your editor.
+            - link "branching icon Version control Built-in support for git and many other source control providers." [ref=e1728] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/sourcecontrol/overview
+              - img "branching icon" [ref=e1729]
+              - heading "Version control" [level=3] [ref=e1730]
+              - paragraph [ref=e1731]: Built-in support for git and many other source control providers.
+            - link "tools icon Build tasks Run tools and analyze their results from within VS Code." [ref=e1732] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/debugtest/tasks
+              - img "tools icon" [ref=e1733]
+              - heading "Build tasks" [level=3] [ref=e1734]
+              - paragraph [ref=e1735]: Run tools and analyze their results from within VS Code.
+            - link "history icon Local history Never lose your changes with automatically tracked local history." [ref=e1736] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/updates/v1_66#_local-history
+              - img "history icon" [ref=e1737]
+              - heading "Local history" [level=3] [ref=e1738]
+              - paragraph [ref=e1739]: Never lose your changes with automatically tracked local history.
+            - link "palette icon Themes Your theme is an extension of your personality. Add some flair to your editor and add your touch." [ref=e1740] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/configure/themes
+              - img "palette icon" [ref=e1741]
+              - heading "Themes" [level=3] [ref=e1742]
+              - paragraph [ref=e1743]: Your theme is an extension of your personality. Add some flair to your editor and add your touch.
+            - link "keyboard icon Accessibility Optimized experience for screen readers, high contrast themes, and keyboard-only navigation." [ref=e1744] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/configure/accessibility/accessibility
+              - img "keyboard icon" [ref=e1745]
+              - heading "Accessibility" [level=3] [ref=e1746]
+              - paragraph [ref=e1747]: Optimized experience for screen readers, high contrast themes, and keyboard-only navigation.
+            - link "globe icon Web support Whether you are on your phone, tablet, or desktop, you can access your code from anywhere." [ref=e1748] [cursor=pointer]:
+              - /url: https://code.visualstudio.com/docs/setup/vscode-web
+              - img "globe icon" [ref=e1749]
+              - heading "Web support" [level=3] [ref=e1750]
+              - paragraph [ref=e1751]: Whether you are on your phone, tablet, or desktop, you can access your code from anywhere.
+  - contentinfo [ref=e1752]:
+    - generic [ref=e1753]:
+      - generic [ref=e1755]:
+        - list [ref=e1756]:
+          - listitem [ref=e1757]:
+            - link "VS Code on Github" [ref=e1758] [cursor=pointer]:
+              - /url: https://github.com/microsoft/vscode
+              - img "VS Code on Github" [ref=e1759]
+          - listitem [ref=e1760]:
+            - link "Follow us on X" [ref=e1761] [cursor=pointer]:
+              - /url: https://go.microsoft.com/fwlink/?LinkID=533687
+              - img "Follow us on X" [ref=e1762]
+          - listitem [ref=e1763]:
+            - link "VS Code on LinkedIn" [ref=e1764] [cursor=pointer]:
+              - /url: https://www.linkedin.com/showcase/vs-code
+              - img "VS Code on LinkedIn" [ref=e1765]
+          - listitem [ref=e1766]:
+            - link "VS Code on Bluesky" [ref=e1767] [cursor=pointer]:
+              - /url: https://bsky.app/profile/vscode.dev
+              - img "VS Code on Bluesky" [ref=e1768]
+          - listitem [ref=e1769]:
+            - link "Join the VS Code community on Reddit" [ref=e1770] [cursor=pointer]:
+              - /url: https://www.reddit.com/r/vscode/
+              - img "Join the VS Code community on Reddit" [ref=e1771]
+          - listitem [ref=e1772]:
+            - link "The VS Code Insiders Podcast" [ref=e1773] [cursor=pointer]:
+              - /url: https://www.vscodepodcast.com
+              - img "The VS Code Insiders Podcast" [ref=e1774]
+          - listitem [ref=e1775]:
+            - link "VS Code on TikTok" [ref=e1776] [cursor=pointer]:
+              - /url: https://www.tiktok.com/@vscode
+              - img "VS Code on TikTok" [ref=e1777]
+          - listitem [ref=e1778]:
+            - link "VS Code on YouTube" [ref=e1779] [cursor=pointer]:
+              - /url: https://www.youtube.com/@code
+              - img "VS Code on YouTube" [ref=e1780]
+        - link "Microsoft homepage" [ref=e1781] [cursor=pointer]:
+          - /url: https://www.microsoft.com
+          - img "Microsoft homepage" [ref=e1782]
+      - list [ref=e1784]:
+        - listitem [ref=e1785]:
+          - link "Get support for VS Code (opens in new tab)" [ref=e1786] [cursor=pointer]:
+            - /url: https://support.serviceshub.microsoft.com/supportforbusiness/create?sapId=d66407ed-3967-b000-4cfb-2c318cad363d
+            - text: Support
+        - listitem [ref=e1787]:
+          - link "Microsoft privacy statement (opens in new tab)" [ref=e1788] [cursor=pointer]:
+            - /url: https://go.microsoft.com/fwlink/?LinkId=521839
+            - text: Privacy
+        - listitem [ref=e1789]: Manage Cookies
+        - listitem [ref=e1790]:
+          - link "Microsoft Terms of Use (opens in new tab)" [ref=e1791] [cursor=pointer]:
+            - /url: https://www.microsoft.com/legal/terms-of-use
+            - text: Terms of Use
+        - listitem [ref=e1792]:
+          - link "Visual Studio Code license (opens in new tab)" [ref=e1793] [cursor=pointer]:
+            - /url: /License
+            - text: License
+      - list [ref=e1795]:
+        - listitem [ref=e1796]:
+          - img "Your Privacy Choices Opt-Out Icon" [ref=e1797]
+          - link "Your Privacy Choices (opens in new tab)" [ref=e1802] [cursor=pointer]:
+            - /url: https://aka.ms/YourCaliforniaPrivacyChoices
+            - text: Your Privacy Choices
+        - listitem [ref=e1803]:
+          - link "Microsoft Consumer Health Privacy policy (opens in new tab)" [ref=e1804] [cursor=pointer]:
+            - /url: https://go.microsoft.com/fwlink/?linkid=2259814
+            - text: Consumer Health Privacy

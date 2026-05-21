@@ -7,7 +7,7 @@ const ASSETS = [
   '/faxina.html',
   '/despesas.html',
   '/trabalhos.html',
-  '/extras.html',
+  '/relatorios.html',
   '/adicionar.html',
   '/logo.png',
   '/manifest.json'

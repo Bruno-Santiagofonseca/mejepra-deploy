@@ -25,32 +25,50 @@
   --font-body:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif
 }
 html,body{height:100%;background:var(--bg);font-family:var(--font-body);color:var(--fg);-webkit-font-smoothing:antialiased}
-body{display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;min-height:100dvh}
-body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url('logo.png');background-size:120px auto;background-repeat:space;background-position:center;opacity:.045;pointer-events:none}
-.grid-wrap,.logo-area,.bottom-nav{position:relative;z-index:1}
+body{display:flex;flex-direction:column;max-width:100%;margin:0 auto;position:relative;min-height:100dvh;padding:0 clamp(16px,5vw,80px)}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url('logo.png');background-size:clamp(80px,10vw,120px) auto;background-repeat:space;background-position:center;opacity:.045;pointer-events:none}
+.grid-wrap,.logo-area,.bottom-nav,.backup-area{position:relative;z-index:1}
 
 /* Logo */
-.logo-area{display:flex;flex-direction:column;align-items:center;padding:28px 20px 12px}
-.logo-img{width:170px;height:170px;object-fit:contain;display:block}
-.logo-subtitle{font-size:24px;font-weight:700;margin-top:18px;color:var(--fg);font-family:var(--font-display);letter-spacing:-0.3px}
-.logo-sub{font-size:14px;color:var(--muted);margin-top:4px;font-weight:400}
+.logo-area{display:flex;flex-direction:column;align-items:center;padding:clamp(20px,4vh,28px) 20px 12px}
+.logo-img{width:clamp(100px,15vw,170px);height:clamp(100px,15vw,170px);object-fit:contain;display:block}
+.logo-subtitle{font-size:clamp(18px,3vw,24px);font-weight:700;margin-top:clamp(12px,2vh,18px);color:var(--fg);font-family:var(--font-display);letter-spacing:-0.3px}
+.logo-sub{font-size:clamp(12px,2vw,14px);color:var(--muted);margin-top:4px;font-weight:400}
 
 /* Grid */
-.grid-wrap{flex:1;padding:12px 16px 20px;display:flex;flex-direction:column}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;align-content:start}
+.grid-wrap{flex:1;padding:12px 0 20px;display:flex;flex-direction:column}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2vw,20px);flex:1;align-content:start;max-width:1200px;margin:0 auto;width:100%}
 
 /* Card button */
-.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--surface);border-radius:var(--radius);padding:20px 12px;border:1px solid var(--border);cursor:pointer;transition:all .2s;min-height:120px;text-decoration:none;color:var(--fg);-webkit-tap-highlight-color:transparent}
+.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.5vw,10px);background:var(--surface);border-radius:var(--radius);padding:clamp(16px,3vw,20px) clamp(10px,2vw,12px);border:1px solid var(--border);cursor:pointer;transition:all .2s;min-height:clamp(100px,15vh,120px);text-decoration:none;color:var(--fg);-webkit-tap-highlight-color:transparent}
 .card:active{transform:scale(.96);background:color-mix(in srgb,var(--surface) 96%,var(--accent))}
-.card svg{width:36px;height:36px;display:block;color:var(--accent);flex-shrink:0}
-.card span{font-size:15px;font-weight:600;text-align:center;line-height:1.3;font-family:var(--font-display)}
-.card .card-sub{font-size:11px;color:var(--muted);font-weight:400;margin-top:-4px}
+.card svg{width:clamp(28px,4vw,36px);height:clamp(28px,4vw,36px);display:block;color:var(--accent);flex-shrink:0}
+.card span{font-size:clamp(13px,1.8vw,15px);font-weight:600;text-align:center;line-height:1.3;font-family:var(--font-display)}
+.card .card-sub{font-size:clamp(10px,1.5vw,11px);color:var(--muted);font-weight:400;margin-top:-4px}
+
+/* Backup area */
+.backup-area{padding:12px 0 16px;max-width:1200px;margin:0 auto;width:100%}
+.backup-btn{width:100%;padding:clamp(12px,2vw,14px);border:none;border-radius:var(--radius);background:var(--surface);color:var(--fg);font-size:clamp(13px,1.8vw,15px);font-weight:700;font-family:var(--font-display);cursor:pointer;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.backup-btn:active{transform:scale(.98);background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
+.backup-btn svg{width:20px;height:20px}
+
+/* Backup action sheet */
+.backup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:90;display:none;opacity:0;transition:opacity .25s}
+.backup-overlay.open{display:block;opacity:1}
+.backup-sheet{position:fixed;bottom:0;left:0;right:0;z-index:91;background:var(--surface);border-radius:18px 18px 0 0;padding:clamp(14px,2vw,16px) clamp(16px,3vw,20px) clamp(20px,4vw,28px);box-shadow:0 -4px 30px rgba(0,0,0,.12);transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);max-width:600px;margin:0 auto}
+.backup-sheet.open{transform:translateY(0)}
+.backup-sheet .sheet-handle{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px}
+.backup-sheet .sheet-title{font-size:clamp(16px,2vw,18px);font-weight:700;font-family:var(--font-display);margin-bottom:16px;text-align:center}
+.backup-sheet .backup-option{display:flex;align-items:center;gap:12px;padding:clamp(12px,2vw,14px);border:1.5px solid var(--border);border-radius:12px;background:var(--surface);font-size:clamp(14px,1.8vw,15px);font-weight:600;font-family:var(--font-display);cursor:pointer;transition:all .15s;color:var(--fg);width:100%;margin-bottom:10px}
+.backup-sheet .backup-option:active{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+.backup-sheet .backup-option svg{width:22px;height:22px;flex-shrink:0;color:var(--accent)}
+.backup-sheet .backup-option:last-child{margin-bottom:0}
 
 /* Bottom nav */
-.bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:8px 16px 16px;border-top:1px solid var(--border);background:var(--surface)}
-.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--muted);font-size:10px;font-weight:500;transition:color .2s;background:none;border:none;font-family:var(--font-body);-webkit-tap-highlight-color:transparent}
+.bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:8px 16px 16px;border-top:1px solid var(--border);background:var(--surface);max-width:100%}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--muted);font-size:clamp(10px,1.2vw,10px);font-weight:500;transition:color .2s;background:none;border:none;font-family:var(--font-body);-webkit-tap-highlight-color:transparent}
 .nav-item.active{color:var(--accent)}
-.nav-item svg{width:24px;height:24px}
+.nav-item svg{width:clamp(20px,3vw,24px);height:clamp(20px,3vw,24px)}
 .nav-item.active svg{color:var(--accent)}
 </style>
 </head>
@@ -90,19 +108,31 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url('l
       <span>Trabalhos</span>
     </a>
 
-    <a class="card" href="extras.html">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
-      <span>Extras</span>
+    <a class="card" href="relatorios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span>Relatórios</span>
     </a>
 
   </div>
 </div>
 
-<div style="padding:12px 16px 16px;display:flex;gap:10px">
-  <button onclick="fazerBackup()" style="flex:1;padding:14px;border:none;border-radius:var(--radius);background:var(--accent);color:#fff;font-size:15px;font-weight:700;font-family:var(--font-display);cursor:pointer">
+<div class="backup-area">
+  <button class="backup-btn" onclick="abrirBackupSheet()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Backup
+  </button>
+</div>
+
+<div class="backup-overlay" id="backup-overlay" onclick="fecharBackupSheet()"></div>
+<div class="backup-sheet" id="backup-sheet">
+  <div class="sheet-handle"></div>
+  <h2 class="sheet-title">Backup</h2>
+  <button class="backup-option" onclick="fazerBackup()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Exportar Backup
   </button>
-  <button onclick="document.getElementById('restoreInput').click()" style="flex:1;padding:14px;border:none;border-radius:var(--radius);background:var(--surface);color:var(--fg);font-size:15px;font-weight:700;font-family:var(--font-display);cursor:pointer;border:1px solid var(--border)">
+  <button class="backup-option" onclick="document.getElementById('restoreInput').click()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
     Restaurar Backup
   </button>
   <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restaurarBackup(this)">
@@ -120,7 +150,17 @@ if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
 }
 
+function abrirBackupSheet(){
+  document.getElementById('backup-overlay').classList.add('open');
+  document.getElementById('backup-sheet').classList.add('open');
+}
+function fecharBackupSheet(){
+  document.getElementById('backup-overlay').classList.remove('open');
+  document.getElementById('backup-sheet').classList.remove('open');
+}
+
 async function fazerBackup(){
+  fecharBackupSheet();
   try {
     const res = await fetch('/api/backup');
     const blob = await res.blob();
@@ -135,6 +175,7 @@ async function fazerBackup(){
 }
 
 async function restaurarBackup(input){
+  fecharBackupSheet();
   const file = input.files[0];
   if(!file) return;
   if(!confirm('Isso vai SUBSTITUIR todos os dados atuais. Continuar?')) { input.value=''; return; }

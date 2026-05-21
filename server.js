@@ -7,7 +7,6 @@ const mensalidadesRouter = require('./src/routes/mensalidades');
 const faxinaRouter = require('./src/routes/faxina');
 const despesasRouter = require('./src/routes/despesas');
 const trabalhosRouter = require('./src/routes/trabalhos');
-const extrasRouter = require('./src/routes/extras');
 const dashboardRouter = require('./src/routes/dashboard');
 
 const app = express();
@@ -40,7 +39,6 @@ app.use('/api/mensalidades', mensalidadesRouter);
 app.use('/api/faxina', faxinaRouter);
 app.use('/api/despesas', despesasRouter);
 app.use('/api/trabalhos', trabalhosRouter);
-app.use('/api/extras', extrasRouter);
 app.use('/api/dashboard', dashboardRouter);
 
 app.get('/', (req, res) => {
@@ -48,28 +46,33 @@ app.get('/', (req, res) => {
 });
 
 // Backup: export all data as JSON
-app.get('/api/backup', (req, res) => {
-  const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
+app.get('/api/backup', async (req, res) => {
+  const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos'];
   const backup = {};
-  TABLES.forEach(t => { backup[t] = db.getAll(t); });
+  for (const t of TABLES) {
+    backup[t] = await db.getAll(t);
+  }
   res.setHeader('Content-Disposition', 'attachment; filename=mejepra-backup-' + new Date().toISOString().slice(0,10) + '.json');
   res.json(backup);
 });
 
 // Restore: import data from JSON
-app.post('/api/restore', (req, res) => {
+app.post('/api/restore', async (req, res) => {
   try {
     const data = req.body;
-    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
-    TABLES.forEach(t => {
+    const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos'];
+    for (const t of TABLES) {
       if (data[t] && Array.isArray(data[t])) {
-        db.getAll(t).forEach(r => db.delete(t, r.id));
-        data[t].forEach(r => {
+        const current = await db.getAll(t);
+        for (const r of current) {
+          await db.delete(t, r.id);
+        }
+        for (const r of data[t]) {
           const { created_at, updated_at, ...rest } = r;
-          db.insert(t, rest);
-        });
+          await db.insert(t, rest);
+        }
       }
-    });
+    }
     res.json({ success: true, message: 'Dados restaurados com sucesso' });
   } catch (e) {
     res.status(500).json({ error: e.message });
