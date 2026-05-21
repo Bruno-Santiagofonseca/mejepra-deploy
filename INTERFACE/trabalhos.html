@@ -248,6 +248,7 @@ function abrirSheet(row){
   document.getElementById('e-valor').value=row.dataset.valor;
   document.getElementById('e-divisao').value=row.dataset.divisao;
   editPagamentos = row.dataset.pagamentos ? JSON.parse(row.dataset.pagamentos) : {};
+  selectedMediums = row.dataset.participantes ? JSON.parse(row.dataset.participantes) : [];
   atualizarBtnPagamentos();
   document.getElementById('edit-overlay').classList.add('open');
   document.getElementById('edit-sheet').classList.add('open');
@@ -267,11 +268,12 @@ async function salvarEdicao(){
   const mA = getMesAno();
   try {
     const id = parseInt(editRow.dataset.id);
-    await fetch(`${API}/trabalhos/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao, pagamentos: editPagamentos }) });
+    await fetch(`${API}/trabalhos/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao, pagamentos: editPagamentos, participantes: selectedMediums }) });
     editRow.dataset.entidade=entidade;
     editRow.dataset.valor=valor;
     editRow.dataset.divisao=divisao;
     editRow.dataset.pagamentos=JSON.stringify(editPagamentos);
+    editRow.dataset.participantes=JSON.stringify(selectedMediums);
     const cells=editRow.querySelectorAll('td');
     cells[0].textContent=entidade;
     cells[1].textContent='R$ '+valor.toFixed(2).replace('.',',');
@@ -304,6 +306,7 @@ async function carregarTrabalhos(){
       const porMed = t.divisao > 0 ? t.valor / t.divisao : t.valor;
       const pagamentos = t.pagamentos || {};
       const pagos = Object.values(pagamentos).filter(Boolean).length;
+      const participantes = t.participantes || [];
       const tr = document.createElement('tr');
       tr.dataset.id = String(t.id);
       tr.dataset.entidade = t.entidade;
@@ -311,12 +314,9 @@ async function carregarTrabalhos(){
       tr.dataset.mes = t.mes || '';
       tr.dataset.divisao = String(t.divisao);
       tr.dataset.pagamentos = JSON.stringify(pagamentos);
+      tr.dataset.participantes = JSON.stringify(participantes);
       tr.innerHTML = `<td>${t.entidade}</td><td class="value">R$ ${t.valor.toFixed(2).replace('.',',')}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td>${pagos}/${t.divisao}</td>`;
       tbody.appendChild(tr);
-    });
-    tbody.addEventListener('click', function(e){
-      const tr = e.target.closest('tr');
-      if(tr) abrirSheet(tr);
     });
     atualizarTotais();
   } catch(e) { console.error('Erro ao carregar:', e); }
@@ -404,7 +404,7 @@ async function addTrabalho(){
   if(!entidade||!valor){alert('Preencha a entidade e o valor.');return}
   const mA = getMesAno();
   try {
-    const res = await fetch(`${API}/trabalhos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao }) });
+    const res = await fetch(`${API}/trabalhos`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ entidade, valor, mes: mA.mes, ano: mA.ano, divisao, status: 'pendente', participantes: selectedMediums }) });
     const t = await res.json();
     var porMed=divisao>0?valor/divisao:valor;
     const tr=document.createElement('tr');
@@ -414,6 +414,7 @@ async function addTrabalho(){
     tr.dataset.mes=mA.mes;
     tr.dataset.divisao=String(divisao);
     tr.dataset.pagamentos='{}';
+    tr.dataset.participantes=JSON.stringify(selectedMediums);
     tr.innerHTML='<td>'+entidade+'</td><td class="value">R$ '+valor.toFixed(2).replace('.',',')+'</td><td class="value">R$ '+porMed.toFixed(2).replace('.',',')+'</td><td>0/'+divisao+'</td>';
     document.getElementById('trabalhos-tbody').appendChild(tr);
     document.getElementById('f-entidade').value='';
@@ -440,7 +441,15 @@ function fecharPagamentosSheet(){
 function renderPagMediumList(){
   const list = document.getElementById('pagMediumList');
   const divisao = parseInt(document.getElementById('e-divisao').value) || 1;
-  const todosMediuns = mediunsAtivos.slice(0, divisao);
+  
+  // Se não houver participantes salvos no dataset, usa fallback para os N primeiros alfabeticamente
+  let participantesIds = selectedMediums;
+  if (!participantesIds || participantesIds.length === 0) {
+    participantesIds = mediunsAtivos.slice(0, divisao).map(m => m.id);
+  }
+  
+  const todosMediuns = mediunsAtivos.filter(m => participantesIds.includes(m.id));
+  
   list.innerHTML = todosMediuns.map(m => {
     const pago = tempPagamentos[m.id] || false;
     return `<div class="medium-check ${pago?'selected':''}" onclick="togglePagMedium(${m.id})">
@@ -511,6 +520,19 @@ function navegarMes(dir){
   span.textContent = meses[mes]+" "+ano;
   carregarTrabalhos();
 }
+// Inicializar com o mês/ano atual dinamicamente
+(function(){
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const now = new Date();
+  document.querySelector(".period-bar .month").textContent = meses[now.getMonth()] + " " + now.getFullYear();
+})();
+
+// Escutar cliques na tabela de trabalhos (apenas uma vez)
+document.getElementById('trabalhos-tbody').addEventListener('click', function(e){
+  const tr = e.target.closest('tr');
+  if(tr) abrirSheet(tr);
+});
+
 carregarMediuns();
 carregarTrabalhos();
 </script>

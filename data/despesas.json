@@ -1,1 +1,98 @@
-[]
+[
+  {
+    "id": 1,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Material escritório",
+    "valor": 230,
+    "parcela": "1/1",
+    "divisao": 1,
+    "status": "paga",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 2,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Água",
+    "valor": 180,
+    "parcela": "1/1",
+    "divisao": 1,
+    "status": "paga",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 3,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Energia elétrica",
+    "valor": 420,
+    "parcela": "1/1",
+    "divisao": 1,
+    "status": "aberta",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 4,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Manutenção telhado",
+    "valor": 1200,
+    "parcela": "3/6",
+    "divisao": 1,
+    "status": "parcial",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 5,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Alimentação evento",
+    "valor": 650,
+    "parcela": "1/1",
+    "divisao": 1,
+    "status": "aberta",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 6,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Produtos limpeza",
+    "valor": 190,
+    "parcela": "1/1",
+    "divisao": 1,
+    "status": "paga",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 7,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Móvel sala",
+    "valor": 1800,
+    "parcela": "2/5",
+    "divisao": 1,
+    "status": "parcial",
+    "mes": "05",
+    "ano": "2026"
+  },
+  {
+    "id": 8,
+    "created_at": "2026-05-21T12:19:55.718Z",
+    "updated_at": "2026-05-21T12:19:55.718Z",
+    "item": "Internet",
+    "valor": 150,
+    "parcela": "1/1",
+    "divisao": 1,
+    "status": "aberta",
+    "mes": "05",
+    "ano": "2026"
+  }
+]

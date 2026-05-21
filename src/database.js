@@ -1,28 +1,61 @@
 const fs = require('fs');
 const path = require('path');
+const { Client } = require('pg');
 
 const DB_DIR = path.join(__dirname, '..', 'data');
 if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR, { recursive: true });
 
 const TABLES = ['mediuns', 'mensalidades', 'faxina', 'despesas', 'trabalhos', 'extras'];
 
-function readTable(table) {
+const memoryCache = {};
+let pgClient = null;
+let usePostgres = false;
+
+function readLocalTable(table) {
   const filePath = path.join(DB_DIR, `${table}.json`);
   if (!fs.existsSync(filePath)) {
-    writeTable(table, []);
     return [];
   }
   try {
     const data = fs.readFileSync(filePath, 'utf8');
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
 }
 
+function readTable(table) {
+  return memoryCache[table] || [];
+}
+
 function writeTable(table, data) {
+  memoryCache[table] = data;
+
+  // Salvar no arquivo JSON local de forma assíncrona
   const filePath = path.join(DB_DIR, `${table}.json`);
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+  fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8', (err) => {
+    if (err) console.error(`[DB] Erro ao salvar arquivo local para ${table}:`, err);
+  });
+
+  // Salvar no Postgres de forma assíncrona se estiver conectado
+  if (usePostgres) {
+    saveTableToDb(table);
+  }
+}
+
+async function saveTableToDb(table) {
+  if (!pgClient) return;
+  try {
+    const data = memoryCache[table];
+    await pgClient.query(
+      `INSERT INTO mejepra_data (key, value) VALUES ($1, $2)
+       ON CONFLICT (key) DO UPDATE SET value = $2`,
+      [table, JSON.stringify(data)]
+    );
+  } catch (err) {
+    console.error(`[DB] Erro ao sincronizar tabela ${table} com o Postgres:`, err);
+  }
 }
 
 function generateId(table) {
@@ -32,6 +65,72 @@ function generateId(table) {
 }
 
 const db = {
+  async init() {
+    const connectionString = process.env.DATABASE_URL || process.env.database_url || process.env.SUPABASE_DB_URL || process.env.supabase_db_url;
+
+    // Inicializar o cache com arrays vazios
+    TABLES.forEach(table => {
+      memoryCache[table] = [];
+    });
+
+    if (connectionString) {
+      console.log("[DB] Conexão com Postgres/Supabase detectada. Inicializando...");
+      try {
+        pgClient = new Client({
+          connectionString,
+          ssl: {
+            rejectUnauthorized: false // Necessário para conexões do Supabase / Render
+          }
+        });
+        await pgClient.connect();
+        console.log("[DB] Conectado ao PostgreSQL/Supabase com sucesso!");
+
+        // Garantir que a tabela mejepra_data existe
+        await pgClient.query(`
+          CREATE TABLE IF NOT EXISTS mejepra_data (
+            key VARCHAR(50) PRIMARY KEY,
+            value JSONB NOT NULL
+          )
+        `);
+
+        // Carregar todas as tabelas para a memória cache
+        for (const table of TABLES) {
+          const res = await pgClient.query('SELECT value FROM mejepra_data WHERE key = $1', [table]);
+          if (res.rows.length > 0) {
+            memoryCache[table] = res.rows[0].value;
+          } else {
+            // Se não existir no banco de dados remoto, lê os dados locais iniciais
+            const localData = readLocalTable(table);
+            memoryCache[table] = localData;
+            
+            // Grava o backup local no banco para ficar sincronizado
+            await pgClient.query(
+              `INSERT INTO mejepra_data (key, value) VALUES ($1, $2)
+               ON CONFLICT (key) DO UPDATE SET value = $2`,
+              [table, JSON.stringify(localData)]
+            );
+          }
+        }
+        usePostgres = true;
+      } catch (err) {
+        console.error("[DB] Falha ao conectar ao PostgreSQL/Supabase. Usando fallback local JSON:", err);
+        this.loadLocalData();
+      }
+    } else {
+      console.log("[DB] Nenhuma string de conexão Postgres fornecida. Usando arquivos locais JSON.");
+      this.loadLocalData();
+    }
+
+    // Inicializa valores padrão caso tabelas essenciais estejam vazias
+    this.initDefaults();
+  },
+
+  loadLocalData() {
+    TABLES.forEach(table => {
+      memoryCache[table] = readLocalTable(table);
+    });
+  },
+
   getAll(table) {
     return readTable(table);
   },
@@ -128,14 +227,14 @@ const db = {
     const trabalhos = readTable('trabalhos');
     if (trabalhos.length === 0) {
       const items = [
-        { entidade: 'Caboclo Tupinambá', valor: 300, mes: '05', ano: '2026', divisao: 5, status: 'realizado' },
-        { entidade: 'Preta Velha Maria', valor: 250, mes: '05', ano: '2026', divisao: 4, status: 'realizado' },
-        { entidade: 'Baiano Ventania', valor: 350, mes: '06', ano: '2026', divisao: 6, status: 'futuro' },
-        { entidade: 'Indio Pena Branca', valor: 280, mes: '05', ano: '2026', divisao: 3, status: 'pendente' },
-        { entidade: 'Boiadeiro Serra', valor: 320, mes: '05', ano: '2026', divisao: 5, status: 'realizado' },
-        { entidade: 'Marujo Costa', valor: 200, mes: '06', ano: '2026', divisao: 4, status: 'futuro' },
-        { entidade: 'Cigana Esmeralda', valor: 280, mes: '05', ano: '2026', divisao: 7, status: 'realizado' },
-        { entidade: 'Mestre Quintino', valor: 400, mes: '05', ano: '2026', divisao: 6, status: 'realizado' }
+        { entidade: 'Caboclo Tupinambá', valor: 300, mes: '05', ano: '2026', divisao: 5, status: 'realizado', participantes: [1, 2, 3, 4, 5] },
+        { entidade: 'Preta Velha Maria', valor: 250, mes: '05', ano: '2026', divisao: 4, status: 'realizado', participantes: [1, 2, 3, 5] },
+        { entidade: 'Baiano Ventania', valor: 350, mes: '06', ano: '2026', divisao: 6, status: 'futuro', participantes: [1, 2, 3, 4, 5, 6] },
+        { entidade: 'Indio Pena Branca', valor: 280, mes: '05', ano: '2026', divisao: 3, status: 'pendente', participantes: [1, 2, 3] },
+        { entidade: 'Boiadeiro Serra', valor: 320, mes: '05', ano: '2026', divisao: 5, status: 'realizado', participantes: [1, 2, 3, 4, 5] },
+        { entidade: 'Marujo Costa', valor: 200, mes: '06', ano: '2026', divisao: 4, status: 'futuro', participantes: [1, 2, 3, 4] },
+        { entidade: 'Cigana Esmeralda', valor: 280, mes: '05', ano: '2026', divisao: 7, status: 'realizado', participantes: [1, 2, 3, 4, 5, 6, 7] },
+        { entidade: 'Mestre Quintino', valor: 400, mes: '05', ano: '2026', divisao: 6, status: 'realizado', participantes: [1, 2, 3, 4, 5, 6] }
       ];
       items.forEach(t => this.insert('trabalhos', t));
     }

@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 
   const trabalhos = db.getAll('trabalhos');
   const trabalhosTotal = trabalhos.reduce((s, t) => s + t.valor, 0);
-  const trabalhosRealizados = trabalhosTotal;
+  const trabalhosRealizados = trabalhos.filter(t => t.status === 'realizado').reduce((s, t) => s + t.valor, 0);
 
   const extras = db.getAll('extras');
   const extrasReceitas = extras.filter(e => e.tipo === 'receita').reduce((s, e) => s + e.valor, 0);

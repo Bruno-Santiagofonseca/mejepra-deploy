@@ -148,7 +148,7 @@ document.querySelector('.submit-btn').addEventListener('click', async function(e
   e.preventDefault();
   const nome = document.getElementById('cadNome').value.trim();
   if (!nome) { this.textContent = 'Preencha o nome!'; this.style.background = '#e74c3c'; setTimeout(() => { this.textContent = 'Salvar Cadastro'; this.style.background = 'var(--accent)'; }, 1500); return; }
-  const tipo = document.querySelector('.type-btn.active').textContent;
+  const tipo = document.querySelector('.type-btn.active').textContent.trim();
   const tel = document.getElementById('cadTel').value.trim();
   const endereco = document.getElementById('cadEndereco').value.trim();
   const email = document.getElementById('cadEmail').value.trim();

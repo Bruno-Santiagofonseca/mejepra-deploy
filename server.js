@@ -37,8 +37,12 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'INTERFACE', 'index.html'));
 });
 
-// db.initDefaults(); // Desativado para entrega ao cliente
-
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Mejepra Financeiro rodando em http://0.0.0.0:${PORT}`);
+// Inicializa o banco de dados (remoto ou local) antes de abrir a porta do servidor
+db.init().then(() => {
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Mejepra Financeiro rodando em http://0.0.0.0:${PORT}`);
+  });
+}).catch(err => {
+  console.error("[SERVER] Falha fatal ao inicializar o banco de dados:", err);
+  process.exit(1);
 });

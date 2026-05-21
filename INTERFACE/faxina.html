@@ -334,6 +334,13 @@ function navegarMes(dir){
   carregarDados();
 }
 
+// Inicializar com o mês/ano atual dinamicamente
+(function(){
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const now = new Date();
+  document.querySelector(".period-bar .month").textContent = meses[now.getMonth()] + " " + now.getFullYear();
+})();
+
 carregarMediuns();
 carregarDados();
 </script>

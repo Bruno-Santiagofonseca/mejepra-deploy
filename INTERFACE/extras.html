@@ -401,10 +401,6 @@ async function carregarExtras(){
       tr.innerHTML = `<td>${e.item}</td><td class="value">R$ ${e.valor.toFixed(2).replace('.',',')}</td><td>${e.parcela}</td><td>${e.qtd}</td><td class="value">R$ ${porMed.toFixed(2).replace('.',',')}</td><td>${pagos}/${e.divisao}</td><td><span class="tag ${e.tipo}">${tipoLabel}</span></td>`;
       tbody.appendChild(tr);
     });
-    tbody.addEventListener('click', function(e){
-      const tr = e.target.closest('tr');
-      if(tr) abrirSheet(tr);
-    });
     atualizarTotais();
   } catch(e) { console.error('Erro ao carregar:', e); }
 }
@@ -600,6 +596,19 @@ function navegarMes(dir){
   span.textContent = meses[mes]+" "+ano;
   carregarExtras();
 }
+// Inicializar com o mês/ano atual dinamicamente
+(function(){
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const now = new Date();
+  document.querySelector(".period-bar .month").textContent = meses[now.getMonth()] + " " + now.getFullYear();
+})();
+
+// Escutar cliques na tabela de itens extras (apenas uma vez)
+document.getElementById('extras-tbody').addEventListener('click', function(e){
+  const tr = e.target.closest('tr');
+  if(tr) abrirSheet(tr);
+});
+
 carregarMediuns();
 carregarExtras();
 </script>
