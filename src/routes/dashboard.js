@@ -54,9 +54,20 @@ router.get('/medium/:id', (req, res) => {
 
   const { mes, ano } = req.query;
 
-  const mensalidades = db.query('mensalidades', m =>
+  const rawMensalidades = db.query('mensalidades', m =>
     m.medium_id === parseInt(req.params.id)
-  ).sort((a, b) => {
+  );
+
+  // Agrupar e deduplicar mensalidades por mes/ano
+  const uniqueMensalidadesMap = {};
+  rawMensalidades.forEach(m => {
+    const key = `${m.ano || ''}-${m.mes || ''}`;
+    if (!uniqueMensalidadesMap[key] || m.pago > uniqueMensalidadesMap[key].pago || (m.pago === uniqueMensalidadesMap[key].pago && m.id > uniqueMensalidadesMap[key].id)) {
+      uniqueMensalidadesMap[key] = m;
+    }
+  });
+
+  const mensalidades = Object.values(uniqueMensalidadesMap).sort((a, b) => {
     if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
     return a.mes.localeCompare(b.mes);
   });

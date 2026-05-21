@@ -18,7 +18,24 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const { medium_id, nome, valor, pago, status, mes, ano } = req.body;
   if (!nome || !mes || !ano) return res.status(400).json({ error: 'Nome, mês e ano são obrigatórios' });
-  const mens = db.insert('mensalidades', { medium_id: medium_id || null, nome, valor: valor || 0, pago: pago || 0, status: status || 'pendente', mes, ano });
+
+  if (medium_id) {
+    const existing = db.query('mensalidades', m => 
+      m.medium_id === parseInt(medium_id) && m.mes === mes && m.ano === ano
+    );
+    if (existing && existing.length > 0) {
+      // Se já existe, atualiza em vez de criar duplicado
+      const mens = db.update('mensalidades', existing[0].id, {
+        nome,
+        valor: valor !== undefined ? valor : existing[0].valor,
+        pago: pago !== undefined ? pago : existing[0].pago,
+        status: status || existing[0].status
+      });
+      return res.status(200).json(mens);
+    }
+  }
+
+  const mens = db.insert('mensalidades', { medium_id: medium_id ? parseInt(medium_id) : null, nome, valor: valor || 0, pago: pago || 0, status: status || 'pendente', mes, ano });
   res.status(201).json(mens);
 });
 
