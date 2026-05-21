@@ -1,0 +1,16 @@
+{
+  "name": "mejepra-template",
+  "version": "1.0.0",
+  "description": "Template de projeto Node/Express com SQLite local para demonstração",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.21.0",
+    "sqlite3": "^5.1.6"
+  }
+}
