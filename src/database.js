@@ -387,6 +387,18 @@ async function initDefaults() {
   // No default data — client starts with clean database
 }
 
+async function resetSequences() {
+  if (!USE_PG || !pool) return;
+  for (const table of TABLES) {
+    try {
+      await pool.query(`SELECT setval(pg_get_serial_sequence('${table}', 'id'), COALESCE((SELECT MAX(id) FROM ${table}), 1))`);
+      console.log(`[DB] Sequence reset for table '${table}'`);
+    } catch (err) {
+      console.error(`[DB] Failed to reset sequence for table '${table}':`, err);
+    }
+  }
+}
+
 const dbApi = {
   init: initDB,
   getAll: queryAll,
@@ -396,7 +408,8 @@ const dbApi = {
   delete: deleteRow,
   query,
   migrateFromJSON,
-  initDefaults
+  initDefaults,
+  resetSequences
 };
 
 module.exports = dbApi;

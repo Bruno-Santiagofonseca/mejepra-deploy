@@ -73,6 +73,9 @@ app.post('/api/restore', async (req, res) => {
         }
       }
     }
+    if (db.resetSequences) {
+      await db.resetSequences();
+    }
     res.json({ success: true, message: 'Dados restaurados com sucesso' });
   } catch (e) {
     res.status(500).json({ error: e.message });
