@@ -94,11 +94,106 @@ async function initPG() {
 
   await pool.query('SELECT 1');
   await createPgTables();
+  await migrateFromOldMejepraData();
 }
 
 async function createPgTables() {
   for (const [table, columns] of Object.entries(SCHEMA)) {
     await pool.query(`CREATE TABLE IF NOT EXISTS ${table} (${columns})`);
+  }
+}
+
+async function migrateFromOldMejepraData() {
+  if (!USE_PG || !pool) return;
+  try {
+    const tableCheck = await pool.query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'mejepra_data'
+      );
+    `);
+    
+    if (!tableCheck.rows[0].exists) {
+      console.log("[DB Migration] Old table 'mejepra_data' does not exist. Skipping migration.");
+      return;
+    }
+
+    console.log("[DB Migration] Old table 'mejepra_data' found! Checking if migration is needed...");
+
+    // We check if the 'mediuns' table has any records to decide if we need to migrate
+    const countCheck = await pool.query("SELECT COUNT(*) FROM mediuns");
+    const mediunsCount = parseInt(countCheck.rows[0].count, 10);
+    
+    if (mediunsCount > 0) {
+      console.log("[DB Migration] New relational tables already contain data. Skipping migration.");
+      return;
+    }
+
+    console.log("[DB Migration] New tables are empty. Commencing migration from 'mejepra_data' to dedicated SQL tables...");
+
+    // Get all valid columns for active tables from information_schema
+    const columnsCheck = await pool.query(`
+      SELECT table_name, column_name 
+      FROM information_schema.columns 
+      WHERE table_schema = 'public'
+    `);
+    
+    const validColumnsMap = {};
+    for (const row of columnsCheck.rows) {
+      if (!validColumnsMap[row.table_name]) {
+        validColumnsMap[row.table_name] = [];
+      }
+      validColumnsMap[row.table_name].push(row.column_name);
+    }
+
+    const res = await pool.query("SELECT key, value FROM mejepra_data");
+    
+    for (const row of res.rows) {
+      const table = row.key;
+      const data = row.value;
+      
+      if (!TABLES.includes(table)) {
+        console.log(`[DB Migration] Skipping table '${table}' as it is not in the current active tables list.`);
+        continue;
+      }
+      
+      if (!Array.isArray(data) || data.length === 0) {
+        console.log(`[DB Migration] Table '${table}' has no records in 'mejepra_data'.`);
+        continue;
+      }
+
+      console.log(`[DB Migration] Migrating ${data.length} records into table '${table}'...`);
+
+      const validCols = validColumnsMap[table] || [];
+
+      for (const record of data) {
+        const allColumns = Object.keys(record);
+        const columns = allColumns.filter(c => validCols.includes(c));
+        
+        if (columns.length === 0) continue;
+
+        const values = columns.map(c => {
+          const val = record[c];
+          if (val === null || val === undefined) return null;
+          if (typeof val === 'object') return JSON.stringify(val);
+          return val;
+        });
+        
+        const placeholders = columns.map((_, i) => `$${i + 1}`).join(', ');
+        const insertQuery = `INSERT INTO ${table} (${columns.join(', ')}) VALUES (${placeholders}) ON CONFLICT (id) DO NOTHING`;
+        
+        await pool.query(insertQuery, values);
+      }
+
+      // Reset sequence for SERIAL id (safely using a subquery so it works on empty tables or tables of any size)
+      await pool.query(`SELECT setval(pg_get_serial_sequence('${table}', 'id'), COALESCE((SELECT MAX(id) FROM ${table}), 1))`);
+      console.log(`[DB Migration] Table '${table}' successfully migrated and sequence reset!`);
+    }
+    
+    console.log("[DB Migration] Migration from 'mejepra_data' completed successfully! 🎉");
+  } catch (err) {
+    console.error("[DB Migration] Error during migration from 'mejepra_data':", err);
   }
 }
 
