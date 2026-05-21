@@ -1,6 +1,6 @@
-# Mejepra Financeiro — Checklist de Atualizações
+# Mejepra Financeiro — CHANGELOG
 
-## Sessão Atual — Resumo Completo
+## v2.0 — Atualização Completa (Maio 2026)
 
 ### 1. Correção da aba Despesas — Cálculo de Totais
 **Problema:** Cards do topo (Total/Pago/Pendente) não calculavam corretamente.
@@ -85,30 +85,35 @@
 - Frontend: input numérico "Qtd parcelas" em vez de texto "1/3"
 - Display: mostra "1/3", "2/3", "3/3" automaticamente
 
+### 9. Cache do Service Worker
+- Versão atualizada para `mejepra-v2` para forçar atualização nos dispositivos móveis
+
 ---
 
 ## Arquivos alterados nesta sessão
 
 | Arquivo | Alteração |
 |---------|-----------|
-| `INTERFACE/despesas.html` | Cálculo de totais, campo pagamentos |
-| `INTERFACE/index.html` | Grid 5 cards, botão backup unificado |
+| `INTERFACE/despesas.html` | Cálculo de totais, campo pagamentos, parcelamento real |
+| `INTERFACE/index.html` | Grid 5 cards, botão backup unificado, card Relatórios |
 | `INTERFACE/trabalhos.html` | Accordion cards |
 | `INTERFACE/relatorios.html` | Nova página (criada) |
-| `INTERFACE/mediuns.html` | Removido botão relatório, CSS e funções |
-| `INTERFACE/service-worker.js` | Cache atualizado |
+| `INTERFACE/mediuns.html` | Removido botão relatório, CSS, funções e seção Extras |
+| `INTERFACE/service-worker.js` | Cache v2, relatorios.html adicionado |
 | `server.js` | Removida rota extras, backup sem extras |
-| `src/database.js` | Campo pagamentos em despesas, TABLES sem extras |
-| `src/routes/despesas.js` | POST/PUT com pagamentos |
+| `src/database.js` | Campo pagamentos em despesas, parcelamento, TABLES sem extras |
+| `src/routes/despesas.js` | POST/PUT com pagamentos, parcelamento automático |
 | `src/routes/dashboard.js` | Sem extras, trabalhos sem filtro de pago, valor direto |
 | `scripts/backup.js` | Sem extras |
 | `scripts/restore.js` | Sem extras |
 
 ---
 
-## Próximos passos / Pendências
+## Pendências / Próximos passos
 
 - [ ] Testar relatório com dados reais após deploy
 - [ ] Verificar se PDF gera corretamente em mobile
 - [ ] Validar compartilhamento WhatsApp com dados completos
 - [ ] Monitorar performance com muitos trabalhos no accordion
+- [ ] Testar exclusão em cascata de parcelas
+- [ ] Testar edição de parcelas (recalculação automática)
