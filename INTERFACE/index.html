@@ -148,6 +148,13 @@ body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url('l
 <script>
 if('serviceWorker' in navigator){
   navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
+  });
 }
 
 function abrirBackupSheet(){
