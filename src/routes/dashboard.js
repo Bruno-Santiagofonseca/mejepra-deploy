@@ -60,23 +60,48 @@ router.get('/medium/:id', async (req, res) => {
     }
   });
 
-  const mensalidades = Object.values(uniqueMensalidadesMap).sort((a, b) => {
-    if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
-    return a.mes.localeCompare(b.mes);
-  });
-
-  const faxinas = (await db.query('faxina', f => f.medium_id === parseInt(req.params.id, 10))).sort((a, b) => {
-    if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
-    return a.mes.localeCompare(b.mes);
-  });
-
-  let totalMens = 0, pagoMens = 0;
-  mensalidades.forEach(m => { totalMens += m.valor; pagoMens += m.pago; });
-
-  let totalFaxFalta = 0;
-  faxinas.forEach(f => { if (f.presenca === 'falta') totalFaxFalta += f.valor; });
+  const mensalidades = Object.values(uniqueMensalidadesMap);
+  let mensalidadesFiltradas = (mes && ano ? mensalidades.filter(m => m.mes === mes && m.ano === ano) : mensalidades);
 
   const mediumId = parseInt(req.params.id, 10);
+  if (mensalidadesFiltradas.length === 0 && medium && mes && ano) {
+    let defaultValor = 0;
+    if (mensalidades.length > 0) {
+      const mensalidadesOrdenadas = [...mensalidades].sort((a, b) => {
+        if ((b.ano || '') !== (a.ano || '')) return (b.ano || '').localeCompare(a.ano || '');
+        return (b.mes || '').localeCompare(a.mes || '');
+      });
+      defaultValor = mensalidadesOrdenadas[0].valor || 0;
+    }
+    mensalidadesFiltradas.push({
+      id: null,
+      medium_id: mediumId,
+      nome: medium.nome,
+      valor: defaultValor,
+      pago: 0,
+      status: 'pendente',
+      mes: mes,
+      ano: ano
+    });
+  }
+
+  mensalidadesFiltradas.sort((a, b) => {
+    if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
+    return a.mes.localeCompare(b.mes);
+  });
+
+  const faxinas = await db.query('faxina', f => f.medium_id === mediumId);
+  const faxinasFiltradas = (mes && ano ? faxinas.filter(f => f.mes === mes && f.ano === ano) : faxinas)
+    .sort((a, b) => {
+      if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
+      return a.mes.localeCompare(b.mes);
+    });
+
+  let totalMens = 0, pagoMens = 0;
+  mensalidadesFiltradas.forEach(m => { totalMens += m.valor; pagoMens += m.pago; });
+
+  let totalFaxFalta = 0;
+  faxinasFiltradas.forEach(f => { if (f.presenca === 'falta') totalFaxFalta += f.valor; });
 
   const despesas = await db.getAll('despesas');
   const despesasFiltradas = (mes && ano ? despesas.filter(d => d.mes === mes && d.ano === ano) : despesas)
@@ -86,9 +111,16 @@ router.get('/medium/:id', async (req, res) => {
         return dm.includes(mediumId);
       } catch { return d.divisao > 0; }
     });
+
+  let pagoDespesas = 0;
   const despesasDetalhadas = despesasFiltradas.map(d => {
     const valParcela = d.parcela && d.parcela.includes('/') ? d.valor / (parseInt(d.parcela.split('/')[1], 10) || 1) : d.valor;
     const porMed = d.divisao > 0 ? valParcela / d.divisao : valParcela;
+    const pagamentos = typeof d.pagamentos === 'string' ? JSON.parse(d.pagamentos) : (d.pagamentos || {});
+    const pago = pagamentos[String(mediumId)] === true;
+    if (pago) {
+      pagoDespesas += porMed;
+    }
     return {
       id: d.id,
       item: d.item,
@@ -97,7 +129,7 @@ router.get('/medium/:id', async (req, res) => {
       valor_parcela: valParcela,
       divisao: d.divisao,
       por_medium: porMed,
-      status: d.status,
+      status: pago ? 'pago' : 'aberta',
       mes: d.mes,
       ano: d.ano
     };
@@ -107,10 +139,15 @@ router.get('/medium/:id', async (req, res) => {
   const trabalhos = await db.getAll('trabalhos');
   const trabalhosFiltrados = (mes && ano ? trabalhos.filter(t => t.mes === mes && t.ano === ano) : trabalhos)
     .filter(t => t.divisao > 0);
+
+  let pagoTrabalhos = 0;
   const trabalhosDetalhados = trabalhosFiltrados.map(t => {
     const porMed = t.valor;
     const pagamentos = typeof t.pagamentos === 'string' ? JSON.parse(t.pagamentos) : (t.pagamentos || {});
     const pago = pagamentos[String(mediumId)] === true;
+    if (pago) {
+      pagoTrabalhos += porMed;
+    }
     return {
       id: t.id,
       entidade: t.entidade,
@@ -124,14 +161,14 @@ router.get('/medium/:id', async (req, res) => {
   });
   const totalTrabalhosMedium = trabalhosDetalhados.reduce((s, t) => s + t.por_medium, 0);
 
-  const totalCreditos = pagoMens;
-  const totalDebitos = totalDespesasMedium + totalTrabalhosMedium + totalFaxFalta;
+  const totalCreditos = pagoMens + pagoDespesas + pagoTrabalhos;
+  const totalDebitos = totalDespesasMedium + totalTrabalhosMedium + totalFaxFalta + totalMens;
   const saldo = totalCreditos - totalDebitos;
 
   res.json({
     medium,
-    mensalidades,
-    faxinas,
+    mensalidades: mensalidadesFiltradas,
+    faxinas: faxinasFiltradas,
     despesas: despesasDetalhadas,
     trabalhos: trabalhosDetalhados,
     resumo: {
