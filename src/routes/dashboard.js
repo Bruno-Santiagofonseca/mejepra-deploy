@@ -123,7 +123,7 @@ router.get('/medium/:id', async (req, res) => {
 
   let pagoDespesas = 0;
   const despesasDetalhadas = despesasFiltradas.map(d => {
-    const valParcela = d.parcela && d.parcela.includes('/') ? d.valor / (parseInt(d.parcela.split('/')[1], 10) || 1) : d.valor;
+    const valParcela = d.valor;
     const porMed = d.divisao > 0 ? valParcela / d.divisao : valParcela;
     const pagamentos = typeof d.pagamentos === 'string' ? JSON.parse(d.pagamentos) : (d.pagamentos || {});
     const pago = pagamentos[String(mediumId)] === true;
@@ -133,7 +133,7 @@ router.get('/medium/:id', async (req, res) => {
     return {
       id: d.id,
       item: d.item,
-      valor_total: d.valor,
+      valor_total: d.valor * (d.total_parcelas || 1),
       parcela: d.parcela,
       valor_parcela: valParcela,
       divisao: d.divisao,
