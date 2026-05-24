@@ -71,31 +71,47 @@ router.put('/:id', async (req, res) => {
   const existing = await db.getById('despesas', req.params.id);
   if (!existing) return res.status(404).json({ error: 'Despesa não encontrada' });
 
-  const { item, valor, parcela, divisao, status, mes, ano, divisao_mediums, pagamentos, total_parcelas } = req.body;
+  const { item, valor, divisao, status, mes, ano, divisao_mediums, pagamentos, total_parcelas } = req.body;
 
   const originalId = existing.despesa_original_id || existing.id;
   const allRelated = await db.query('despesas', d => d.despesa_original_id === originalId || d.id === originalId);
 
+  // Bug 4: garantir ordenação correta por parcela_atual antes de iterar
+  allRelated.sort((a, b) => (a.parcela_atual || 1) - (b.parcela_atual || 1));
+
   const numParcelas = parseInt(total_parcelas) || existing.total_parcelas || 1;
-  const newValor = valor !== undefined ? valor : existing.valor;
-  const valorParcela = newValor / numParcelas;
+  // Bug 1: valor recebido do frontend é sempre o valor TOTAL da despesa
+  // Se não enviado, reconstrói o total a partir do valor da parcela armazenado
+  const valorTotal = valor !== undefined ? valor : existing.valor * (existing.total_parcelas || 1);
+  const valorParcela = valorTotal / numParcelas;
+
+  const targetId = parseInt(req.params.id);
+
+  // Evitar que as parcelas sejam movidas ao editar a partir de um mês específico.
+  // A data de início real da primeira parcela (ou o primeiro registro do grupo) deve ser a âncora.
+  const isFirstParcel = existing.parcela_atual === 1;
+  const firstParcel = allRelated.find(d => d.parcela_atual === 1) || allRelated[0] || existing;
+  const mesInicio = isFirstParcel && mes ? mes : firstParcel.mes;
+  const anoInicio = isFirstParcel && ano ? ano : firstParcel.ano;
 
   for (let i = 0; i < numParcelas; i++) {
-    const mesAno = getMesAnoOffset(mes || existing.mes, ano || existing.ano, i);
+    const mesAno = getMesAnoOffset(mesInicio, anoInicio, i);
     const parcelaStr = `${i + 1}/${numParcelas}`;
 
     if (i < allRelated.length) {
       const existingParcela = allRelated[i];
+      // Bug 2: pagamentos e status só são atualizados na parcela alvo (mês que está sendo editado)
+      const isTargetParcel = existingParcela.id === targetId;
       await db.update('despesas', existingParcela.id, {
         item: item !== undefined ? item : existingParcela.item,
         valor: valorParcela,
         parcela: parcelaStr,
         divisao: divisao !== undefined ? divisao : existingParcela.divisao,
-        status: status !== undefined ? status : existingParcela.status,
+        status: isTargetParcel && status !== undefined ? status : existingParcela.status,
         mes: mesAno.mes,
         ano: mesAno.ano,
         divisao_mediums: divisao_mediums !== undefined ? divisao_mediums : existingParcela.divisao_mediums,
-        pagamentos: pagamentos !== undefined ? pagamentos : existingParcela.pagamentos,
+        pagamentos: isTargetParcel && pagamentos !== undefined ? pagamentos : existingParcela.pagamentos,
         parcela_atual: i + 1,
         total_parcelas: numParcelas
       });
@@ -105,11 +121,11 @@ router.put('/:id', async (req, res) => {
         valor: valorParcela,
         parcela: parcelaStr,
         divisao: divisao !== undefined ? divisao : existing.divisao,
-        status: status !== undefined ? status : existing.status,
+        status: existing.status,
         mes: mesAno.mes,
         ano: mesAno.ano,
         divisao_mediums: divisao_mediums !== undefined ? divisao_mediums : existing.divisao_mediums,
-        pagamentos: pagamentos !== undefined ? pagamentos : existing.pagamentos,
+        pagamentos: {},
         parcela_atual: i + 1,
         total_parcelas: numParcelas,
         despesa_original_id: originalId

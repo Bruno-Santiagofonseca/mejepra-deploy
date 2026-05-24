@@ -147,7 +147,7 @@ body>*{position:relative;z-index:1}
     <label>Novo trabalho</label>
     <div class="input-row">
       <input type="text" id="inputEntidade" placeholder="Nome da entidade">
-      <input type="number" id="inputValor" placeholder="Valor (R$)" step="0.01" min="0" style="max-width:140px">
+      <input type="text" id="inputValor" inputmode="decimal" placeholder="0,00" style="max-width:140px">
       <button onclick="addTrabalho()">Adicionar</button>
     </div>
   </div>
@@ -362,7 +362,6 @@ async function salvarStatus(){
   const trab = trabalhos.find(t => t.id === editingTrabalhoId);
   if(!trab) return;
 
-  const mA = getMesAno();
   const pagamentos = trab.pagamentos || {};
   pagamentos[editingMediumId] = statusAtual === "pago";
 
@@ -373,8 +372,8 @@ async function salvarStatus(){
       body: JSON.stringify({
         entidade: trab.entidade,
         valor: trab.valor,
-        mes: mA.mes,
-        ano: mA.ano,
+        mes: trab.mes,
+        ano: trab.ano,
         divisao: trab.divisao,
         pagamentos: pagamentos
       })
@@ -396,7 +395,7 @@ async function excluirTrabalho(){
 
 async function addTrabalho(){
   const entidade = document.getElementById("inputEntidade").value.trim();
-  const valor = parseFloat(document.getElementById("inputValor").value) || 0;
+  const valor = parseMoeda(document.getElementById("inputValor").value);
   if(!entidade){ alert("Preencha o nome da entidade."); return; }
   if(valor <= 0){ alert("Preencha um valor válido."); return; }
   if(mediunsAtivos.length === 0){ alert("Não há médiuns cadastrados."); return; }
@@ -427,6 +426,28 @@ function navegarMes(dir){
   carregarDados();
 }
 
+function inicializarMes() {
+  const span = document.querySelector(".period-bar .month");
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const d = new Date();
+  span.textContent = meses[d.getMonth()] + " " + d.getFullYear();
+}
+function formatarMoeda(input) {
+  const digits = input.value.replace(/\D/g, '');
+  if (!digits) { input.value = ''; return; }
+  const num = parseInt(digits, 10) / 100;
+  input.value = num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatarMoedaValor(numero) {
+  if (!numero && numero !== 0) return '';
+  return numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function parseMoeda(str) {
+  if (!str) return 0;
+  return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
+}
+document.getElementById('inputValor').addEventListener('input', function() { formatarMoeda(this); });
+inicializarMes();
 carregarDados();
 </script>
 <script>

@@ -3,31 +3,40 @@ const router = express.Router();
 const db = require('../database');
 
 router.get('/', async (req, res) => {
+  const hoje = new Date();
+  const mes = req.query.mes || String(hoje.getMonth() + 1).padStart(2, '0');
+  const ano = req.query.ano || String(hoje.getFullYear());
+
   const mediunsAtivos = (await db.query('mediuns', m => m.status === 'Ativo')).length;
   const mediunsInativos = (await db.query('mediuns', m => m.status === 'Inativo')).length;
 
-  const mensalidades = await db.getAll('mensalidades');
+  let mensalidades = await db.getAll('mensalidades');
+  mensalidades = mensalidades.filter(m => m.mes === mes && m.ano === ano);
   const mensPrevisto = mensalidades.reduce((s, m) => s + m.valor, 0);
   const mensRecebido = mensalidades.reduce((s, m) => s + m.pago, 0);
 
-  const faxinas = await db.getAll('faxina');
+  let faxinas = await db.getAll('faxina');
+  faxinas = faxinas.filter(f => f.mes === mes && f.ano === ano);
   const faxinaFaltas = faxinas.filter(f => f.presenca === 'falta').reduce((s, f) => s + f.valor, 0);
   const faxinaFeitas = faxinas.filter(f => f.presenca === 'feito').length;
 
-  const despesas = await db.getAll('despesas');
+  let despesas = await db.getAll('despesas');
+  despesas = despesas.filter(d => d.mes === mes && d.ano === ano);
   const despesasTotal = despesas.reduce((s, d) => s + d.valor, 0);
   const despesasPagas = despesas.filter(d => d.status === 'paga').reduce((s, d) => s + d.valor, 0);
 
-  const trabalhos = await db.getAll('trabalhos');
-  const trabalhosTotal = trabalhos.reduce((s, t) => s + t.valor, 0);
-  const trabalhosRealizados = trabalhosTotal;
+  let trabalhos = await db.getAll('trabalhos');
+  trabalhos = trabalhos.filter(t => t.mes === mes && t.ano === ano);
+  const trabalhosTotal = trabalhos.reduce((s, t) => s + (t.valor * t.divisao), 0);
 
   res.json({
+    mes,
+    ano,
     mediuns: { ativos: mediunsAtivos, inativos: mediunsInativos },
     mensalidades: { previsto: mensPrevisto, recebido: mensRecebido, pendente: mensPrevisto - mensRecebido },
     faxina: { total_faltas_valor: faxinaFaltas, feitas: faxinaFeitas },
     despesas: { total: despesasTotal, pagas: despesasPagas, pendentes: despesasTotal - despesasPagas },
-    trabalhos: { total: trabalhosTotal, realizados: trabalhosRealizados },
+    trabalhos: { total: trabalhosTotal },
     resumo_geral: {
       total_receitas: mensRecebido,
       total_despesas: despesasTotal + faxinaFaltas,
@@ -152,6 +161,7 @@ router.get('/medium/:id', async (req, res) => {
       id: t.id,
       entidade: t.entidade,
       valor_total: t.valor * t.divisao,
+      valor_por_medium: t.valor,
       divisao: t.divisao,
       por_medium: porMed,
       status: pago ? 'pago' : (t.status || 'pendente'),

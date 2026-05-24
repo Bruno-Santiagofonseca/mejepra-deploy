@@ -159,7 +159,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
   </div>
   <div class="form-row">
     <div class="form-field">
-      <input id="f-valor" type="number" step="0.01" placeholder="Valor (R$)">
+      <input id="f-valor" type="text" inputmode="decimal" placeholder="0,00">
     </div>
     <div class="form-field">
       <input id="f-parcela" type="text" placeholder="Parcela (ex: 1/3)">
@@ -201,7 +201,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
   <div class="form-row">
     <div class="form-field">
       <label>Valor (R$)</label>
-      <input id="e-valor" type="number" step="0.01" placeholder="Valor">
+      <input id="e-valor" type="text" inputmode="decimal" placeholder="0,00">
     </div>
     <div class="form-field">
       <label>Parcela</label>
@@ -287,7 +287,7 @@ function calcParcelaValor(valorTotal, parcelaStr){
   return valorTotal/total;
 }
 function atualizarPreview(){
-  const valor = parseFloat(document.getElementById('f-valor').value)||0;
+  const valor = parseMoeda(document.getElementById('f-valor').value);
   const parcela = document.getElementById('f-parcela').value.trim()||'1/1';
   const qtd = parseInt(document.getElementById('f-qtd').value)||1;
   const divisao = selectedMediums.length || 0;
@@ -302,9 +302,10 @@ function atualizarPreview(){
     preview.style.display='none';
   }
 }
-document.getElementById('f-valor').addEventListener('input', atualizarPreview);
+document.getElementById('f-valor').addEventListener('input', function() { formatarMoeda(this); atualizarPreview(); });
 document.getElementById('f-parcela').addEventListener('input', atualizarPreview);
 document.getElementById('f-qtd').addEventListener('input', atualizarPreview);
+document.getElementById('e-valor').addEventListener('input', function() { formatarMoeda(this); });
 
 function abrirDivisaoSheet(){
   tempSelected = [...selectedMediums];
@@ -344,7 +345,7 @@ function toggleSelectAll(){
 }
 function updateDivPreview(){
   const bar = document.getElementById('divPreviewBar');
-  const valor = parseFloat(document.getElementById('f-valor').value)||0;
+  const valor = parseMoeda(document.getElementById('f-valor').value);
   const qtd = parseInt(document.getElementById('f-qtd').value)||1;
   const parcela = document.getElementById('f-parcela').value.trim()||'1/1';
   if(tempSelected.length > 0 && valor > 0){
@@ -411,7 +412,7 @@ async function carregarExtras(){
 async function addExtra(){
   const tipo = document.getElementById('f-tipo').value;
   const item = document.getElementById('f-item').value.trim();
-  const valor = parseFloat(document.getElementById('f-valor').value)||0;
+  const valor = parseMoeda(document.getElementById('f-valor').value);
   const parcela = document.getElementById('f-parcela').value.trim()||'1/1';
   const qtd = parseInt(document.getElementById('f-qtd').value)||1;
   const divisao = selectedMediums.length || 1;
@@ -450,7 +451,7 @@ async function addExtra(){
 function abrirSheet(row){
   editRow=row;
   document.getElementById('e-item').value=row.dataset.item;
-  document.getElementById('e-valor').value=row.dataset.valor;
+  document.getElementById('e-valor').value=formatarMoedaValor(parseFloat(row.dataset.valor)||0);
   document.getElementById('e-parcela').value=row.dataset.parcela;
   document.getElementById('e-qtd').value=row.dataset.qtd||'1';
   document.getElementById('e-divisao').value=row.dataset.divisao;
@@ -475,7 +476,7 @@ async function salvarEdicao(){
   if(!editRow) return;
   const tipo = document.getElementById('e-tipo-receita').classList.contains('active')?'receita':'gasto';
   const item=document.getElementById('e-item').value.trim();
-  const valor=parseFloat(document.getElementById('e-valor').value)||0;
+  const valor=parseMoeda(document.getElementById('e-valor').value);
   const parcela=document.getElementById('e-parcela').value.trim()||'1/1';
   const qtd=parseInt(document.getElementById('e-qtd').value)||1;
   const divisao=parseInt(document.getElementById('e-divisao').value)||1;
@@ -591,6 +592,27 @@ function atualizarTotais(){
   }
 }
 
+function inicializarMes() {
+  const span = document.querySelector(".period-bar .month");
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const d = new Date();
+  span.textContent = meses[d.getMonth()] + " " + d.getFullYear();
+}
+function formatarMoeda(input) {
+  const digits = input.value.replace(/\D/g, '');
+  if (!digits) { input.value = ''; return; }
+  const num = parseInt(digits, 10) / 100;
+  input.value = num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatarMoedaValor(numero) {
+  if (!numero && numero !== 0) return '';
+  return numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function parseMoeda(str) {
+  if (!str) return 0;
+  return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
+}
+
 function getMesAno(){
   const span = document.querySelector(".period-bar .month");
   const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -607,6 +629,7 @@ function navegarMes(dir){
   span.textContent = meses[mes]+" "+ano;
   carregarExtras();
 }
+inicializarMes();
 carregarMediuns();
 carregarExtras();
 </script>

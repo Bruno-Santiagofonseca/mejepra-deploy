@@ -146,7 +146,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
   </div>
   <div class="form-row">
     <div class="form-field">
-      <input id="f-valor" type="number" step="0.01" placeholder="Valor (R$)">
+      <input id="f-valor" type="text" inputmode="decimal" placeholder="0,00">
     </div>
     <div class="form-field">
       <input id="f-parcelas" type="number" min="1" step="1" placeholder="Qtd parcelas" value="1">
@@ -178,7 +178,7 @@ tbody td:last-child{border-right:1px solid var(--border);border-radius:0 var(--r
   <div class="form-row">
     <div class="form-field">
       <label>Valor (R$)</label>
-      <input id="e-valor" type="number" step="0.01" placeholder="Valor">
+      <input id="e-valor" type="text" inputmode="decimal" placeholder="0,00">
     </div>
     <div class="form-field">
       <label>Qtd Parcelas</label>
@@ -263,7 +263,7 @@ async function carregarMediuns(){
 function abrirSheet(row){
   editRow=row;
   document.getElementById('e-item').value=row.dataset.item;
-  document.getElementById('e-valor').value=row.dataset.valor;
+  document.getElementById('e-valor').value=formatarMoedaValor(parseFloat(row.dataset.valor_total)||0);
   document.getElementById('e-parcelas').value=row.dataset.total_parcelas || 1;
   document.getElementById('e-divisao').value=row.dataset.divisao;
   const divisaoMediums = row.dataset.divisao_mediums ? JSON.parse(row.dataset.divisao_mediums) : [];
@@ -285,7 +285,7 @@ function fecharSheet(){
 async function salvarEdicao(){
   if(!editRow) return;
   const item=document.getElementById('e-item').value.trim();
-  const valor=parseFloat(document.getElementById('e-valor').value)||0;
+  const valor=parseMoeda(document.getElementById('e-valor').value);
   const totalParcelas=parseInt(document.getElementById('e-parcelas').value)||1;
   const divisao=parseInt(document.getElementById('e-divisao').value)||1;
   const status=document.getElementById('e-status').value;
@@ -320,20 +320,25 @@ async function carregarDespesas(){
     const tbody = document.getElementById('despesas-tbody');
     tbody.innerHTML = '';
     despesas.forEach(d => {
+      const numParcelas = d.total_parcelas || 1;
       const parcelaLabel = d.parcela_atual && d.total_parcelas ? `${d.parcela_atual}/${d.total_parcelas}` : d.parcela || '1/1';
-      const cadaUm = d.valor / d.divisao;
+      // d.valor = valor da parcela (armazenado no banco). valor_total = valor completo da despesa
+      const valorTotal = d.valor * numParcelas;
+      const cadaUm = d.valor / (d.divisao || 1);
       const tr = document.createElement('tr');
       tr.dataset.id = d.id;
       tr.dataset.item = d.item;
-      tr.dataset.valor = d.valor;
+      tr.dataset.valor = d.valor;          // valor da parcela (para cálculos internos)
+      tr.dataset.valor_total = valorTotal; // valor total da despesa (para campo de edição)
       tr.dataset.parcela = d.parcela;
-      tr.dataset.divisao = d.divisao;
+      tr.dataset.divisao = d.divisao || 1;
       tr.dataset.divisao_mediums = JSON.stringify(d.divisao_mediums || []);
-      tr.dataset.total_parcelas = d.total_parcelas || 1;
+      tr.dataset.total_parcelas = numParcelas;
       const pagamentos = d.pagamentos || {};
       tr.dataset.pagamentos = JSON.stringify(pagamentos);
       const statusLabel = d.status.charAt(0).toUpperCase() + d.status.slice(1);
-      tr.innerHTML = `<td>${d.item}</td><td class="value">R$ ${d.valor.toFixed(2).replace('.',',')}</td><td>${parcelaLabel}</td><td class="value">R$ ${d.valor.toFixed(2).replace('.',',')}</td><td class="value cada-um">R$ ${cadaUm.toFixed(2).replace('.',',')}</td><td><span class="tag ${d.status}">${statusLabel}</span></td>`;
+      // Coluna "Valor" = valor total | Coluna "Valor Parcela" = valor desta parcela
+      tr.innerHTML = `<td>${d.item}</td><td class="value">R$ ${valorTotal.toFixed(2).replace('.',',')}</td><td>${parcelaLabel}</td><td class="value">R$ ${d.valor.toFixed(2).replace('.',',')}</td><td class="value cada-um">R$ ${cadaUm.toFixed(2).replace('.',',')}</td><td><span class="tag ${d.status}">${statusLabel}</span></td>`;
       tbody.appendChild(tr);
       tr.addEventListener('click', function(){ abrirSheet(tr); });
     });
@@ -348,7 +353,7 @@ function calcParcelaValor(valorTotal, parcelaStr){
   return valorTotal/total;
 }
 function atualizarPreview(){
-  const valor = parseFloat(document.getElementById('f-valor').value)||0;
+  const valor = parseMoeda(document.getElementById('f-valor').value);
   const totalParcelas = parseInt(document.getElementById('f-parcelas').value)||1;
   const divisao = selectedMediums.length || 0;
   const preview = document.getElementById('divisao-preview');
@@ -361,8 +366,12 @@ function atualizarPreview(){
     preview.style.display='none';
   }
 }
-document.getElementById('f-valor').addEventListener('input', atualizarPreview);
+document.getElementById('f-valor').addEventListener('input', function() {
+  formatarMoeda(this);
+  atualizarPreview();
+});
 document.getElementById('f-parcelas').addEventListener('input', atualizarPreview);
+document.getElementById('e-valor').addEventListener('input', function() { formatarMoeda(this); });
 
 function abrirDivisaoSheet(){
   tempSelected = [...selectedMediums];
@@ -402,7 +411,7 @@ function toggleSelectAll(){
 }
 function updateDivPreview(){
   const bar = document.getElementById('divPreviewBar');
-  const valor = parseFloat(document.getElementById('f-valor').value)||0;
+  const valor = parseMoeda(document.getElementById('f-valor').value);
   const totalParcelas = parseInt(document.getElementById('f-parcelas').value)||1;
   if(tempSelected.length > 0 && valor > 0){
     const valorParcela = valor / totalParcelas;
@@ -429,7 +438,7 @@ function confirmarDivisao(){
 
 async function addDespesa(){
   const item = document.getElementById('f-item').value.trim();
-  const valor = parseFloat(document.getElementById('f-valor').value)||0;
+  const valor = parseMoeda(document.getElementById('f-valor').value);
   const totalParcelas = parseInt(document.getElementById('f-parcelas').value)||1;
   const divisao = selectedMediums.length || 1;
   if(!item || !valor){ alert('Preencha o nome do item e o valor.'); return }
@@ -516,6 +525,25 @@ function atualizarBtnPagamentos(){
   }
 }
 
+// ── Funções de formatação monetária ──────────────────────────────────────────
+function formatarMoeda(input) {
+  // Aplica máscara em tempo real: transforma dígitos em formato R$ 0,00
+  const digits = input.value.replace(/\D/g, '');
+  if (!digits) { input.value = ''; return; }
+  const num = parseInt(digits, 10) / 100;
+  input.value = num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatarMoedaValor(numero) {
+  // Converte um float para string formatada: 1200.5 → "1.200,50"
+  if (!numero && numero !== 0) return '';
+  return numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function parseMoeda(str) {
+  // Converte string formatada de volta para float: "1.200,50" → 1200.50
+  if (!str) return 0;
+  return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
+}
+// ─────────────────────────────────────────────────────────────────────────────
 function getMesAno(){
   const span = document.querySelector(".period-bar .month");
   const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
@@ -532,6 +560,13 @@ function navegarMes(dir){
   span.textContent = meses[mes]+" "+ano;
   carregarDespesas();
 }
+function inicializarMes() {
+  const span = document.querySelector(".period-bar .month");
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const d = new Date();
+  span.textContent = meses[d.getMonth()] + " " + d.getFullYear();
+}
+inicializarMes();
 carregarMediuns();
 carregarDespesas();
 </script>

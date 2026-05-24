@@ -167,6 +167,7 @@ async function carregarMediuns(){
   try {
     const res = await fetch(`${API}/mediuns`);
     const lista = await res.json();
+    window._mediuns = lista; // cache local para busca sem nova requisição
     renderizar(lista);
     return lista;
   } catch(e) { console.error('Erro ao carregar médiuns:', e); renderizar([]); }
@@ -237,13 +238,11 @@ async function excluirMedium(){
     carregarMediuns();
   } catch(e) { console.error('Erro ao excluir:', e); }
 }
-document.querySelector('.search-bar input').addEventListener('input', async function(){
+document.querySelector('.search-bar input').addEventListener('input', function(){
   const q = this.value.toLowerCase();
-  try {
-    const res = await fetch(`${API}/mediuns`);
-    const lista = await res.json();
-    renderizar(lista.filter(m => m.nome.toLowerCase().includes(q)));
-  } catch(e) {}
+  // filtra localmente a lista já carregada — sem nova requisição à API
+  const lista = window._mediuns || [];
+  renderizar(lista.filter(m => m.nome.toLowerCase().includes(q)));
 });
 carregarMediuns();
 </script>

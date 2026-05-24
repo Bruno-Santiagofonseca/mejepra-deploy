@@ -117,7 +117,7 @@ body>*{position:relative;z-index:1}
   <div class="default-valor-input">
     <label>Valor padrão da mensalidade</label>
     <div class="input-row">
-      <input type="number" id="inputPadrao" placeholder="0,00" step="0.01" min="0">
+      <input type="text" id="inputPadrao" inputmode="decimal" placeholder="0,00">
       <button onclick="aplicarParaTodos()">Aplicar a todos</button>
     </div>
   </div>
@@ -152,11 +152,11 @@ body>*{position:relative;z-index:1}
   </div>
   <div class="field">
     <label>Valor da mensalidade (R$)</label>
-    <input type="number" id="inputValor" placeholder="0,00" step="0.01" min="0">
+    <input type="text" id="inputValor" inputmode="decimal" placeholder="0,00">
   </div>
   <div class="field">
     <label>Valor pago (R$)</label>
-    <input type="number" id="inputPago" placeholder="0,00" step="0.01" min="0">
+    <input type="text" id="inputPago" inputmode="decimal" placeholder="0,00">
   </div>
 
   <div id="faltanteDisplay" style="display:none;text-align:center;padding:8px;border-radius:10px;background:color-mix(in srgb,#e67e22 12%,transparent);color:#e67e22;font-size:14px;font-weight:700;margin-bottom:12px"></div>
@@ -179,6 +179,29 @@ body>*{position:relative;z-index:1}
 </div>
 
 <script>
+function inicializarMes() {
+  const span = document.querySelector(".period-bar .month");
+  const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  const d = new Date();
+  span.textContent = meses[d.getMonth()] + " " + d.getFullYear();
+}
+// ── Funções de formatação monetária ──────────────────────────────
+function formatarMoeda(input) {
+  const digits = input.value.replace(/\D/g, '');
+  if (!digits) { input.value = ''; return; }
+  const num = parseInt(digits, 10) / 100;
+  input.value = num.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function formatarMoedaValor(numero) {
+  if (!numero && numero !== 0) return '';
+  return numero.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+function parseMoeda(str) {
+  if (!str) return 0;
+  return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
+}
+// ─────────────────────────────────────────────────────────────────
+
 const API = '/api';
 function getMesAno(){
   const span = document.querySelector(".period-bar .month");
@@ -235,17 +258,17 @@ function renderizar(){
       <div class="info">
         <div class="name">${d.nome}</div>
         <div class="row-detail">
-          <span><span class="label">Mensalidade</span> <span class="val">R$ ${d.valor.toFixed(2)}</span></span>
-          <span><span class="label">Pago</span> <span class="val accent">R$ ${d.pago.toFixed(2)}</span></span>
+          <span><span class="label">Mensalidade</span> <span class="val">R$ ${d.valor.toFixed(2).replace('.',',')}</span></span>
+          <span><span class="label">Pago</span> <span class="val accent">R$ ${d.pago.toFixed(2).replace('.',',')}</span></span>
         </div>
       </div>
       <span class="tag ${statusClass}">${statusLabel}</span>
     `;
     lista.appendChild(item);
   });
-  document.getElementById("totalPrevisto").textContent = "R$ "+totalPrev.toFixed(2);
-  document.getElementById("totalRecebido").textContent = "R$ "+totalPago.toFixed(2);
-  document.getElementById("totalPendente").textContent = "R$ "+(totalPrev-totalPago).toFixed(2);
+  document.getElementById("totalPrevisto").textContent = "R$ "+totalPrev.toFixed(2).replace('.',',');
+  document.getElementById("totalRecebido").textContent = "R$ "+totalPago.toFixed(2).replace('.',',');
+  document.getElementById("totalPendente").textContent = "R$ "+(totalPrev-totalPago).toFixed(2).replace('.',',');
 }
 
 function abrirSheet(dadosEdicao){
@@ -253,8 +276,8 @@ function abrirSheet(dadosEdicao){
   editingMediumId = dadosEdicao.medium_id;
   document.getElementById("sheetTitle").textContent = "Editar Mensalidade";
   document.getElementById("sheetNome").textContent = dadosEdicao.nome;
-  document.getElementById("inputValor").value = dadosEdicao.valor !== undefined && dadosEdicao.valor !== '' ? dadosEdicao.valor : "";
-  document.getElementById("inputPago").value = dadosEdicao.pago !== undefined && dadosEdicao.pago !== '' ? dadosEdicao.pago : "";
+  document.getElementById("inputValor").value = dadosEdicao.valor ? formatarMoedaValor(dadosEdicao.valor) : "";
+  document.getElementById("inputPago").value = dadosEdicao.pago ? formatarMoedaValor(dadosEdicao.pago) : "";
   document.getElementById("btnExcluir").style.display = dadosEdicao.id ? "block" : "none";
   statusAtual = dadosEdicao.status || "pendente";
   document.querySelectorAll(".status-options button").forEach(b => {
@@ -277,15 +300,15 @@ function selecionarStatus(el){
   el.classList.add("selected");
   statusAtual = el.dataset.status;
   if(statusAtual === "pago"){
-    const valor = parseFloat(document.getElementById("inputValor").value) || 0;
-    document.getElementById("inputPago").value = valor;
+    const valor = parseMoeda(document.getElementById("inputValor").value);
+    document.getElementById("inputPago").value = formatarMoedaValor(valor);
   }
   atualizarFaltante();
 }
 
 function atualizarFaltante(){
-  const valor = parseFloat(document.getElementById("inputValor").value) || 0;
-  const pago = parseFloat(document.getElementById("inputPago").value) || 0;
+  const valor = parseMoeda(document.getElementById("inputValor").value);
+  const pago = parseMoeda(document.getElementById("inputPago").value);
   const el = document.getElementById("faltanteDisplay");
   if(valor > 0 && pago < valor){
     el.style.display = "block";
@@ -296,8 +319,8 @@ function atualizarFaltante(){
 }
 
 async function salvarMensalidade(){
-  const valor = parseFloat(document.getElementById("inputValor").value) || 0;
-  const pago = parseFloat(document.getElementById("inputPago").value) || 0;
+  const valor = parseMoeda(document.getElementById("inputValor").value);
+  const pago = parseMoeda(document.getElementById("inputPago").value);
   if(valor <= 0){ alert("Preencha o valor da mensalidade."); return; }
   const mA = getMesAno();
   const med = mediunsAtivos.find(m => m.id === editingMediumId);
@@ -340,9 +363,9 @@ function navegarMes(dir){
 }
 
 async function aplicarParaTodos(){
-  const valor = parseFloat(document.getElementById("inputPadrao").value);
+  const valor = parseMoeda(document.getElementById("inputPadrao").value);
   if(!valor || valor <= 0){ alert("Digite um valor válido para aplicar a todos."); return; }
-  if(!confirm(`Aplicar R$ ${valor.toFixed(2)} como valor padrão para todos os médiuns?`)) return;
+  if(!confirm(`Aplicar R$ ${valor.toFixed(2).replace('.',',')} como valor padrão para todos os médiuns?`)) return;
   try {
     for(const d of dados){
       const mA = getMesAno();
@@ -359,9 +382,11 @@ async function aplicarParaTodos(){
   } catch(e) { console.error('Erro:', e); }
 }
 
-document.getElementById('inputValor').addEventListener('input', atualizarFaltante);
-document.getElementById('inputPago').addEventListener('input', atualizarFaltante);
+document.getElementById('inputValor').addEventListener('input', function() { formatarMoeda(this); atualizarFaltante(); });
+document.getElementById('inputPago').addEventListener('input', function() { formatarMoeda(this); atualizarFaltante(); });
+document.getElementById('inputPadrao').addEventListener('input', function() { formatarMoeda(this); });
 
+inicializarMes();
 carregarDados();
 </script>
 <script>
