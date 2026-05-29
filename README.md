@@ -1,64 +1,166 @@
-# Mejepra Financeiro
+# Centro360 Financeiro
 
-Sistema de gestão financeira para centro espírita.
+Sistema de gestão financeira para centros espíritas. Controle de médiuns, mensalidades, faxina, despesas, trabalhos e relatórios.
 
-## Funcionalidades
+---
 
-- **Médiuns** — Cadastro e gestão de médiuns
-- **Mensalidade** — Controle de mensalidades por médium
-- **Faxina** — Registro de presenças e faltas na faxina
-- **Despesas** — Despesas divididas entre médiuns com controle de pagamento individual
-- **Trabalhos** — Trabalhos espirituais com rateio e acompanhamento de pagamentos (cards expansíveis)
-- **Relatórios** — Relatório financeiro completo por médium (tela, PDF, WhatsApp)
-- **Backup** — Exportar e restaurar dados em JSON
+## 🚀 Rodando Localmente
 
-## Últimas atualizações
+### Pré-requisitos
+- Node.js 18+
+- npm
 
-- Correção do cálculo de totais na aba Despesas (valor total, pago, pendente)
-- Remoção da aba Extras (redundante com Despesas)
-- Redesign da aba Trabalhos com cards accordion expansíveis
-- Relatório Financeiro movido para card na Home
-- Geração de relatórios com fonte única de dados (tela, PDF, WhatsApp sincronizados)
-- Correção dos valores de Trabalhos no relatório (sem recalcular divisão)
-
-## Como usar
-
-### 1. Definir o banco no Render
-No painel do serviço, configure a variável de ambiente:
+### Instalação
 
 ```bash
-DATABASE_URL=postgres://USER:PASSWORD@HOST:PORT/DATABASE
-```
+# Clone o repositório
+git clone https://github.com/SEU_USUARIO/centro360.git
+cd centro360
 
-### 2. Fazer backup antes da mudança
-Use o endpoint do app em produção:
-
-```bash
-curl -L https://<seu-domínio>/api/backup -o backup-mejepra.json
-```
-
-Ou localmente:
-
-```bash
-npm run backup
-```
-
-### 3. Restaurar dados
-Use o endpoint de restore no novo banco:
-
-```bash
-curl -X POST https://<seu-domínio>/api/restore \
-  -H "Content-Type: application/json" \
-  --data-binary @backup-mejepra.json
-```
-
-### 4. Scripts locais
-- `npm run backup` → cria `data/backup-mejepra-YYYY-MM-DD.json`
-- `npm run restore <arquivo>` → restaura o backup local
-
-### 5. Executar o servidor
-
-```bash
+# Instale as dependências
 npm install
+
+# Configure o ambiente
+cp .env.example .env
+# Edite o .env com seus valores
+
+# Inicie o servidor
 npm start
+```
+
+Acesse: **http://localhost:3000**
+
+No primeiro acesso, crie uma conta na tela de login.
+
+---
+
+## ☁️ Deploy no Render (gratuito)
+
+### Passo a Passo
+
+**1. Suba o código para o GitHub**
+```bash
+git add .
+git commit -m "deploy inicial"
+git push origin main
+```
+
+**2. Crie a conta no Render**
+Acesse [render.com](https://render.com) e conecte com sua conta GitHub.
+
+**3. Crie o banco PostgreSQL**
+- No painel do Render → **New** → **PostgreSQL**
+- Nome: `centro360-db`
+- Plano: **Free**
+- Clique em **Create Database**
+- Aguarde o banco ficar disponível e **copie o Internal Database URL**
+
+**4. Crie o Web Service**
+- No painel do Render → **New** → **Web Service**
+- Conecte ao repositório GitHub
+- Configure:
+  - **Name:** `centro360-financeiro`
+  - **Environment:** `Node`
+  - **Build Command:** `npm install`
+  - **Start Command:** `node server.js`
+  - **Plan:** Free
+
+**5. Configure as variáveis de ambiente**
+
+No Web Service → aba **Environment** → adicione:
+
+| Variável | Valor |
+|----------|-------|
+| `DATABASE_URL` | Cole a **Internal Database URL** do banco criado |
+| `JWT_SECRET` | Clique em **Generate** (gera automaticamente) |
+| `NODE_ENV` | `production` |
+
+**6. Deploy**
+- Clique em **Create Web Service**
+- Aguarde o build completar (~3 min)
+- Acesse a URL gerada (ex: `https://centro360-financeiro.onrender.com`)
+
+> ⚠️ **Plano gratuito do Render:** o servidor hiberna após 15 min sem uso. Na primeira requisição após inatividade, pode demorar ~30 segundos para acordar.
+
+---
+
+## 🔧 Variáveis de Ambiente
+
+| Variável | Obrigatório | Descrição |
+|----------|-------------|-----------|
+| `DATABASE_URL` | Em produção | URL do PostgreSQL. Sem isso usa SQLite local |
+| `JWT_SECRET` | Sim | Chave secreta para tokens JWT (mín. 32 chars) |
+| `NODE_ENV` | Sim | `development` ou `production` |
+| `PORT` | Não | Porta do servidor (padrão: 3000) |
+| `CORS_ORIGIN` | Não | Domínio permitido (padrão: qualquer) |
+
+---
+
+## 🏗️ Estrutura do Projeto
+
+```
+centro360/
+├── server.js              # Servidor Express principal
+├── render.yaml            # Configuração de deploy no Render
+├── src/
+│   ├── database.js        # SQLite (dev) / PostgreSQL (prod)
+│   ├── middleware/
+│   │   ├── auth.js        # JWT — geração e verificação
+│   │   └── rbac.js        # Controle de papéis (admin/tesoureiro/consultor)
+│   └── routes/
+│       ├── auth.js        # POST /login, POST /register
+│       ├── mediuns.js
+│       ├── mensalidades.js
+│       ├── faxina.js
+│       ├── despesas.js
+│       ├── trabalhos.js
+│       ├── extras.js
+│       └── dashboard.js
+└── INTERFACE/
+    ├── login.html
+    ├── index.html         # Dashboard
+    ├── mediuns.html
+    ├── mensalidade.html
+    ├── faxina.html
+    ├── despesas.html
+    ├── trabalhos.html
+    ├── extras.html
+    ├── relatorios.html
+    └── adicionar.html
+```
+
+---
+
+## 🔐 Segurança
+
+- Autenticação via **JWT** (expira em 7 dias)
+- **RBAC** — cada papel tem permissões específicas
+- **Rate limiting** — 20 tentativas de login por 15 min
+- **Helmet** — headers de segurança HTTP
+- **Isolamento** — cada terreiro vê apenas seus dados
+- **Auditoria** — todas as ações são registradas em `audit_log`
+
+---
+
+## 📊 API Endpoints
+
+```
+POST   /api/auth/register     Criar conta
+POST   /api/auth/login        Fazer login
+GET    /api/auth/me           Dados do usuário logado
+
+GET    /api/mediuns           Listar médiuns
+POST   /api/mediuns           Cadastrar médium
+
+GET    /api/mensalidades      Listar mensalidades
+POST   /api/mensalidades      Criar mensalidade
+
+GET    /api/faxina            Escala de faxina
+GET    /api/despesas          Despesas
+GET    /api/trabalhos         Trabalhos espirituais
+GET    /api/extras            Extras
+GET    /api/dashboard         Resumo financeiro
+GET    /api/health            Health check
+GET    /api/backup            Exportar backup (admin/tesoureiro)
+POST   /api/restore           Restaurar backup (admin)
 ```

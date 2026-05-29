@@ -5,7 +5,8 @@ node_modules/
 .vscode/
 
 # SQLite database
-data/mejepra.db
-data/mejepra.db-shm
-data/mejepra.db-wal
+data/centro360.db
+data/centro360.db-shm
+data/centro360.db-wal
 data/*.json
+data/backups/

@@ -2,30 +2,33 @@ const express = require('express');
 const router = express.Router();
 const db = require('../database');
 
+function terreiro(req) { return req.user.terreiro_id; }
+
 router.get('/', async (req, res) => {
+  const tid = terreiro(req);
   const hoje = new Date();
   const mes = req.query.mes || String(hoje.getMonth() + 1).padStart(2, '0');
   const ano = req.query.ano || String(hoje.getFullYear());
 
-  const mediunsAtivos = (await db.query('mediuns', m => m.status === 'Ativo')).length;
-  const mediunsInativos = (await db.query('mediuns', m => m.status === 'Inativo')).length;
+  const mediunsAtivos = (await db.query('mediuns', m => m.status === 'Ativo' && m.terreiro_id === tid)).length;
+  const mediunsInativos = (await db.query('mediuns', m => m.status === 'Inativo' && m.terreiro_id === tid)).length;
 
-  let mensalidades = await db.getAll('mensalidades');
+  let mensalidades = await db.query('mensalidades', m => m.terreiro_id === tid);
   mensalidades = mensalidades.filter(m => m.mes === mes && m.ano === ano);
   const mensPrevisto = mensalidades.reduce((s, m) => s + m.valor, 0);
   const mensRecebido = mensalidades.reduce((s, m) => s + m.pago, 0);
 
-  let faxinas = await db.getAll('faxina');
+  let faxinas = await db.query('faxina', f => f.terreiro_id === tid);
   faxinas = faxinas.filter(f => f.mes === mes && f.ano === ano);
   const faxinaFaltas = faxinas.filter(f => f.presenca === 'falta').reduce((s, f) => s + f.valor, 0);
   const faxinaFeitas = faxinas.filter(f => f.presenca === 'feito').length;
 
-  let despesas = await db.getAll('despesas');
+  let despesas = await db.query('despesas', d => d.terreiro_id === tid);
   despesas = despesas.filter(d => d.mes === mes && d.ano === ano);
   const despesasTotal = despesas.reduce((s, d) => s + d.valor, 0);
   const despesasPagas = despesas.filter(d => d.status === 'paga').reduce((s, d) => s + d.valor, 0);
 
-  let trabalhos = await db.getAll('trabalhos');
+  let trabalhos = await db.query('trabalhos', t => t.terreiro_id === tid);
   trabalhos = trabalhos.filter(t => t.mes === mes && t.ano === ano);
   const trabalhosTotal = trabalhos.reduce((s, t) => s + (t.valor * t.divisao), 0);
 
@@ -54,11 +57,11 @@ function getNomeMes(m) {
 
 router.get('/medium/:id', async (req, res) => {
   const medium = await db.getById('mediuns', req.params.id);
-  if (!medium) return res.status(404).json({ error: 'Médium não encontrado' });
+  if (!medium || medium.deleted_at || medium.terreiro_id !== terreiro(req)) return res.status(404).json({ error: 'Médium não encontrado' });
 
   const { mes, ano } = req.query;
 
-  const rawMensalidades = await db.query('mensalidades', m => m.medium_id === parseInt(req.params.id, 10));
+  const rawMensalidades = await db.query('mensalidades', m => m.medium_id === parseInt(req.params.id, 10) && m.terreiro_id === terreiro(req));
 
   // Agrupar e deduplicar mensalidades por mes/ano
   const uniqueMensalidadesMap = {};
@@ -99,7 +102,7 @@ router.get('/medium/:id', async (req, res) => {
     return a.mes.localeCompare(b.mes);
   });
 
-  const faxinas = await db.query('faxina', f => f.medium_id === mediumId);
+  const faxinas = await db.query('faxina', f => f.medium_id === mediumId && f.terreiro_id === terreiro(req));
   const faxinasFiltradas = (mes && ano ? faxinas.filter(f => f.mes === mes && f.ano === ano) : faxinas)
     .sort((a, b) => {
       if ((a.ano || '') !== (b.ano || '')) return (a.ano || '').localeCompare(b.ano || '');
@@ -112,7 +115,7 @@ router.get('/medium/:id', async (req, res) => {
   let totalFaxFalta = 0;
   faxinasFiltradas.forEach(f => { if (f.presenca === 'falta') totalFaxFalta += f.valor; });
 
-  const despesas = await db.getAll('despesas');
+  const despesas = await db.query('despesas', d => d.terreiro_id === terreiro(req));
   const despesasFiltradas = (mes && ano ? despesas.filter(d => d.mes === mes && d.ano === ano) : despesas)
     .filter(d => {
       try {
@@ -145,7 +148,7 @@ router.get('/medium/:id', async (req, res) => {
   });
   const totalDespesasMedium = despesasDetalhadas.reduce((s, d) => s + d.por_medium, 0);
 
-  const trabalhos = await db.getAll('trabalhos');
+  const trabalhos = await db.query('trabalhos', t => t.terreiro_id === terreiro(req));
   const trabalhosFiltrados = (mes && ano ? trabalhos.filter(t => t.mes === mes && t.ano === ano) : trabalhos)
     .filter(t => t.divisao > 0);
 

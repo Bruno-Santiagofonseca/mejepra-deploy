@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0A1E3F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Centro360">
+<link rel="icon" type="image/png" href="mppkpkje-icon.PNG">
+<title>Centro360 — Login</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:oklch(96.6% 0.006 262);
+  --surface:oklch(100% 0 0);
+  --fg:oklch(13.9% 0.050 263);
+  --muted:oklch(46% 0.047 266);
+  --border:oklch(87.3% 0.018 265);
+  --accent:oklch(59.9% 0.108 194);
+  --accent-hover:oklch(51.6% 0.103 195);
+  --accent-light:oklch(74.4% 0.077 189);
+  --gold:oklch(75% 0.149 79);
+  --gold-light:oklch(94% 0.035 79);
+  --danger:oklch(54.6% 0.196 28);
+  --danger-light:oklch(92.8% 0.035 25);
+  --radius:16px;
+  --radius-sm:10px;
+  --font:-apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --ease-out-quart:cubic-bezier(0.25,1,0.5,1);
+  --ease-out-quint:cubic-bezier(0.22,1,0.36,1);
+  --ease-out-expo:cubic-bezier(0.16,1,0.3,1);
+  --dur-fast:150ms;
+  --dur-state:250ms;
+  --dur-panel:400ms;
+  --dur-enter:600ms
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:oklch(9.6% 0.036 263);
+    --surface:oklch(13.1% 0.043 263);
+    --fg:oklch(92.6% 0.013 262);
+    --muted:oklch(62.8% 0.048 267);
+    --border:oklch(20.8% 0.050 263);
+    --accent:oklch(74.4% 0.077 189);
+    --accent-hover:oklch(81.4% 0.092 189);
+    --accent-light:oklch(23.7% 0.032 227);
+    --gold:oklch(75% 0.149 79);
+    --gold-light:oklch(21.2% 0.058 75);
+    --danger:oklch(60.9% 0.193 28);
+    --danger-light:oklch(11.1% 0.046 27);
+  }
+}
+html,body{height:100%}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;min-height:100dvh;background:var(--bg);font-family:var(--font);color:var(--fg);-webkit-font-smoothing:antialiased}
+
+@keyframes fadeSlideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 30%,transparent)}50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--accent) 0%,transparent)}}
+
+.login-wrap{position:relative;z-index:1;width:100%;max-width:420px}
+.login-wrap.entered{animation:fadeSlideUp var(--dur-enter) var(--ease-out-quart) 80ms both}
+
+.login-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:40px 32px 36px;width:100%}
+@media(min-width:480px){.login-card{padding:48px 40px 40px}}
+
+.logo-img{max-width:min(260px,60%);height:auto;display:block;margin:0 auto 20px}
+.logo-name{font-size:1.5rem;font-weight:700;color:var(--fg);letter-spacing:-.4px}
+.logo-name span{color:var(--accent)}
+.logo-sub{font-size:.7rem;color:var(--muted);margin-top:4px;font-weight:500;letter-spacing:.4px;text-transform:uppercase}
+
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-group label{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px}
+.input-wrap{position:relative;display:flex;align-items:center}
+.input-wrap .input-icon{position:absolute;left:14px;width:18px;height:18px;color:var(--muted);pointer-events:none;flex-shrink:0}
+.input-wrap .input-icon svg{width:18px;height:18px;display:block}
+
+.password-toggle:hover{color:var(--fg)}
+.password-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.password-toggle svg{width:20px;height:20px;display:block}
+
+.forgot-link{text-align:right;margin-top:-6px}
+.forgot-link a{font-size:.75rem;color:var(--muted);text-decoration:none;font-weight:500;transition:color .15s}
+.forgot-link a:hover{color:var(--accent)}
+
+.divider{display:flex;align-items:center;gap:12px;margin:4px 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{font-size:.7rem;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:1px}
+
+.footer-text{text-align:center;margin-top:24px;font-size:.7rem;color:var(--muted);font-weight:500}
+
+/* ── Animations ── */
+.form{display:none;flex-direction:column;gap:18px}
+.form.active{display:flex;animation:fadeSlideUp var(--dur-panel) var(--ease-out-quart) both}
+.form.active .form-group{animation:fadeSlideUp var(--dur-state) var(--ease-out-quint) both}
+.form.active .form-group:nth-child(1){animation-delay:60ms}
+.form.active .form-group:nth-child(2){animation-delay:120ms}
+.form.active .form-group:nth-child(3){animation-delay:180ms}
+.form.active .form-group:nth-child(4){animation-delay:240ms}
+.form.active .forgot-link{animation:fadeSlideUp var(--dur-state) var(--ease-out-quint) 200ms both}
+.form.active .btn-primary{animation:fadeSlideUp var(--dur-state) var(--ease-out-quint) 260ms both}
+.form.active .divider{animation:fadeIn var(--dur-state) var(--ease-out-quart) 320ms both}
+.form.active .btn-secondary{animation:fadeSlideUp var(--dur-state) var(--ease-out-quint) 360ms both}
+
+.logo-area{animation:fadeSlideUp var(--dur-state) var(--ease-out-quart) 100ms both;text-align:center;margin-bottom:24px}
+.panel-heading{animation:fadeSlideUp var(--dur-state) var(--ease-out-quint) 250ms both;font-size:1.15rem;font-weight:700;color:var(--fg);margin-bottom:24px;letter-spacing:-.2px}
+
+.password-toggle{position:absolute;right:6px;background:none;border:none;cursor:pointer;color:var(--muted);padding:10px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:color .15s,background .15s,transform var(--dur-fast) var(--ease-out-quart);-webkit-tap-highlight-color:transparent;min-width:44px;min-height:44px}
+.password-toggle:active{transform:scale(.88)}
+.password-toggle.visible{transform:rotate(3deg);color:var(--accent)}
+
+.btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-size:.875rem;font-weight:700;font-family:var(--font);cursor:pointer;transition:background .2s,transform .15s,box-shadow .2s;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:8px;position:relative;overflow:hidden}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn:active{transform:scale(.97)}
+.btn-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.35);transform:scale(0);animation:rippleBurst .5s var(--ease-out-expo) forwards;pointer-events:none}
+@keyframes rippleBurst{to{transform:scale(4);opacity:0}}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-secondary{background:transparent;color:var(--fg);border:1.5px solid var(--border);font-weight:600}
+.btn-secondary:hover{background:color-mix(in srgb,var(--accent) 6%,transparent);border-color:var(--accent);color:var(--accent)}
+
+.form-group input{width:100%;padding:13px 14px 13px 42px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.875rem;font-family:var(--font);font-weight:500;background:var(--bg);color:var(--fg);outline:none;transition:border-color var(--dur-fast) var(--ease-out-quart),box-shadow var(--dur-fast) var(--ease-out-quart),transform var(--dur-fast) var(--ease-out-quart)}
+.form-group input:focus{border-color:var(--accent)}
+.form-group input::placeholder{color:color-mix(in srgb,var(--muted) 55%,transparent);font-weight:400}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 20px;font-size:.8125rem;font-weight:600;color:var(--fg);box-shadow:0 8px 30px rgba(0,0,0,.1);z-index:200;opacity:0;pointer-events:none;transition:opacity var(--dur-state) var(--ease-out-quart),transform var(--dur-state) var(--ease-out-quart);max-width:calc(100vw - 40px);text-wrap:pretty;display:flex;align-items:center;gap:10px}
+.toast.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0)}
+.toast.danger{border-color:var(--danger)}.toast.danger svg{color:var(--danger)}
+.toast svg{width:18px;height:18px;flex-shrink:0;color:var(--accent)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+
+@media(max-width:380px){
+  body{padding:12px}
+  .login-card{padding:28px 20px 24px}
+  .form-group input{padding:12px 12px 12px 38px;font-size:.8125rem}
+  .btn{padding:12px;font-size:.8125rem}
+  .panel-heading{font-size:1rem}
+  .logo-img{max-width:min(160px,55%)}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .login-wrap.entered{animation:none}
+  .form.active{animation:none}
+  .form.active .form-group,.form.active .forgot-link,.form.active .btn-primary,.form.active .divider,.form.active .btn-secondary{animation:none;animation-delay:0s}
+  .logo-area,.panel-heading{animation:none}
+  .modal-overlay,.modal-card,.modal-close{animation:none!important}
+}
+/* ── Forgot Password Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:auto}
+.modal-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:32px;width:100%;max-width:420px;position:relative;animation:fadeSlideUp .35s var(--ease-out-quart) both}
+.modal-close{position:absolute;top:12px;right:12px;background:none;border:none;cursor:pointer;color:var(--muted);padding:8px;border-radius:8px;transition:color .15s;-webkit-tap-highlight-color:transparent}
+.modal-close:hover{color:var(--fg)}
+.modal-close svg{width:22px;height:22px;display:block}
+.modal-card h2{font-size:1.1rem;font-weight:700;color:var(--fg);margin-bottom:4px}
+.modal-card .modal-desc{font-size:.8125rem;color:var(--muted);margin-bottom:20px;line-height:1.5}
+.forgot-step{display:none;flex-direction:column;gap:16px}
+.forgot-step.active{display:flex;animation:fadeSlideUp var(--dur-panel) var(--ease-out-quart) both}
+.forgot-step .form-group input{padding-left:14px}
+.forgot-step .form-group input.code-input{text-align:center;font-size:1.5rem;font-weight:700;letter-spacing:8px;padding:16px 14px;font-family:var(--font);font-variant-numeric:tabular-nums}
+.forgot-back{background:none;border:none;color:var(--muted);font-size:.75rem;font-weight:600;cursor:pointer;padding:4px 0;font-family:var(--font);transition:color .15s;align-self:flex-start}
+.forgot-back:hover{color:var(--fg)}
+.modal-success{display:none;flex-direction:column;align-items:center;gap:12px;padding:20px 0;text-align:center}
+.modal-success.active{display:flex;animation:fadeSlideUp .35s var(--ease-out-quart) both}
+.modal-success .check-icon{width:48px;height:48px;color:var(--accent)}
+.modal-success h3{font-size:1.1rem;font-weight:700;color:var(--fg)}
+.modal-success p{font-size:.8125rem;color:var(--muted)}
+/* ── Inline Validation ── */
+.optional-badge{font-weight:400;text-transform:lowercase;font-size:.65rem;color:var(--muted);letter-spacing:0}
+.form-group input.input-error{border-color:var(--danger)}
+.form-group input.input-error:focus{border-color:var(--danger)}
+.field-error{font-size:.7rem;color:var(--danger);font-weight:500;display:none;margin-top:-4px}
+.field-error.show{display:block;animation:fadeSlideUp .2s var(--ease-out-quart) both}
+</style>
+</head>
+<body>
+
+<div class="login-wrap" role="main" aria-label="Login Centro360">
+  <div class="login-card">
+    <div class="logo-area">
+      <img class="logo-img" src="mppkpki8-Centro360_Logo_Vector-sem-fundo.png" alt="Centro360">
+    </div>
+
+    <h1 class="panel-heading" id="panel-heading">Entrar</h1>
+
+    <form class="form active" id="panel-login" autocomplete="on" novalidate>
+      <div class="form-group">
+        <label for="login-email">Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <input type="email" id="login-email" autocomplete="email" placeholder="seu@email.com" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="login-senha">Senha</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <input type="password" id="login-senha" autocomplete="current-password" placeholder="Sua senha" required>
+          <button class="password-toggle" type="button" aria-label="Mostrar senha" onclick="toggleSenha('login-senha',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="forgot-link"><a href="#" onclick="openForgotModal();return false">Esqueceu a senha?</a></div>
+      <button class="btn btn-primary" type="submit" id="btn-login">Entrar</button>
+      <div class="divider"><span>ou</span></div>
+      <button class="btn btn-secondary" type="button" onclick="mudarPainel('register')">Criar nova conta</button>
+    </form>
+
+    <form class="form" id="panel-register" autocomplete="on" novalidate>
+      <div class="form-group">
+        <label for="reg-nome">Nome</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </span>
+          <input type="text" id="reg-nome" autocomplete="name" placeholder="Seu nome" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <input type="email" id="reg-email" autocomplete="email" placeholder="seu@email.com" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg-senha">Senha</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <input type="password" id="reg-senha" autocomplete="new-password" placeholder="Mínimo 6 caracteres" minlength="6" required>
+          <button class="password-toggle" type="button" aria-label="Mostrar senha" onclick="toggleSenha('reg-senha',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg-senha-confirm">Confirmar Senha</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <input type="password" id="reg-senha-confirm" autocomplete="new-password" placeholder="Repita a senha" required>
+          <button class="password-toggle" type="button" aria-label="Mostrar senha" onclick="toggleSenha('reg-senha-confirm',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reg-terreiro">Nome do Centro / Terreiro <span class="optional-badge">opcional</span></label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          </span>
+          <input type="text" id="reg-terreiro" autocomplete="off" placeholder="Opcional">
+        </div>
+      </div>
+      <button class="btn btn-primary" type="submit" id="btn-register">Criar Conta</button>
+      <div class="divider"><span>ou</span></div>
+      <button class="btn btn-secondary" type="button" onclick="mudarPainel('login')">Já tenho conta</button>
+    </form>
+  </div>
+  <div class="footer-text">Centro360 — Gestão para centros espirituais</div>
+</div>
+
+<!-- ── Forgot Password Modal ── -->
+<div class="modal-overlay" id="forgot-modal" role="dialog" aria-modal="true" aria-labelledby="forgot-title" aria-describedby="forgot-desc">
+  <div class="modal-card">
+    <button class="modal-close" type="button" onclick="closeForgotModal()" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <h2 id="forgot-title">Recuperar Senha</h2>
+    <p class="modal-desc" id="forgot-desc">Siga as etapas para redefinir sua senha.</p>
+
+    <!-- Step 1: Email -->
+    <div class="forgot-step active" id="forgot-step1" role="form" aria-label="Digite seu email">
+      <p>Digite seu email para receber um código de recuperação.</p>
+      <div class="form-group">
+        <label for="forgot-email">Email</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </span>
+          <input type="email" id="forgot-email" autocomplete="email" placeholder="seu@email.com" required inputmode="email">
+        </div>
+      </div>
+      <button class="btn btn-primary" type="button" onclick="sendCode()">Enviar Código</button>
+      <button class="forgot-back" type="button" onclick="closeForgotModal()">Cancelar</button>
+    </div>
+
+    <!-- Step 2: Code -->
+    <div class="forgot-step" id="forgot-step2" role="form" aria-label="Digite o código">
+      <p>Digite o código de 6 dígitos enviado para <strong id="forgot-email-display"></strong>.</p>
+      <div class="form-group">
+        <label for="forgot-code">Código de verificação</label>
+        <input type="text" id="forgot-code" maxlength="6" placeholder="000000" required inputmode="numeric" pattern="[0-9]{6}" autocomplete="one-time-code" class="code-input">
+      </div>
+      <button class="btn btn-primary" type="button" onclick="verifyCode()">Verificar</button>
+      <button class="forgot-back" type="button" onclick="backToStep(1)"><span aria-hidden="true">←</span> Voltar</button>
+    </div>
+
+    <!-- Step 3: New Password -->
+    <div class="forgot-step" id="forgot-step3" role="form" aria-label="Nova senha">
+      <p>Digite sua nova senha.</p>
+      <div class="form-group">
+        <label for="forgot-senha">Nova Senha</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <input type="password" id="forgot-senha" autocomplete="new-password" placeholder="Mínimo 6 caracteres" minlength="6" required>
+          <button class="password-toggle" type="button" aria-label="Mostrar senha" onclick="toggleSenha('forgot-senha',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="forgot-senha-confirm">Confirmar Nova Senha</label>
+        <div class="input-wrap">
+          <span class="input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </span>
+          <input type="password" id="forgot-senha-confirm" autocomplete="new-password" placeholder="Repita a senha" required>
+          <button class="password-toggle" type="button" aria-label="Mostrar senha" onclick="toggleSenha('forgot-senha-confirm',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+      <button class="btn btn-primary" type="button" onclick="resetPassword()">Redefinir Senha</button>
+      <button class="forgot-back" type="button" onclick="backToStep(2)"><span aria-hidden="true">←</span> Voltar</button>
+    </div>
+
+    <!-- Success state -->
+    <div class="modal-success" id="forgot-success">
+      <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      <h3>Senha redefinida!</h3>
+      <p>Sua senha foi atualizada com sucesso.</p>
+      <button class="btn btn-primary" type="button" onclick="closeForgotModal()">Voltar ao Login</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="alert" aria-live="assertive">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" id="toast-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+  <span id="toast-text"></span>
+</div>
+
+<script>
+(function(){
+  var TOKEN_KEY = 'centro360_token';
+  var token = localStorage.getItem(TOKEN_KEY);
+  if (token) { window.location.replace('/index.html'); return; }
+
+  var panels = { login: document.getElementById('panel-login'), register: document.getElementById('panel-register') };
+  var heading = document.getElementById('panel-heading');
+
+  window.mudarPainel = function(target){
+    var current = Object.keys(panels).filter(function(k){ return panels[k].classList.contains('active'); })[0];
+    if (current === target) return;
+    var oldPanel = panels[current];
+    var newPanel = panels[target];
+    oldPanel.classList.remove('active');
+    oldPanel.style.animation = 'none';
+    void oldPanel.offsetHeight;
+    oldPanel.style.animation = '';
+    heading.style.animation = 'none';
+    void heading.offsetHeight;
+    heading.style.animation = '';
+    heading.textContent = target === 'login' ? 'Entrar' : 'Criar Conta';
+    requestAnimationFrame(function(){
+      newPanel.classList.add('active');
+      var firstInput = newPanel.querySelector('input');
+      if (firstInput) firstInput.focus();
+    });
+  };
+
+  window.toggleSenha = function(inputId, btn){
+    var input = document.getElementById(inputId);
+    var isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+    btn.classList.toggle('visible', !isPassword);
+    btn.setAttribute('aria-label', isPassword ? 'Ocultar senha' : 'Mostrar senha');
+    btn.innerHTML = isPassword
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  };
+
+  function toast(msg, type){
+    var el = document.getElementById('toast');
+    var textEl = document.getElementById('toast-text');
+    var iconEl = document.getElementById('toast-icon');
+    textEl.textContent = msg;
+    el.className = 'toast';
+    if (type) el.classList.add(type);
+    iconEl.innerHTML = type === 'danger'
+      ? '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>'
+      : '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>';
+    el.classList.add('show');
+    clearTimeout(el._timer);
+    el._timer = setTimeout(function(){ el.classList.remove('show'); }, 4000);
+  }
+
+  function addRipple(e){
+    var btn = e.currentTarget;
+    var ripple = document.createElement('span');
+    ripple.className = 'btn-ripple';
+    var rect = btn.getBoundingClientRect();
+    var size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+    ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+    btn.appendChild(ripple);
+    ripple.addEventListener('animationend', function(){ ripple.remove(); });
+  }
+  document.querySelectorAll('.btn').forEach(function(b){
+    b.addEventListener('mousedown', addRipple);
+    b.addEventListener('touchstart', addRipple, {passive:true});
+  });
+
+  function errorToast(msg){ toast(msg, 'danger'); }
+
+  // ── Forgot Password Modal ──
+  var forgotEls = {
+    modal: document.getElementById('forgot-modal'),
+    step1: document.getElementById('forgot-step1'),
+    step2: document.getElementById('forgot-step2'),
+    step3: document.getElementById('forgot-step3'),
+    success: document.getElementById('forgot-success')
+  };
+
+  window.openForgotModal = function(){
+    forgotEls.modal.classList.add('open');
+    [1,2,3].forEach(function(s){ forgotEls['step'+s].classList.remove('active'); });
+    forgotEls.success.classList.remove('active');
+    forgotEls.step1.classList.add('active');
+    document.getElementById('forgot-email').value = '';
+    document.getElementById('forgot-code').value = '';
+    document.getElementById('forgot-senha').value = '';
+    document.getElementById('forgot-senha-confirm').value = '';
+    document.getElementById('forgot-email-display').textContent = '';
+    clearFieldErrors();
+    setTimeout(function(){ document.getElementById('forgot-email').focus(); }, 150);
+  };
+
+  window.closeForgotModal = function(){
+    forgotEls.modal.classList.remove('open');
+  };
+
+  forgotEls.modal.addEventListener('click', function(e){
+    if (e.target === forgotEls.modal) closeForgotModal();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && forgotEls.modal.classList.contains('open')) closeForgotModal();
+  });
+
+  window.sendCode = function(){
+    var email = document.getElementById('forgot-email').value.trim();
+    if (!email) { errorToast('Digite seu email.'); return; }
+    if (!email.includes('@')) { errorToast('Email inválido.'); return; }
+    document.getElementById('forgot-email-display').textContent = email;
+    toast('Código enviado para ' + email);
+    forgotEls.step1.classList.remove('active');
+    forgotEls.step2.classList.add('active');
+    setTimeout(function(){ document.getElementById('forgot-code').focus(); }, 150);
+  };
+
+  window.verifyCode = function(){
+    var code = document.getElementById('forgot-code').value.trim();
+    if (code.length < 6) { errorToast('Digite o código de 6 dígitos.'); return; }
+    forgotEls.step2.classList.remove('active');
+    forgotEls.step3.classList.add('active');
+    setTimeout(function(){ document.getElementById('forgot-senha').focus(); }, 150);
+  };
+
+  window.resetPassword = function(){
+    var senha = document.getElementById('forgot-senha').value;
+    var confirm = document.getElementById('forgot-senha-confirm').value;
+    if (!senha || senha.length < 6) { errorToast('A senha deve ter no mínimo 6 caracteres.'); return; }
+    if (senha !== confirm) { errorToast('As senhas não conferem.'); return; }
+    forgotEls.step3.classList.remove('active');
+    forgotEls.success.classList.add('active');
+  };
+
+  window.backToStep = function(step){
+    [1,2,3].forEach(function(s){ forgotEls['step'+s].classList.remove('active'); });
+    forgotEls['step'+step].classList.add('active');
+    clearFieldErrors();
+    setTimeout(function(){
+      var inputId = step === 1 ? 'forgot-email' : step === 2 ? 'forgot-code' : 'forgot-senha';
+      document.getElementById(inputId).focus();
+    }, 150);
+  };
+
+  document.getElementById('panel-login').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var btn = document.getElementById('btn-login');
+    var email = document.getElementById('login-email').value.trim();
+    var senha = document.getElementById('login-senha').value;
+    if (!email || !senha) { errorToast('Preencha email e senha.'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+
+    try {
+      var res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, senha: senha })
+      });
+      var data = await res.json();
+      if (!res.ok) { errorToast(data.error || 'Erro ao entrar.'); return; }
+      localStorage.setItem(TOKEN_KEY, data.token);
+      window.location.replace('/index.html');
+    } catch(e){
+      errorToast('Erro de conexão.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+    }
+  });
+
+  document.getElementById('panel-register').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var btn = document.getElementById('btn-register');
+    var nome = document.getElementById('reg-nome').value.trim();
+    var email = document.getElementById('reg-email').value.trim();
+    var senha = document.getElementById('reg-senha').value;
+    var senhaConfirm = document.getElementById('reg-senha-confirm').value;
+    var terreiro = document.getElementById('reg-terreiro').value.trim();
+
+    if (!nome || !email || !senha) { errorToast('Preencha nome, email e senha.'); return; }
+    if (senha.length < 6) { errorToast('Senha deve ter no mínimo 6 caracteres.'); return; }
+    if (senha !== senhaConfirm) { errorToast('As senhas não conferem.'); return; }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+
+    try {
+      var body = { nome: nome, email: email, senha: senha };
+      if (terreiro) body.terreiro = terreiro;
+      var res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      var data = await res.json();
+      if (!res.ok) { errorToast(data.error || 'Erro ao criar conta.'); return; }
+      localStorage.setItem(TOKEN_KEY, data.token);
+      window.location.replace('/index.html');
+    } catch(e){
+      errorToast('Erro de conexão.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Criar Conta';
+    }
+  });
+  // ── Inline Validation ──
+  function clearFieldErrors(){
+    document.querySelectorAll('.field-error.show').forEach(function(e){ e.classList.remove('show'); });
+    document.querySelectorAll('.input-error').forEach(function(e){ e.classList.remove('input-error'); });
+  }
+
+  function initInlineValidation(){
+    document.querySelectorAll('.form input[required], .form input[minlength]').forEach(function(input){
+      var wrap = input.closest('.input-wrap');
+      if (!wrap) return;
+      var errorEl = document.createElement('span');
+      errorEl.className = 'field-error';
+      wrap.parentNode.insertBefore(errorEl, wrap.nextSibling);
+
+      function validate(){
+        errorEl.classList.remove('show');
+        input.classList.remove('input-error');
+        if (!input.value.trim() && input.required){
+          errorEl.textContent = 'Campo obrigatório';
+          errorEl.classList.add('show');
+          input.classList.add('input-error');
+          return false;
+        }
+        if ((input.id === 'reg-senha' || input.id === 'forgot-senha') && input.value.length > 0 && input.value.length < 6){
+          errorEl.textContent = 'Mínimo 6 caracteres';
+          errorEl.classList.add('show');
+          input.classList.add('input-error');
+          return false;
+        }
+        if (input.id === 'reg-senha-confirm' || input.id === 'forgot-senha-confirm'){
+          var matchId = input.id === 'reg-senha-confirm' ? 'reg-senha' : 'forgot-senha';
+          if (input.value && input.value !== document.getElementById(matchId).value){
+            errorEl.textContent = 'Senhas não conferem';
+            errorEl.classList.add('show');
+            input.classList.add('input-error');
+            return false;
+          }
+        }
+        if (input.type === 'email' && input.value && !input.value.includes('@')){
+          errorEl.textContent = 'Email inválido';
+          errorEl.classList.add('show');
+          input.classList.add('input-error');
+          return false;
+        }
+        return true;
+      }
+      input.addEventListener('blur', function(){ validate(); });
+      input.addEventListener('input', function(){ if (errorEl.classList.contains('show')) validate(); });
+    });
+  }
+  initInlineValidation();
+
+  // Page entrance trigger
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      document.querySelector('.login-wrap').classList.add('entered');
+    });
+  });
+
+  // Service-worker registration and cache cleanup (once per cache version)
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.getRegistrations().then(function(regs){
+      regs.forEach(function(r){r.unregister()});
+    });
+    if('caches' in window){
+      caches.keys().then(function(keys){
+        keys.forEach(function(k){
+          if(k.startsWith('centro360-')) caches.delete(k);
+        });
+      });
+    }
+  }
+})();
+</script>
+</body>
+</html>
