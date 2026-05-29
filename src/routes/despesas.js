@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../database');
-const { authorize } = require('../middleware/rbac');
 
 function getMesAnoOffset(mesStr, anoStr, offset) {
   const meses = ['01','02','03','04','05','06','07','08','09','10','11','12'];
@@ -12,28 +11,22 @@ function getMesAnoOffset(mesStr, anoStr, offset) {
   return { mes: meses[mes], ano: String(ano) };
 }
 
-function terreiro(req) { return req.user.terreiro_id; }
-
 router.get('/', async (req, res) => {
-  const tid = terreiro(req);
   const { mes, ano } = req.query;
-  let data = await db.query('despesas', d => d.terreiro_id === tid);
+  let data = await db.getAll('despesas');
   if (mes && ano) data = data.filter(d => d.mes === mes && d.ano === ano);
   res.json(data.sort((a, b) => a.item.localeCompare(b.item)));
 });
 
 router.get('/:id', async (req, res) => {
   const desp = await db.getById('despesas', req.params.id);
-  if (!desp || desp.deleted_at || desp.terreiro_id !== terreiro(req)) return res.status(404).json({ error: 'Despesa não encontrada' });
+  if (!desp) return res.status(404).json({ error: 'Despesa não encontrada' });
   res.json(desp);
 });
 
 router.post('/', async (req, res) => {
-  const tid = terreiro(req);
   const { item, valor, parcela, divisao, status, mes, ano, divisao_mediums, pagamentos, total_parcelas } = req.body;
   if (!item || valor === undefined) return res.status(400).json({ error: 'Item e valor são obrigatórios' });
-
-  if (mes && ano && db.isPeriodLocked(mes, ano)) return res.status(403).json({ error: 'Período bloqueado. Não é possível modificar meses anteriores.' });
 
   const numParcelas = parseInt(total_parcelas) || 1;
   const valorParcela = valor / numParcelas;
@@ -56,16 +49,15 @@ router.post('/', async (req, res) => {
       pagamentos: pagamentos || {},
       parcela_atual: i + 1,
       total_parcelas: numParcelas,
-      despesa_original_id: null,
-      terreiro_id: tid
-    }, req.user);
+      despesa_original_id: null
+    });
 
     if (isOriginal) {
-      await db.update('despesas', desp.id, { despesa_original_id: desp.id }, req.user);
+      await db.update('despesas', desp.id, { despesa_original_id: desp.id });
       desp.despesa_original_id = desp.id;
     } else {
       const firstDesp = created[0];
-      await db.update('despesas', desp.id, { despesa_original_id: firstDesp.id }, req.user);
+      await db.update('despesas', desp.id, { despesa_original_id: firstDesp.id });
       desp.despesa_original_id = firstDesp.id;
     }
 
@@ -77,16 +69,12 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   const existing = await db.getById('despesas', req.params.id);
-  if (!existing || existing.terreiro_id !== terreiro(req)) return res.status(404).json({ error: 'Despesa não encontrada' });
+  if (!existing) return res.status(404).json({ error: 'Despesa não encontrada' });
 
   const { item, valor, divisao, status, mes, ano, divisao_mediums, pagamentos, total_parcelas } = req.body;
 
   const originalId = existing.despesa_original_id || existing.id;
   const allRelated = await db.query('despesas', d => d.despesa_original_id === originalId || d.id === originalId);
-
-  for (var rel of allRelated) {
-    if (db.isPeriodLocked(rel.mes, rel.ano)) return res.status(403).json({ error: 'Período bloqueado. Não é possível modificar parcelas de meses anteriores.' });
-  }
 
   // Bug 4: garantir ordenação correta por parcela_atual antes de iterar
   allRelated.sort((a, b) => (a.parcela_atual || 1) - (b.parcela_atual || 1));
@@ -126,7 +114,7 @@ router.put('/:id', async (req, res) => {
         pagamentos: isTargetParcel && pagamentos !== undefined ? pagamentos : existingParcela.pagamentos,
         parcela_atual: i + 1,
         total_parcelas: numParcelas
-      }, req.user);
+      });
     } else {
       await db.insert('despesas', {
         item: item !== undefined ? item : existing.item,
@@ -141,7 +129,7 @@ router.put('/:id', async (req, res) => {
         parcela_atual: i + 1,
         total_parcelas: numParcelas,
         despesa_original_id: originalId
-      }, req.user);
+      });
     }
   }
 
@@ -149,19 +137,15 @@ router.put('/:id', async (req, res) => {
   res.json(updated);
 });
 
-router.delete('/:id', authorize('admin'), async (req, res) => {
+router.delete('/:id', async (req, res) => {
   const existing = await db.getById('despesas', req.params.id);
-  if (!existing || existing.terreiro_id !== terreiro(req)) return res.status(404).json({ error: 'Despesa não encontrada' });
+  if (!existing) return res.status(404).json({ error: 'Despesa não encontrada' });
 
   const originalId = existing.despesa_original_id || existing.id;
   const allRelated = await db.query('despesas', d => d.despesa_original_id === originalId || d.id === originalId);
 
-  for (var d of allRelated) {
-    if (db.isPeriodLocked(d.mes, d.ano)) return res.status(403).json({ error: 'Período bloqueado. Não é possível excluir parcelas de meses anteriores.' });
-  }
-
-  for (var d of allRelated) {
-    await db.delete('despesas', d.id, req.user);
+  for (const d of allRelated) {
+    await db.delete('despesas', d.id);
   }
 
   res.json({ message: 'Despesa e parcelas excluídas com sucesso' });

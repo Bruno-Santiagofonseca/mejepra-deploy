@@ -1,28 +1,10 @@
-databases:
-  - name: centro360-db
-    plan: free
-    databaseName: centro360
-    user: centro360
-
 services:
   - type: web
-    name: centro360-financeiro
+    name: mejepra-financeiro
     env: node
-    plan: free
     buildCommand: npm install
     startCommand: node server.js
-    healthCheckPath: /api/health
-    autoDeploy: true
+    healthCheckPath: /
     envVars:
       - key: NODE_VERSION
         value: 20
-      - key: NODE_ENV
-        value: production
-      - key: DATABASE_URL
-        fromDatabase:
-          name: centro360-db
-          property: connectionString
-      - key: JWT_SECRET
-        generateValue: true
-      - key: PORT
-        value: 10000

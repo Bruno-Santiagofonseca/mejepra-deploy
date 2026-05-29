@@ -1,5 +1,5 @@
 {
-  "name": "centro360-financeiro",
+  "name": "mejepra-financeiro",
   "version": "1.0.0",
   "description": "Sistema de gestao financeira para centro espirita",
   "main": "server.js",
@@ -13,14 +13,8 @@
     "@capacitor/android": "^8.3.4",
     "@capacitor/cli": "^8.3.4",
     "@capacitor/core": "^8.3.4",
-    "bcryptjs": "^3.0.3",
     "cors": "^2.8.5",
-    "dotenv": "^17.4.2",
     "express": "^4.21.0",
-    "express-rate-limit": "^8.5.2",
-    "express-validator": "^7.3.2",
-    "helmet": "^8.2.0",
-    "jsonwebtoken": "^9.0.3",
     "pg": "^8.11.1",
     "sql.js": "^1.14.1"
   }

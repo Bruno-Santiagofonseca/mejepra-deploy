@@ -1,419 +1,207 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#F4F6FA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0A1E3F" media="(prefers-color-scheme: dark)">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#2a7a5a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Centro360">
+<meta name="apple-mobile-web-app-title" content="Mejepra">
 <link rel="manifest" href="/manifest.json">
-<link rel="icon" type="image/png" href="mppkpkje-icon.PNG">
-<title>Centro360 — Dashboard</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<title>Mejepra — Gestão Financeira</title>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:oklch(96.6% 0.004 265);
+  --bg:oklch(98% 0.004 240);
   --surface:oklch(100% 0 0);
-  --fg:oklch(32% 0.06 262);
-  --muted:oklch(48% 0.035 260);
-  --border:oklch(88% 0.005 265);
-  --accent:oklch(56% 0.15 190);
-  --accent-light:oklch(90% 0.06 190);
-  --gold:oklch(74% 0.16 85);
-  --gold-light:oklch(94% 0.06 85);
-  --gold-dark:oklch(50% 0.18 25);
-  --gold-dark-light:oklch(90% 0.06 25);
+  --fg:oklch(20% 0.02 240);
+  --muted:oklch(50% 0.018 240);
+  --border:oklch(90% 0.006 240);
+  --accent:oklch(56% 0.12 170);
+  --accent-light:oklch(90% 0.06 170);
   --radius:16px;
-  --radius-sm:12px;
-  --font:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif
+  --font-display:'Söhne','Avenir Next',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  --font-body:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif
 }
-@media(prefers-color-scheme:dark){
-  :root{
-    --bg:oklch(18% 0.012 265);
-    --surface:oklch(22% 0.015 265);
-    --fg:oklch(88% 0.01 265);
-    --muted:oklch(60% 0.015 240);
-    --border:oklch(30% 0.012 265);
-    --accent:oklch(65% 0.13 190);
-    --accent-light:oklch(30% 0.06 190);
-    --gold:oklch(74% 0.16 85);
-    --gold-light:oklch(40% 0.06 85);
-    --gold-dark:oklch(60% 0.2 25);
-    --gold-dark-light:oklch(35% 0.1 25)
-  }
-}
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
-}
+html,body{height:100%;background:var(--bg);font-family:var(--font-body);color:var(--fg);-webkit-font-smoothing:antialiased}
+body{display:flex;flex-direction:column;max-width:100%;margin:0 auto;position:relative;min-height:100dvh;padding:0 clamp(16px,5vw,80px)}
+body::before{content:'';position:fixed;inset:0;z-index:0;background-image:url('logo.png');background-size:clamp(80px,10vw,120px) auto;background-repeat:space;background-position:center;opacity:.045;pointer-events:none}
+.grid-wrap,.logo-area,.bottom-nav,.backup-area{position:relative;z-index:1}
 
-/* Background shape — elemento de identidade sutil */
-body::before{
-  content:'';position:fixed;top:-40vh;right:-20vw;width:80vw;height:80vw;border-radius:50%;
-  background:radial-gradient(circle,color-mix(in srgb,var(--accent) 6%,transparent) 0%,transparent 70%);
-  pointer-events:none;z-index:0
-}
+/* Logo */
+.logo-area{display:flex;flex-direction:column;align-items:center;padding:clamp(20px,4vh,28px) 20px 12px}
+.logo-img{width:clamp(100px,15vw,170px);height:clamp(100px,15vw,170px);object-fit:contain;display:block}
+.logo-subtitle{font-size:clamp(18px,3vw,24px);font-weight:700;margin-top:clamp(12px,2vh,18px);color:var(--fg);font-family:var(--font-display);letter-spacing:-0.3px}
+.logo-sub{font-size:clamp(12px,2vw,14px);color:var(--muted);margin-top:4px;font-weight:400}
 
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.logo-wrap{animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards}
-.section-label{opacity:0;animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.1s}
-.nav-card{opacity:0;animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards}
-.nav-card:nth-child(1){animation-delay:.15s}
-.nav-card:nth-child(2){animation-delay:.2s}
-.nav-card:nth-child(3){animation-delay:.25s}
-.nav-card:nth-child(4){animation-delay:.3s}
-.nav-card:nth-child(5){animation-delay:.35s}
-.nav-card:nth-child(6){animation-delay:.4s}
-.backup-area{opacity:0;animation:fadeUp .5s cubic-bezier(.16,1,.3,1) forwards;animation-delay:.45s}
+/* Grid */
+.grid-wrap{flex:1;padding:12px 0 20px;display:flex;flex-direction:column}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2vw,20px);flex:1;align-content:start;max-width:1200px;margin:0 auto;width:100%}
 
-html,body{height:100%;background:var(--bg);font-family:var(--font);color:var(--fg);-webkit-font-smoothing:antialiased}
-body{display:flex;flex-direction:column;max-width:720px;margin:0 auto;min-height:100dvh;padding:0 12px;position:relative}
-@media(min-width:768px){body{padding:0 24px}}
+/* Card button */
+.card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(8px,1.5vw,10px);background:var(--surface);border-radius:var(--radius);padding:clamp(16px,3vw,20px) clamp(10px,2vw,12px);border:1px solid var(--border);cursor:pointer;transition:all .2s;min-height:clamp(100px,15vh,120px);text-decoration:none;color:var(--fg);-webkit-tap-highlight-color:transparent}
+.card:active{transform:scale(.96);background:color-mix(in srgb,var(--surface) 96%,var(--accent))}
+.card svg{width:clamp(28px,4vw,36px);height:clamp(28px,4vw,36px);display:block;color:var(--accent);flex-shrink:0}
+.card span{font-size:clamp(13px,1.8vw,15px);font-weight:600;text-align:center;line-height:1.3;font-family:var(--font-display)}
+.card .card-sub{font-size:clamp(10px,1.5vw,11px);color:var(--muted);font-weight:400;margin-top:-4px}
 
-.logo-wrap{display:flex;align-items:center;justify-content:center;padding:36px 0 8px}
-.logo-img{width:min(300px,68vw);height:auto;display:block}
+/* Backup area */
+.backup-area{padding:12px 0 16px;max-width:1200px;margin:0 auto;width:100%}
+.backup-btn{width:100%;padding:clamp(12px,2vw,14px);border:none;border-radius:var(--radius);background:var(--surface);color:var(--fg);font-size:clamp(13px,1.8vw,15px);font-weight:700;font-family:var(--font-display);cursor:pointer;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.backup-btn:active{transform:scale(.98);background:var(--accent-light);color:var(--accent);border-color:var(--accent)}
+.backup-btn svg{width:20px;height:20px}
 
-.section-label{font-size:.8125rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;padding:0 2px}
-.section-nav{margin-top:44px}
+/* Backup action sheet */
+.backup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:90;display:none;opacity:0;transition:opacity .25s}
+.backup-overlay.open{display:block;opacity:1}
+.backup-sheet{position:fixed;bottom:0;left:0;right:0;z-index:91;background:var(--surface);border-radius:18px 18px 0 0;padding:clamp(14px,2vw,16px) clamp(16px,3vw,20px) clamp(20px,4vw,28px);box-shadow:0 -4px 30px rgba(0,0,0,.12);transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);max-width:600px;margin:0 auto}
+.backup-sheet.open{transform:translateY(0)}
+.backup-sheet .sheet-handle{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 16px}
+.backup-sheet .sheet-title{font-size:clamp(16px,2vw,18px);font-weight:700;font-family:var(--font-display);margin-bottom:16px;text-align:center}
+.backup-sheet .backup-option{display:flex;align-items:center;gap:12px;padding:clamp(12px,2vw,14px);border:1.5px solid var(--border);border-radius:12px;background:var(--surface);font-size:clamp(14px,1.8vw,15px);font-weight:600;font-family:var(--font-display);cursor:pointer;transition:all .15s;color:var(--fg);width:100%;margin-bottom:10px}
+.backup-sheet .backup-option:active{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
+.backup-sheet .backup-option svg{width:22px;height:22px;flex-shrink:0;color:var(--accent)}
+.backup-sheet .backup-option:last-child{margin-bottom:0}
 
-/* Grid — 2 col mobile, 3 col desktop */
-.nav-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:640px){.nav-grid{grid-template-columns:repeat(3,1fr);gap:10px}}
-
-/* Card padrão */
-.nav-card{
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  background:var(--surface);border-radius:var(--radius);padding:18px 12px 16px;
-  border:1.5px solid var(--border);cursor:pointer;position:relative;z-index:1;
-  transition:border-color .2s,transform .2s,background .2s;
-  text-decoration:none;color:var(--fg);-webkit-tap-highlight-color:transparent;min-height:94px;text-align:center
-}
-.nav-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.nav-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.nav-card:active{transform:scale(.96)}
-.nav-card svg{width:26px;height:26px;display:block;color:var(--fg);flex-shrink:0;margin-bottom:2px}
-@media(min-width:640px){.nav-card svg{width:30px;height:30px}}
-.nav-card .nav-label{font-size:.9375rem;font-weight:800;letter-spacing:-.02em;line-height:1.25;font-family:var(--font)}
-.nav-card .nav-sub{font-size:.6875rem;color:var(--muted);font-weight:500;margin-top:1px;letter-spacing:.01em}
-
-/* Card destacado — Médiuns (âncora visual) */
-.nav-card.featured{
-  background:color-mix(in srgb,var(--accent) 10%,var(--surface));
-  border-color:color-mix(in srgb,var(--accent) 30%,var(--border))
-}
-.nav-card.featured svg{color:var(--accent)}
-.nav-card.featured .nav-label{color:var(--accent)}
-.nav-card.featured:hover{background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
-.nav-card.featured::after{
-  content:'Início';position:absolute;top:8px;right:10px;
-  font-size:.625rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
-  color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);
-  padding:2px 8px;border-radius:6px;line-height:1.5
-}
-@media(prefers-color-scheme:dark){
-  .nav-card.featured{background:color-mix(in srgb,var(--accent) 16%,var(--surface))}
-  .nav-card.featured:hover{background:color-mix(in srgb,var(--accent) 24%,var(--surface))}
-  .nav-card.featured::after{background:color-mix(in srgb,var(--accent) 22%,transparent)}
-}
-
-/* Backup — compacto, sem competir */
-.backup-area{margin-top:44px;padding-bottom:48px;display:flex;justify-content:center}
-.backup-btn{
-  display:inline-flex;align-items:center;gap:8px;
-  background:color-mix(in srgb,var(--bg) 50%,var(--surface));
-  border:1.5px dashed var(--border);border-radius:20px;padding:12px 20px;
-  cursor:pointer;transition:background .2s,border-color .2s;position:relative;z-index:1;
-  color:var(--muted);font-size:.8125rem;font-weight:600;font-family:var(--font);
-  -webkit-tap-highlight-color:transparent
-}
-.backup-btn:hover{background:var(--accent-light);border-color:var(--accent);border-style:solid;color:var(--accent)}
-.backup-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.backup-btn:active{transform:scale(.97)}
-.backup-btn svg{width:16px;height:16px;flex-shrink:0;color:currentColor}
-
-.sheet-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
-.sheet-overlay.open{opacity:1;pointer-events:auto}
-.sheet{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-radius:20px 20px 0 0;z-index:101;padding:20px 16px calc(16px + env(safe-area-inset-bottom,16px));transform:translateY(100%);transition:transform .35s cubic-bezier(.32,.72,0,1);box-shadow:0 -8px 40px rgba(0,0,0,.12);max-width:600px;margin:0 auto;outline:none}
-@media(min-width:480px){.sheet{padding:24px 20px calc(20px + env(safe-area-inset-bottom,20px))}}
-.sheet.open{transform:translateY(0)}
-.sheet .handle{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 18px}
-.sheet .sheet-header{font-size:1.125rem;font-weight:700;font-family:var(--font);margin-bottom:16px;text-align:center}
-.sheet .backup-option{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-size:.9375rem;font-weight:600;font-family:var(--font);cursor:pointer;transition:background .15s,border-color .15s,color .15s;color:var(--fg);width:100%;margin-bottom:10px}
-.sheet .backup-option:hover{background:var(--accent-light);border-color:var(--accent);color:var(--accent)}
-.sheet .backup-option:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.sheet .backup-option svg{width:22px;height:22px;flex-shrink:0;color:var(--accent)}
-.sheet .backup-option:last-child{margin-bottom:0}
-
-.toast-container{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:90vw;width:400px}
-@media(min-width:480px){.toast-container{top:20px}}
-.toast{padding:10px 14px;border-radius:var(--radius-sm);font-size:.875rem;font-weight:500;font-family:var(--font);box-shadow:0 4px 20px rgba(0,0,0,.15);pointer-events:auto;display:flex;align-items:center;gap:8px;animation:toastIn .3s ease}
-.toast-success{background:var(--accent);color:#fff}
-.toast-error{background:var(--gold-dark);color:#fff}
-@keyframes toastIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateY(-12px)}}
-
-.confirm-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .25s}
-.confirm-overlay.open{opacity:1;pointer-events:auto}
-.confirm-box{background:var(--surface);border-radius:14px;padding:20px 24px;max-width:360px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.2)}
-.confirm-box h3{font-size:1.125rem;font-weight:700;font-family:var(--font);margin-bottom:6px}
-.confirm-box p{font-size:.875rem;color:var(--muted);margin-bottom:14px;line-height:1.5}
-.confirm-actions{display:flex;gap:10px}
-.confirm-actions button{flex:1;padding:10px 12px;border-radius:var(--radius-sm);font-size:.9375rem;font-weight:700;border:none;cursor:pointer;font-family:var(--font);transition:opacity .15s,transform .15s}
-.confirm-actions button:hover{opacity:.9;transform:scale(1.02)}
-.confirm-actions button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.confirm-actions button:active{transform:scale(.97)}
-.confirm-confirm{background:var(--accent);color:#fff}
-.confirm-cancel{background:var(--bg);color:var(--muted);border:1.5px solid var(--border)}
-.confirm-danger{background:var(--gold-dark);color:#fff}
-
-/* Tour */
-.tour-highlight{position:relative;z-index:50;animation:tourPulse 2s ease-in-out infinite}
-@keyframes tourPulse{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 40%,transparent)}50%{box-shadow:0 0 0 8px color-mix(in srgb,var(--accent) 0%,transparent)}}
-.tour-tip{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:60;background:var(--accent);color:#fff;padding:12px 20px;border-radius:14px;font-size:.9375rem;font-weight:600;font-family:var(--font);box-shadow:0 4px 20px rgba(0,0,0,.2);max-width:320px;text-align:center;pointer-events:none;animation:tourTipIn .4s ease;line-height:1.4}
-.tour-tip::after{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:10px solid var(--accent)}
-@keyframes tourTipIn{from{opacity:0;transform:translateX(-50%) translateY(16px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-.tour-tip .tour-dismiss{display:inline-block;margin-top:6px;padding:6px 14px;border-radius:8px;background:rgba(255,255,255,.2);font-size:.8125rem;font-weight:700;pointer-events:auto;cursor:pointer}
-.tour-tip .tour-dismiss:hover{background:rgba(255,255,255,.3)}
-
-.help-btn{position:fixed;bottom:20px;right:20px;z-index:90;width:44px;height:44px;border-radius:50%;border:1.5px solid var(--border);background:var(--surface);color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:700;font-family:var(--font);box-shadow:0 2px 12px rgba(0,0,0,.08);transition:transform .2s,background .2s,border-color .2s;-webkit-tap-highlight-color:transparent}
-.help-btn:hover{transform:scale(1.08);border-color:var(--accent);background:var(--accent-light)}
-.help-btn:active{transform:scale(.94)}
-.help-btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-.help-btn svg{width:20px;height:20px;display:block}
-@media(min-width:768px){.help-btn{bottom:28px;right:28px}}
+/* Bottom nav */
+.bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:8px 16px 16px;border-top:1px solid var(--border);background:var(--surface);max-width:100%}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--muted);font-size:clamp(10px,1.2vw,10px);font-weight:500;transition:color .2s;background:none;border:none;font-family:var(--font-body);-webkit-tap-highlight-color:transparent}
+.nav-item.active{color:var(--accent)}
+.nav-item svg{width:clamp(20px,3vw,24px);height:clamp(20px,3vw,24px)}
+.nav-item.active svg{color:var(--accent)}
 </style>
-<script src="/auth-helper.js">
-window.addEventListener('pageshow', function(event) {
-  if (event.persisted) { window.location.reload(); }
-});
-</script>
 </head>
 <body>
 
-<div class="logo-wrap">
-  <img class="logo-img" src="mppkpki8-Centro360_Logo_Vector-sem-fundo.png" alt="Centro360">
+<div class="logo-area">
+  <img class="logo-img" src="logo.png" alt="Mejepra">
+  <div class="logo-subtitle">Mejepra</div>
+  <div class="logo-sub">Gestão Financeira</div>
 </div>
 
-<div class="section-label section-nav">Navegação</div>
+<div class="grid-wrap">
+  <div class="grid">
 
-<div class="nav-grid">
-  <a class="nav-card featured" href="mediuns.html" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-    <div class="nav-label">Médiuns</div>
-    <div class="nav-sub">Cadastro e cargos</div>
-  </a>
-  <a class="nav-card" href="mensalidade.html" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="12" cy="16" r="2"/><path d="M8 2l2 4"/><path d="M16 2l-2 4"/></svg>
-    <div class="nav-label">Mensalidade</div>
-    <div class="nav-sub">Contribuições mensais</div>
-  </a>
-  <a class="nav-card" href="faxina.html" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2l4 4-6 6-4-4 6-6z"/><path d="M8 12l-4 4 2 2 4-4"/><path d="M16 12l4 4-2 2-4-4"/><path d="M8 4l-4 4"/></svg>
-    <div class="nav-label">Faxina</div>
-    <div class="nav-sub">Escala de limpeza</div>
-  </a>
-  <a class="nav-card" href="despesas.html" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></svg>
-    <div class="nav-label">Despesas</div>
-    <div class="nav-sub">Gastos e rateios</div>
-  </a>
-  <a class="nav-card" href="trabalhos.html" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/></svg>
-    <div class="nav-label">Trabalhos</div>
-    <div class="nav-sub">Registro e valores</div>
-  </a>
-  <a class="nav-card" href="relatorios.html" tabindex="0">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-    <div class="nav-label">Relatórios</div>
-    <div class="nav-sub">Análise por médium</div>
-  </a>
+    <a class="card" href="mediuns.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3.5"/><path d="M3 20c1.5-2.5 4-4 7-4s5.5 1.5 7 4"/><path d="M17 5.5a3 3 0 1 1 0 5"/><path d="M21 12c1 1.2 1.5 2.5 1.5 4"/></svg>
+      <span>Médiuns</span>
+    </a>
+
+    <a class="card" href="mensalidade.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/><circle cx="12" cy="16" r="2"/><path d="M8 2l2 4"/><path d="M16 2l-2 4"/></svg>
+      <span>Mensalidade</span>
+    </a>
+
+    <a class="card" href="faxina.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2l4 4-6 6-4-4 6-6z"/><path d="M8 12l-4 4 2 2 4-4"/><path d="M16 12l4 4-2 2-4-4"/><path d="M8 4l-4 4"/></svg>
+      <span>Faxina</span>
+    </a>
+
+    <a class="card" href="despesas.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="8" y1="9" x2="10" y2="9"/></svg>
+      <span>Despesas</span>
+    </a>
+
+    <a class="card" href="trabalhos.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2 7h7l-5.5 4 2 7L12 16l-5.5 4 2-7L3 9h7z"/></svg>
+      <span>Trabalhos</span>
+    </a>
+
+    <a class="card" href="relatorios.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      <span>Relatórios</span>
+    </a>
+
+  </div>
 </div>
 
 <div class="backup-area">
-  <button class="backup-btn" onclick="abrirBackupSheet()" type="button" aria-label="Abrir opções de backup">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  <button class="backup-btn" onclick="abrirBackupSheet()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Backup
   </button>
 </div>
 
-<div class="sheet-overlay" id="backupOverlay" onclick="fecharBackupSheet()" aria-hidden="true"></div>
-<div class="sheet" id="backupSheet" role="dialog" aria-modal="true" aria-labelledby="backupTitle">
-  <div class="handle"></div>
-  <div class="sheet-header" id="backupTitle">Backup</div>
-  <button class="backup-option" onclick="fazerBackup()" type="button">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+<div class="backup-overlay" id="backup-overlay" onclick="fecharBackupSheet()"></div>
+<div class="backup-sheet" id="backup-sheet">
+  <div class="sheet-handle"></div>
+  <h2 class="sheet-title">Backup</h2>
+  <button class="backup-option" onclick="fazerBackup()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
     Exportar Backup
   </button>
-  <button class="backup-option" onclick="document.getElementById('restoreInput').click()" type="button">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+  <button class="backup-option" onclick="document.getElementById('restoreInput').click()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
     Restaurar Backup
   </button>
   <input type="file" id="restoreInput" accept=".json" style="display:none" onchange="restaurarBackup(this)">
 </div>
 
-<div class="confirm-overlay" id="confirmOverlay" role="alertdialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMsg">
-  <div class="confirm-box">
-    <h3 id="confirmTitle">Confirmar</h3>
-    <p id="confirmMsg">Tem certeza?</p>
-    <div class="confirm-actions">
-      <button class="confirm-cancel" onclick="fecharConfirmacao()" type="button">Cancelar</button>
-      <button class="confirm-confirm" id="confirmBtn" onclick="executarConfirmacao()" type="button">Confirmar</button>
-    </div>
-  </div>
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="location.href='index.html'">
+    <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M3 12l9-9 9 9v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span>Início</span>
+  </button>
 </div>
 
-<button class="help-btn" onclick="mostrarAjuda()" type="button" aria-label="Ajuda — tour de navegação" title="Ajuda">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-</button>
-
-<div class="toast-container" id="toastContainer" aria-live="polite"></div>
-
 <script>
-var API = '/api';
-var confirmCallback = null;
-
-function mostrarToast(msg, tipo) {
-  tipo = tipo || 'info';
-  var container = document.getElementById('toastContainer');
-  var el = document.createElement('div');
-  el.className = 'toast toast-' + tipo;
-  el.textContent = msg;
-  el.setAttribute('role', 'status');
-  container.appendChild(el);
-  setTimeout(function() {
-    el.style.animation = 'toastOut .3s ease forwards';
-    setTimeout(function() { el.remove(); }, 300);
-  }, 3000);
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!refreshing) {
+      refreshing = true;
+      window.location.reload();
+    }
+  });
 }
 
-function abrirBackupSheet() {
-  document.getElementById('backupOverlay').classList.add('open');
-  document.getElementById('backupSheet').classList.add('open');
+function abrirBackupSheet(){
+  document.getElementById('backup-overlay').classList.add('open');
+  document.getElementById('backup-sheet').classList.add('open');
+}
+function fecharBackupSheet(){
+  document.getElementById('backup-overlay').classList.remove('open');
+  document.getElementById('backup-sheet').classList.remove('open');
 }
 
-function fecharBackupSheet() {
-  document.getElementById('backupOverlay').classList.remove('open');
-  document.getElementById('backupSheet').classList.remove('open');
-}
-
-async function fazerBackup() {
+async function fazerBackup(){
   fecharBackupSheet();
   try {
-    var res = await fetch(API + '/backup');
-    var blob = await res.blob();
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
+    const res = await fetch('/api/backup');
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
     a.href = url;
-    a.download = 'centro360-backup-' + new Date().toISOString().slice(0,10) + '.json';
+    a.download = 'mejepra-backup-' + new Date().toISOString().slice(0,10) + '.json';
     a.click();
     URL.revokeObjectURL(url);
-    mostrarToast('Backup exportado! Salve o arquivo.', 'success');
-  } catch(e) { mostrarToast('Erro ao exportar: ' + e.message, 'error'); }
+    alert('Backup exportado! Salve o arquivo no Google Drive.');
+  } catch(e) { alert('Erro ao exportar: ' + e.message); }
 }
 
-async function restaurarBackup(input) {
+async function restaurarBackup(input){
   fecharBackupSheet();
-  var file = input.files[0];
+  const file = input.files[0];
   if(!file) return;
-  mostrarConfirmacao(
-    'Restaurar backup?',
-    'Isso vai substituir todos os dados atuais. Esta ação não pode ser desfeita.',
-    function() { executarRestore(file); },
-    'danger'
-  );
-  input.value = '';
-}
-
-async function executarRestore(file) {
+  if(!confirm('Isso vai SUBSTITUIR todos os dados atuais. Continuar?')) { input.value=''; return; }
   try {
-    var data = JSON.parse(await file.text());
-    var res = await fetch(API + '/restore', {
+    const data = JSON.parse(await file.text());
+    const res = await fetch('/api/restore', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    var result = await res.json();
+    const result = await res.json();
     if(result.success) {
-      mostrarToast('Dados restaurados com sucesso!', 'success');
-      setTimeout(function() { location.reload(); }, 800);
+      alert('Dados restaurados com sucesso!');
+      location.reload();
     } else {
-      mostrarToast('Erro: ' + (result.error || 'Falha na restauração'), 'error');
+      alert('Erro: ' + (result.error || 'Falha na restauração'));
     }
-  } catch(e) { mostrarToast('Erro ao restaurar: ' + e.message, 'error'); }
-}
-
-function mostrarConfirmacao(title, msg, callback, style) {
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMsg').textContent = msg;
-  var btn = document.getElementById('confirmBtn');
-  btn.className = 'confirm-confirm' + (style === 'danger' ? ' confirm-danger' : '');
-  btn.textContent = style === 'danger' ? 'Restaurar' : 'Confirmar';
-  confirmCallback = callback;
-  document.getElementById('confirmOverlay').classList.add('open');
-  btn.focus();
-}
-
-function fecharConfirmacao() {
-  document.getElementById('confirmOverlay').classList.remove('open');
-  confirmCallback = null;
-}
-
-function executarConfirmacao() {
-  if (confirmCallback) {
-    var fn = confirmCallback;
-    fecharConfirmacao();
-    fn();
-  }
-}
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') {
-    if (document.getElementById('confirmOverlay').classList.contains('open')) { fecharConfirmacao(); return; }
-    if (document.getElementById('backupSheet').classList.contains('open')) { fecharBackupSheet(); return; }
-  }
-  if (!e.ctrlKey && !e.metaKey && !e.altKey) {
-    if (e.key === '?' || (e.key === '/' && !e.ctrlKey)) { e.preventDefault(); mostrarAjuda(); return; }
-    var navMap = {'1':0,'2':1,'3':2,'4':3,'5':4,'6':5};
-    var idx = navMap[e.key];
-    if (idx !== undefined) {
-      var links = document.querySelectorAll('.nav-card');
-      if (links[idx]) { e.preventDefault(); links[idx].click(); }
-    }
-  }
-});
-
-(function() {
-  if (localStorage.getItem('centro360_tour_visto')) return;
-  var primeiroCard = document.querySelector('.nav-card.featured');
-  if (!primeiroCard) return;
-  localStorage.setItem('centro360_tour_visto', '1');
-  var tip = document.createElement('div');
-  tip.className = 'tour-tip';
-  tip.innerHTML = 'Comece por aqui — cadastre os <strong>Médiuns</strong> para começar a usar o Centro360.<br><span class="tour-dismiss" onclick="this.closest(\'.tour-tip\').remove()">Entendi</span>';
-  document.body.appendChild(tip);
-  primeiroCard.classList.add('tour-highlight');
-  var removeHighlight = function() { primeiroCard.classList.remove('tour-highlight'); };
-  tip.querySelector('.tour-dismiss').addEventListener('click', removeHighlight);
-})();
-
-function mostrarAjuda() {
-  var tip = document.querySelector('.tour-tip');
-  if (tip) { tip.remove(); }
-  var primeiroCard = document.querySelector('.nav-card.featured');
-  if (!primeiroCard) return;
-  primeiroCard.classList.add('tour-highlight');
-  tip = document.createElement('div');
-  tip.className = 'tour-tip';
-  tip.setAttribute('role', 'status');
-  tip.innerHTML = 'Comece por aqui — cadastre os <strong>Médiuns</strong> para começar a usar o Centro360.<br><span class="tour-dismiss">Entendi</span>';
-  document.body.appendChild(tip);
-  var dismiss = tip.querySelector('.tour-dismiss');
-  dismiss.addEventListener('click', function() {
-    tip.remove();
-    primeiroCard.classList.remove('tour-highlight');
-  });
-  setTimeout(function() { dismiss.focus(); }, 450);
+  } catch(e) { alert('Erro ao restaurar: ' + e.message); }
+  input.value = '';
 }
 </script>
 </body>
